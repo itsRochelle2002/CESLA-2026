@@ -1,0 +1,584 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CLIMBS Canteen — Visitor Order</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;800&family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/css/global.css" />
+  <style>
+    *, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+
+    body {
+      font-family: 'DM Sans', sans-serif;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    /* ── HEADER ── */
+    header {
+      padding: 13px 28px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid rgba(201,168,76,0.2);
+      background: rgba(13,27,62,0.7);
+      backdrop-filter: blur(12px);
+      flex-shrink: 0;
+      animation: slideDown 0.5s ease both;
+    }
+    @keyframes slideDown {
+      from { opacity:0; transform:translateY(-12px); }
+      to   { opacity:1; transform:translateY(0); }
+    }
+
+    .header-back {
+      width: 36px; height: 36px; border-radius: 50%;
+      background: rgba(255,255,255,0.08);
+      border: 1px solid rgba(255,255,255,0.15);
+      display: flex; align-items: center; justify-content: center;
+      color: #fff; font-size: 1rem; text-decoration: none;
+      transition: background 0.2s, transform 0.2s;
+    }
+    .header-back:hover { background: rgba(201,168,76,0.2); transform: translateX(-2px); }
+
+    .header-center { flex: 1; text-align: center; }
+    .header-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.2rem; font-weight: 800; color: #fff;
+      letter-spacing: 0.3px;
+    }
+    .header-title span { color: #c9a84c; }
+    .header-badge {
+      display: inline-block;
+      background: rgba(80,200,150,0.2);
+      border: 1px solid rgba(80,200,150,0.4);
+      color: #50c896;
+      font-size: 0.6rem; font-weight: 700;
+      letter-spacing: 2px; text-transform: uppercase;
+      padding: 3px 10px; border-radius: 20px;
+      margin-top: 3px;
+    }
+
+    .header-menu-btn {
+      width: 36px; height: 36px; border-radius: 50%;
+      background: rgba(255,255,255,0.08);
+      border: 1px solid rgba(255,255,255,0.15);
+      display: flex; align-items: center; justify-content: center;
+      color: #fff; font-size: 1rem; cursor: pointer;
+      transition: background 0.2s;
+    }
+    .header-menu-btn:hover { background: rgba(201,168,76,0.2); }
+
+    /* ── LAYOUT ── */
+    .layout {
+      display: flex;
+      flex: 1;
+      gap: 14px;
+      padding: 14px;
+      overflow: hidden;
+      animation: fadeUp 0.5s 0.1s ease both;
+    }
+    @keyframes fadeUp {
+      from { opacity:0; transform:translateY(16px); }
+      to   { opacity:1; transform:translateY(0); }
+    }
+
+    .panel {
+      background: rgba(255,255,255,0.07);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 18px;
+      backdrop-filter: blur(10px);
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .panel-head {
+      padding: 14px 18px 10px;
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+    }
+    .panel-head h2 {
+      font-family: 'Playfair Display', serif;
+      font-size: 0.85rem; font-weight: 700;
+      color: #fff; letter-spacing: 2px;
+      text-transform: uppercase;
+      padding-bottom: 8px;
+      border-bottom: 2px solid #c9a84c;
+      display: inline-block;
+    }
+
+    /* ── LEFT: Categories ── */
+    .col-cats { width: 170px; flex-shrink: 0; padding-bottom: 14px; }
+    .cat-list {
+      display: flex; flex-direction: column; gap: 8px;
+      padding: 12px 14px; overflow-y: auto; flex: 1;
+    }
+    .cat-btn {
+      width: 100%; padding: 11px 14px; border-radius: 10px;
+      background: rgba(255,255,255,0.08);
+      border: 1px solid rgba(255,255,255,0.1);
+      color: rgba(255,255,255,0.8);
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.8rem; font-weight: 600;
+      cursor: pointer; text-align: center;
+      transition: background 0.2s, transform 0.15s;
+    }
+    .cat-btn:hover { background: rgba(255,255,255,0.14); transform: translateX(2px); }
+    .cat-btn.active {
+      background: linear-gradient(135deg, #c9a84c, #e8c87a);
+      border-color: transparent; color: #0d1b3e; font-weight: 700;
+      box-shadow: 0 4px 14px rgba(201,168,76,0.35);
+    }
+
+    /* ── MIDDLE: Items ── */
+    .col-items { flex: 1; min-width: 0; }
+    .items-toolbar {
+      display: flex; align-items: center; justify-content: space-between;
+      gap: 12px; padding: 12px 16px 10px;
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+    }
+    .items-toolbar h2 {
+      font-family: 'Playfair Display', serif;
+      font-size: 0.85rem; font-weight: 700; color: #fff;
+      letter-spacing: 2px; text-transform: uppercase;
+      padding-bottom: 8px; border-bottom: 2px solid #c9a84c;
+      display: inline-block; white-space: nowrap;
+    }
+    .search-wrap {
+      display: flex; align-items: center; gap: 8px;
+      background: rgba(255,255,255,0.08);
+      border: 1px solid rgba(255,255,255,0.12);
+      border-radius: 20px; padding: 7px 14px;
+      flex: 1; max-width: 280px;
+      transition: border-color 0.2s;
+    }
+    .search-wrap:focus-within { border-color: rgba(201,168,76,0.5); }
+    .search-wrap input {
+      background: none; border: none; outline: none;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.78rem; color: #fff; flex: 1;
+    }
+    .search-wrap input::placeholder { color: rgba(255,255,255,0.35); }
+    .search-icon { color: rgba(255,255,255,0.4); font-size: 0.8rem; }
+
+    .items-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+      gap: 12px; padding: 14px;
+      overflow-y: auto; flex: 1;
+    }
+    .item-card {
+      background: rgba(255,255,255,0.06);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 14px; padding: 14px 12px 12px;
+      display: flex; flex-direction: column;
+      align-items: center; gap: 8px;
+      transition: transform 0.2s, border-color 0.2s, box-shadow 0.2s;
+    }
+    .item-card:hover {
+      transform: translateY(-3px);
+      border-color: rgba(201,168,76,0.3);
+      box-shadow: 0 8px 24px rgba(0,0,0,0.3);
+    }
+    .item-img {
+      width: 64px; height: 64px; border-radius: 50%;
+      background: rgba(255,255,255,0.08);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 2rem; overflow: hidden;
+    }
+    .item-img img { width:100%; height:100%; object-fit:cover; border-radius:50%; }
+    .item-name { font-size:0.76rem; font-weight:600; color:#fff; text-align:center; line-height:1.4; }
+    .item-stock { font-size:0.65rem; color:rgba(255,255,255,0.4); }
+    .item-price { font-size:0.85rem; font-weight:700; color:#c9a84c; }
+    .btn-add-cart {
+      width: 100%; padding: 8px;
+      background: rgba(26,52,120,0.6);
+      border: 1px solid rgba(255,255,255,0.15);
+      border-radius: 8px; color: #fff;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.72rem; font-weight: 600; cursor: pointer;
+      transition: background 0.2s, transform 0.15s, border-color 0.2s;
+    }
+    .btn-add-cart:hover {
+      background: linear-gradient(135deg, #c9a84c, #e8c87a);
+      color: #0d1b3e; border-color: transparent; transform: scale(1.03);
+    }
+    .btn-add-cart:disabled {
+      background: rgba(255,255,255,0.04);
+      color: rgba(255,255,255,0.2); cursor: not-allowed; transform: none;
+    }
+    .no-items {
+      grid-column: 1/-1; text-align: center; padding: 40px 20px;
+      color: rgba(255,255,255,0.3); font-size:0.82rem; font-weight:300;
+    }
+
+    /* ── RIGHT: Cart ── */
+    .col-cart { width: 240px; flex-shrink: 0; }
+    .cart-body {
+      display: flex; flex-direction: column; flex: 1;
+      overflow: hidden; padding: 10px 14px; gap: 10px;
+    }
+
+    /* Guest notice banner */
+    .guest-notice {
+      background: rgba(80,200,150,0.1);
+      border: 1px solid rgba(80,200,150,0.3);
+      border-radius: 10px; padding: 9px 12px;
+      font-size: 0.68rem; color: rgba(80,200,150,0.9);
+      font-weight: 500; line-height: 1.5; text-align: center;
+    }
+    .guest-notice strong { color: #50c896; }
+
+    .cart-empty {
+      background: rgba(255,255,255,0.04); border-radius: 10px;
+      padding: 24px 12px; text-align: center;
+      font-size: 0.75rem; color: rgba(255,255,255,0.3); font-weight: 300;
+    }
+    .cart-items {
+      display: flex; flex-direction: column; gap: 6px;
+      max-height: 160px; overflow-y: auto;
+    }
+    .cart-item {
+      display: flex; align-items: center; gap: 8px;
+      background: rgba(255,255,255,0.05);
+      border-radius: 8px; padding: 7px 9px;
+    }
+    .cart-item-name { flex:1; font-size:0.7rem; color:rgba(255,255,255,0.8); font-weight:500; line-height:1.3; }
+    .cart-item-qty { display:flex; align-items:center; gap:4px; }
+    .qty-btn {
+      width:20px; height:20px; border-radius:50%;
+      background:rgba(255,255,255,0.1); border:none; color:#fff;
+      font-size:0.75rem; cursor:pointer;
+      display:flex; align-items:center; justify-content:center;
+      transition: background 0.15s;
+    }
+    .qty-btn:hover { background: rgba(201,168,76,0.4); }
+    .qty-num { font-size:0.72rem; font-weight:700; color:#fff; min-width:16px; text-align:center; }
+    .cart-item-price { font-size:0.7rem; font-weight:700; color:#c9a84c; white-space:nowrap; }
+    .cart-item-del {
+      background:none; border:none; color:rgba(231,76,60,0.6);
+      cursor:pointer; font-size:0.75rem; padding:0 2px; transition:color 0.15s;
+    }
+    .cart-item-del:hover { color:#e74c3c; }
+
+    .cart-total-row {
+      display:flex; justify-content:space-between; align-items:center;
+      padding: 8px 0; border-top: 1px solid rgba(255,255,255,0.1);
+    }
+    .cart-total-label { font-size:0.82rem; font-weight:700; color:#fff; }
+    .cart-total-val   { font-size:1rem; font-weight:800; color:#c9a84c; }
+
+    /* Cash only for guests */
+    .cash-only-label {
+      display: flex; align-items: center; gap: 8px;
+      font-size: 0.74rem; color: rgba(255,255,255,0.65);
+      background: rgba(255,255,255,0.05);
+      border-radius: 8px; padding: 8px 10px;
+    }
+    .cash-only-label span { font-size: 0.9rem; }
+
+    .amount-group { display:flex; flex-direction:column; gap:5px; }
+    .amount-group label { font-size:0.7rem; color:rgba(255,255,255,0.5); font-weight:500; }
+    .amount-input {
+      background: rgba(255,255,255,0.08);
+      border: 1px solid rgba(255,255,255,0.12);
+      border-radius: 8px; padding: 8px 12px;
+      color: #fff; font-family: 'DM Sans', sans-serif;
+      font-size: 0.8rem; font-weight: 600;
+      outline: none; width: 100%; transition: border-color 0.2s;
+    }
+    .amount-input:focus { border-color: rgba(201,168,76,0.5); }
+
+    .change-row { display:flex; justify-content:space-between; align-items:center; }
+    .change-label { font-size:0.72rem; color:rgba(255,255,255,0.5); }
+    .change-val   { font-size:0.82rem; font-weight:700; color:rgba(255,255,255,0.8); }
+
+    .btn-place {
+      width:100%; padding:11px;
+      background: linear-gradient(135deg, #27ae60, #2ecc71);
+      border:none; border-radius:10px; color:#fff;
+      font-family:'DM Sans',sans-serif;
+      font-size:0.78rem; font-weight:700; letter-spacing:0.5px; cursor:pointer;
+      box-shadow: 0 4px 14px rgba(39,174,96,0.35);
+      transition: filter 0.2s, transform 0.2s;
+    }
+    .btn-place:hover { filter:brightness(1.1); transform:translateY(-1px); }
+
+    .btn-clear {
+      width:100%; padding:10px;
+      background:rgba(231,76,60,0.15); border:1px solid rgba(231,76,60,0.3);
+      border-radius:10px; color:rgba(231,76,60,0.9);
+      font-family:'DM Sans',sans-serif;
+      font-size:0.78rem; font-weight:600; cursor:pointer;
+      transition: background 0.2s, transform 0.2s;
+    }
+    .btn-clear:hover { background:rgba(231,76,60,0.25); transform:translateY(-1px); }
+
+    .btn-receipt {
+      width:100%; padding:10px;
+      background:rgba(201,168,76,0.15); border:1px solid rgba(201,168,76,0.3);
+      border-radius:10px; color:#c9a84c;
+      font-family:'DM Sans',sans-serif;
+      font-size:0.78rem; font-weight:600; cursor:pointer;
+      transition: background 0.2s, transform 0.2s;
+    }
+    .btn-receipt:hover { background:rgba(201,168,76,0.25); transform:translateY(-1px); }
+
+    /* Toast */
+    .toast {
+      position:fixed; bottom:24px; left:50%;
+      transform:translateX(-50%) translateY(80px);
+      background:rgba(13,27,62,0.95);
+      border:1px solid rgba(201,168,76,0.4);
+      border-radius:12px; padding:12px 24px;
+      color:#fff; font-size:0.82rem; font-weight:500;
+      box-shadow:0 8px 28px rgba(0,0,0,0.4);
+      transition:transform 0.3s ease;
+      z-index:999; white-space:nowrap;
+    }
+    .toast.show { transform:translateX(-50%) translateY(0); }
+
+    ::-webkit-scrollbar { width:4px; }
+    ::-webkit-scrollbar-track { background:transparent; }
+    ::-webkit-scrollbar-thumb { background:rgba(255,255,255,0.15); border-radius:4px; }
+
+    @media (max-width:860px) {
+      .col-cats { width:130px; }
+      .col-cart { width:200px; }
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <a href="/ordering" class="header-back">&#8592;</a>
+    <div class="header-center">
+      <div class="header-title"><span>CLIMBS</span> Canteen Ordering System</div>
+      <div class="header-badge">&#128100; Visitor / Walk-in</div>
+    </div>
+    <button class="header-menu-btn">&#9776;</button>
+  </header>
+
+  <div class="layout">
+
+    <!-- LEFT: Categories -->
+    <div class="panel col-cats">
+      <div class="panel-head"><h2>Categories</h2></div>
+      <div class="cat-list">
+        <button class="cat-btn active" onclick="filterCat('all', this)">All</button>
+        <button class="cat-btn" onclick="filterCat('meals', this)">Meals</button>
+        <button class="cat-btn" onclick="filterCat('drinks', this)">Drinks</button>
+        <button class="cat-btn" onclick="filterCat('snacks', this)">Snacks</button>
+        <button class="cat-btn" onclick="filterCat('junkfoods', this)">Junk Foods</button>
+        <button class="cat-btn" onclick="filterCat('others', this)">Others</button>
+      </div>
+    </div>
+
+    <!-- MIDDLE: Items -->
+    <div class="panel col-items">
+      <div class="items-toolbar">
+        <h2 id="catTitle">ALL ITEMS</h2>
+        <div class="search-wrap">
+          <span class="search-icon">&#128269;</span>
+          <input type="text" id="searchInput" placeholder="Search items..." oninput="applySearch()" />
+        </div>
+      </div>
+      <div class="items-grid" id="itemsGrid"></div>
+    </div>
+
+    <!-- RIGHT: Cart -->
+    <div class="panel col-cart">
+      <div class="panel-head"><h2>Menu</h2></div>
+      <div class="cart-body">
+
+        <!-- Guest notice -->
+        <div class="guest-notice">
+          &#128100; Ordering as <strong>Visitor</strong><br/>
+          Cash payment only
+        </div>
+
+        <div id="cartEmpty" class="cart-empty">Cart is empty.</div>
+        <div class="cart-items" id="cartItems" style="display:none"></div>
+
+        <div class="cart-total-row">
+          <span class="cart-total-label">Total :</span>
+          <span class="cart-total-val" id="cartTotal">&#8369; 0.00</span>
+        </div>
+
+        <!-- Cash only — no credit option for guests -->
+        <div class="cash-only-label">
+          <span>💵</span> Cash Payment Only
+        </div>
+
+        <div class="amount-group">
+          <label>Amount Paid (&#8369;)</label>
+          <input type="number" class="amount-input" id="amountPaid" value="0.00" min="0" step="0.01" oninput="calcChange()" />
+        </div>
+
+        <div class="change-row">
+          <span class="change-label">Change :</span>
+          <span class="change-val" id="changeVal">&#8369; 0.00</span>
+        </div>
+
+        <button class="btn-place" onclick="placeOrder()">Place Order</button>
+        <button class="btn-clear" onclick="clearCart()">Clear cart</button>
+        <button class="btn-receipt" onclick="printReceipt()">Print Receipt</button>
+
+      </div>
+    </div>
+
+  </div>
+
+  <div class="toast" id="toast"></div>
+
+  <script>
+    const menuItems = [
+      { id:1,  name:'Lugaw with Egg',  category:'meals',     price:55,  stock:50,  emoji:'🍚' },
+      { id:2,  name:'Sinangag',        category:'meals',     price:30,  stock:30,  emoji:'🍛' },
+      { id:3,  name:'Pork Adobo',      category:'meals',     price:75,  stock:20,  emoji:'🍖' },
+      { id:4,  name:'Fried Chicken',   category:'meals',     price:80,  stock:15,  emoji:'🍗' },
+      { id:5,  name:'Pancit Canton',   category:'meals',     price:65,  stock:25,  emoji:'🍜' },
+      { id:6,  name:'Softdrinks',      category:'drinks',    price:25,  stock:100, emoji:'🥤' },
+      { id:7,  name:'Bottled Water',   category:'drinks',    price:15,  stock:80,  emoji:'💧' },
+      { id:8,  name:'Juice',           category:'drinks',    price:20,  stock:60,  emoji:'🧃' },
+      { id:9,  name:'Chips',           category:'snacks',    price:20,  stock:50,  emoji:'🍟' },
+      { id:10, name:'Biscuit',         category:'snacks',    price:15,  stock:40,  emoji:'🍪' },
+      { id:11, name:'Junk Food Pack',  category:'junkfoods', price:18,  stock:45,  emoji:'🍿' },
+      { id:12, name:'Mixed Nuts',      category:'others',    price:35,  stock:30,  emoji:'🥜' },
+    ];
+
+    let currentCat = 'all';
+    let cart       = {};
+    let orderTotal = 0;
+
+    function renderItems() {
+      const search   = document.getElementById('searchInput').value.toLowerCase().trim();
+      const grid     = document.getElementById('itemsGrid');
+      const filtered = menuItems.filter(item => {
+        const matchCat    = currentCat === 'all' || item.category === currentCat;
+        const matchSearch = item.name.toLowerCase().includes(search);
+        return matchCat && matchSearch;
+      });
+
+      if (!filtered.length) {
+        grid.innerHTML = '<div class="no-items">No items found.</div>';
+        return;
+      }
+
+      grid.innerHTML = filtered.map(item => `
+        <div class="item-card">
+          <div class="item-img">${item.emoji}</div>
+          <div class="item-name">${item.name}</div>
+          <div class="item-stock">Stock: ${item.stock}</div>
+          <div class="item-price">&#8369;${item.price.toFixed(2)}</div>
+          <button class="btn-add-cart" onclick="addToCart(${item.id})"
+            ${item.stock <= 0 ? 'disabled' : ''}>Add To Cart</button>
+        </div>
+      `).join('');
+    }
+
+    function filterCat(cat, btn) {
+      currentCat = cat;
+      document.querySelectorAll('.cat-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      document.getElementById('catTitle').textContent = cat === 'all' ? 'ALL ITEMS' : cat.toUpperCase();
+      renderItems();
+    }
+
+    function applySearch() { renderItems(); }
+
+    function addToCart(id) {
+      const item = menuItems.find(i => i.id === id);
+      if (!item || item.stock <= 0) return;
+      if (cart[id]) {
+        if (cart[id].qty >= item.stock) { showToast('⚠️ Max stock reached!'); return; }
+        cart[id].qty++;
+      } else {
+        cart[id] = { ...item, qty: 1 };
+      }
+      showToast(`✓ ${item.name} added`);
+      renderCart();
+    }
+
+    function removeFromCart(id) { delete cart[id]; renderCart(); }
+
+    function changeQty(id, delta) {
+      if (!cart[id]) return;
+      cart[id].qty += delta;
+      if (cart[id].qty <= 0) delete cart[id];
+      renderCart();
+    }
+
+    function clearCart() {
+      cart = {};
+      document.getElementById('amountPaid').value = '0.00';
+      renderCart();
+      showToast('🗑️ Cart cleared');
+    }
+
+    function renderCart() {
+      const cartItemsEl = document.getElementById('cartItems');
+      const cartEmptyEl = document.getElementById('cartEmpty');
+      const keys = Object.keys(cart);
+
+      orderTotal = keys.reduce((s, id) => s + cart[id].price * cart[id].qty, 0);
+      document.getElementById('cartTotal').textContent = '₱' + orderTotal.toFixed(2);
+      calcChange();
+
+      if (!keys.length) {
+        cartEmptyEl.style.display = 'block';
+        cartItemsEl.style.display = 'none';
+        cartItemsEl.innerHTML = '';
+        return;
+      }
+
+      cartEmptyEl.style.display = 'none';
+      cartItemsEl.style.display = 'flex';
+      cartItemsEl.innerHTML = keys.map(id => {
+        const it = cart[id];
+        return `
+          <div class="cart-item">
+            <div class="cart-item-name">${it.name}</div>
+            <div class="cart-item-qty">
+              <button class="qty-btn" onclick="changeQty(${id},-1)">−</button>
+              <span class="qty-num">${it.qty}</span>
+              <button class="qty-btn" onclick="changeQty(${id},1)">+</button>
+            </div>
+            <span class="cart-item-price">₱${(it.price*it.qty).toFixed(2)}</span>
+            <button class="cart-item-del" onclick="removeFromCart(${id})">✕</button>
+          </div>`;
+      }).join('');
+    }
+
+    function calcChange() {
+      const paid   = parseFloat(document.getElementById('amountPaid').value) || 0;
+      const change = paid - orderTotal;
+      document.getElementById('changeVal').textContent = '₱' + (change >= 0 ? change : 0).toFixed(2);
+    }
+
+    function placeOrder() {
+      if (!Object.keys(cart).length) { showToast('⚠️ Cart is empty!'); return; }
+      const paid = parseFloat(document.getElementById('amountPaid').value) || 0;
+      if (paid < orderTotal) { showToast('⚠️ Insufficient amount paid!'); return; }
+      showToast('✅ Order placed successfully!');
+      clearCart();
+    }
+
+    function printReceipt() { showToast('🖨️ Printing receipt...'); }
+
+    let toastTimer;
+    function showToast(msg) {
+      const t = document.getElementById('toast');
+      t.textContent = msg;
+      t.classList.add('show');
+      clearTimeout(toastTimer);
+      toastTimer = setTimeout(() => t.classList.remove('show'), 2200);
+    }
+
+    renderItems();
+  </script>
+</body>
+</html>

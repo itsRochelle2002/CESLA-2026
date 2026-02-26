@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>CESLA Membership Portal</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;800&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="/css/global.css" />
+    <style>
+      *, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+
+      body {
+        font-family: 'DM Sans', sans-serif;
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+        overflow-x: hidden;
+      }
+
+      /* ── HEADER ── */
+      header {
+        padding: 16px 40px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        border-bottom: 1px solid rgba(201,168,76,0.2);
+        background: rgba(13,27,62,0.6);
+        backdrop-filter: blur(10px);
+        animation: slideDown 0.6s ease both;
+      }
+      @keyframes slideDown {
+        from { opacity:0; transform:translateY(-16px); }
+        to   { opacity:1; transform:translateY(0); }
+      }
+
+      .header-back {
+        width: 40px; height: 40px;
+        border-radius: 50%;
+        background: rgba(255,255,255,0.08);
+        border: 1px solid rgba(255,255,255,0.15);
+        display: flex; align-items: center; justify-content: center;
+        color: #fff; font-size: 1.1rem;
+        text-decoration: none;
+        transition: background 0.2s, transform 0.2s;
+        flex-shrink: 0;
+      }
+      .header-back:hover {
+        background: rgba(201,168,76,0.2);
+        border-color: rgba(201,168,76,0.5);
+        transform: translateX(-3px);
+      }
+
+      .header-center { flex: 1; text-align: center; }
+      .header-center h1 {
+        font-family: 'Playfair Display', serif;
+        font-size: 1.35rem; font-weight: 800;
+        color: #fff; letter-spacing: 0.5px;
+      }
+      .header-center h1 span { color: #c9a84c; }
+      .header-center p {
+        font-size: 0.68rem;
+        color: rgba(232,200,122,0.65);
+        letter-spacing: 2.5px;
+        text-transform: uppercase;
+        margin-top: 3px; font-weight: 300;
+      }
+
+      /* Settings gear button */
+      .settings-btn {
+        width: 40px; height: 40px;
+        border-radius: 50%;
+        background: rgba(255,255,255,0.08);
+        border: 1px solid rgba(255,255,255,0.15);
+        display: flex; align-items: center; justify-content: center;
+        color: rgba(255,255,255,0.7); font-size: 1.1rem;
+        cursor: pointer;
+        transition: background 0.2s, transform 0.3s, color 0.2s;
+        flex-shrink: 0;
+      }
+      .settings-btn:hover {
+        background: rgba(201,168,76,0.2);
+        border-color: rgba(201,168,76,0.5);
+        color: #c9a84c;
+        transform: rotate(65deg);
+      }
+
+      /* ── MAIN ── */
+      main {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        padding: 40px 20px;
+        gap: 24px;
+      }
+
+      /* ── SECTION LABEL ── */
+      .section-label {
+        text-align: center;
+        animation: fadeUp 0.5s 0.2s ease both;
+      }
+      .section-label h2 {
+        font-family: 'Playfair Display', serif;
+        font-size: 0.78rem; font-weight: 700;
+        letter-spacing: 5px; text-transform: uppercase;
+        color: rgba(201,168,76,0.8); margin-bottom: 7px;
+      }
+      .section-label p {
+        font-size: 0.8rem;
+        color: rgba(255,255,255,0.38);
+        font-weight: 300; letter-spacing: 0.4px;
+      }
+
+      /* ── LOGIN CARD ── */
+      .login-card {
+        background: rgba(255,255,255,0.07);
+        border: 1px solid rgba(255,255,255,0.12);
+        border-radius: 24px;
+        padding: 48px 44px 40px;
+        width: 100%; max-width: 400px;
+        display: flex; flex-direction: column;
+        align-items: center; gap: 20px;
+        backdrop-filter: blur(14px);
+        box-shadow: 0 24px 64px rgba(0,0,0,0.4),
+                    inset 0 1px 0 rgba(255,255,255,0.1);
+        animation: fadeUp 0.6s 0.15s ease both;
+        position: relative; overflow: hidden;
+      }
+
+      /* Subtle top glow */
+      .login-card::before {
+        content: '';
+        position: absolute; top: 0; left: 10%; right: 10%; height: 1px;
+        background: linear-gradient(90deg, transparent, rgba(201,168,76,0.5), transparent);
+      }
+
+      @keyframes fadeUp {
+        from { opacity:0; transform:translateY(24px); }
+        to   { opacity:1; transform:translateY(0); }
+      }
+
+      /* Icon circle */
+      .icon-wrap {
+        width: 80px; height: 80px;
+        border-radius: 50%;
+        background: rgba(255,255,255,0.06);
+        border: 1px solid rgba(255,255,255,0.12);
+        display: flex; align-items: center; justify-content: center;
+        position: relative;
+      }
+      .icon-wrap svg { width: 44px; height: 44px; }
+      .icon-ring {
+        position: absolute; inset: -6px;
+        border-radius: 50%;
+        border: 1.5px dashed rgba(201,168,76,0.25);
+        animation: spinSlow 14s linear infinite;
+      }
+      @keyframes spinSlow { to { transform: rotate(360deg); } }
+
+      .card-title {
+        font-family: 'Playfair Display', serif;
+        font-size: 1.15rem; font-weight: 700;
+        color: #fff; text-align: center;
+        letter-spacing: 0.3px; line-height: 1.4;
+      }
+
+      .card-sub {
+        font-size: 0.75rem;
+        color: rgba(255,255,255,0.4);
+        text-align: center; font-weight: 300;
+        line-height: 1.6; margin-top: -8px;
+      }
+
+      .divider {
+        width: 100%; height: 1px;
+        background: rgba(255,255,255,0.08);
+      }
+
+      /* Primary button */
+      .btn-login {
+        width: 100%; padding: 15px;
+        background: linear-gradient(135deg, #c9a84c, #e8c87a);
+        color: #0d1b3e;
+        font-family: 'DM Sans', sans-serif;
+        font-size: 0.82rem; font-weight: 700;
+        letter-spacing: 2px; text-transform: uppercase;
+        border: none; border-radius: 12px;
+        cursor: pointer;
+        box-shadow: 0 4px 20px rgba(201,168,76,0.35);
+        transition: transform 0.2s ease, box-shadow 0.2s ease, filter 0.2s ease;
+      }
+      .btn-login:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 28px rgba(201,168,76,0.5);
+        filter: brightness(1.08);
+      }
+      .btn-login:active { transform: translateY(0); }
+
+      /* Register link */
+      .register-link {
+        font-size: 0.78rem; font-weight: 500;
+        color: rgba(255,255,255,0.45);
+        text-decoration: none;
+        transition: color 0.2s;
+        letter-spacing: 0.3px;
+      }
+      .register-link:hover {
+        color: #c9a84c;
+        text-decoration: underline;
+      }
+
+      /* ── SETTINGS OVERLAY ── */
+      .overlay {
+        display: none; position: fixed; inset: 0;
+        background: rgba(0,0,0,0.55);
+        z-index: 200; backdrop-filter: blur(4px);
+      }
+      .overlay.active {
+        display: flex; align-items: center; justify-content: center;
+        animation: fadeIn 0.2s ease;
+      }
+      @keyframes fadeIn { from { opacity:0; } to { opacity:1; } }
+
+      .settings-card {
+        background: rgba(13,27,62,0.92);
+        border: 1px solid rgba(201,168,76,0.25);
+        border-radius: 22px;
+        padding: 40px 36px 32px;
+        width: 100%; max-width: 360px; margin: 20px;
+        display: flex; flex-direction: column;
+        align-items: center; gap: 16px;
+        box-shadow: 0 28px 72px rgba(0,0,0,0.6),
+                    inset 0 1px 0 rgba(255,255,255,0.08);
+        animation: popIn 0.25s cubic-bezier(0.34,1.56,0.64,1);
+      }
+      @keyframes popIn {
+        from { opacity:0; transform:scale(0.88); }
+        to   { opacity:1; transform:scale(1); }
+      }
+
+      .settings-card .warn-icon {
+        width: 60px; height: 60px;
+        border-radius: 50%;
+        background: rgba(231,76,60,0.15);
+        border: 1px solid rgba(231,76,60,0.3);
+        display: flex; align-items: center; justify-content: center;
+        font-size: 1.6rem;
+      }
+      .settings-card h3 {
+        font-family: 'Playfair Display', serif;
+        font-size: 1rem; font-weight: 800;
+        color: #e74c3c; text-align: center;
+        letter-spacing: 1px; text-transform: uppercase;
+      }
+      .settings-card p {
+        font-size: 0.76rem;
+        color: rgba(255,255,255,0.5);
+        text-align: center; line-height: 1.7;
+        font-weight: 300;
+      }
+
+      .btn-admin {
+        width: 100%; padding: 14px;
+        background: rgba(255,255,255,0.07);
+        border: 1px solid rgba(255,255,255,0.15);
+        color: #fff;
+        font-family: 'DM Sans', sans-serif;
+        font-size: 0.82rem; font-weight: 600;
+        letter-spacing: 1px;
+        border-radius: 12px; cursor: pointer;
+        transition: background 0.2s, border-color 0.2s, transform 0.2s;
+      }
+      .btn-admin:hover {
+        background: rgba(201,168,76,0.15);
+        border-color: rgba(201,168,76,0.4);
+        transform: translateY(-2px);
+      }
+
+      .btn-cancel {
+        background: none; border: none;
+        font-size: 0.76rem; font-weight: 500;
+        color: rgba(255,255,255,0.3);
+        cursor: pointer; font-family: 'DM Sans', sans-serif;
+        transition: color 0.2s;
+      }
+      .btn-cancel:hover { color: rgba(255,255,255,0.7); }
+
+      /* ── FOOTER ── */
+      footer {
+        text-align: center; padding: 14px 40px 22px;
+        border-top: 1px solid rgba(255,255,255,0.06);
+      }
+      footer p {
+        font-size: 0.7rem;
+        color: rgba(255,255,255,0.22);
+        font-weight: 300; letter-spacing: 0.4px;
+      }
+
+      @media (max-width: 480px) {
+        header { padding: 12px 20px; }
+        .header-center h1 { font-size: 1rem; }
+        .login-card { padding: 36px 28px 32px; }
+      }
+    </style>
+  </head>
+  <body>
+
+    <header>
+      <a href="/" class="header-back">&#8592;</a>
+      <div class="header-center">
+        <h1>CESLA <span>Membership</span> Portal</h1>
+        <p>CESLA Multi-Purpose Cooperative</p>
+      </div>
+      <button class="settings-btn" onclick="openSettings()" title="Admin Settings">&#9881;</button>
+    </header>
+
+    <main>
+
+      <div class="section-label">
+        <h2>Member Access</h2>
+        <p>Login or register to manage your cooperative account</p>
+      </div>
+
+      <div class="login-card">
+
+        <div class="icon-wrap">
+          <svg viewBox="0 0 44 44" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <circle cx="22" cy="15" r="9" fill="rgba(201,168,76,0.85)"/>
+            <path d="M4 40c0-9.941 8.059-18 18-18s18 8.059 18 18" fill="rgba(201,168,76,0.6)"/>
+          </svg>
+          <div class="icon-ring"></div>
+        </div>
+
+        <div class="card-title">Welcome Back</div>
+        <div class="card-sub">Login to view your membership details,<br>shares, savings &amp; loan records</div>
+
+        <div class="divider"></div>
+
+        <button class="btn-login" onclick="window.location='/membership/login'">
+          &#8594; &nbsp; Member Login
+        </button>
+
+        <a href="/membership/register" class="register-link">
+          Don't have an account? &nbsp;<strong style="color:rgba(201,168,76,0.8);">Register as New Member</strong>
+        </a>
+
+      </div>
+
+    </main>
+
+    <footer>
+      <p>CESLA Multi-Purpose Cooperative &nbsp;&bull;&nbsp; Membership Portal &nbsp;&bull;&nbsp; 2025</p>
+    </footer>
+
+    <!-- Settings / Admin Overlay -->
+    <div class="overlay" id="settingsOverlay" onclick="closeOnBackdrop(event)">
+      <div class="settings-card" id="settingsCard">
+        <div class="warn-icon">&#9888;&#65039;</div>
+        <h3>Restricted Access</h3>
+        <p>This area is restricted to authorized administrators only. Unauthorized access is strictly prohibited and may be subject to legal action.</p>
+        <button class="btn-admin" onclick="window.location='/membership/admin'">
+          &#128272; &nbsp; Login as Administrator
+        </button>
+        <button class="btn-cancel" onclick="closeSettings()">Cancel</button>
+      </div>
+    </div>
+
+    <script>
+      function openSettings()  { document.getElementById('settingsOverlay').classList.add('active'); }
+      function closeSettings() { document.getElementById('settingsOverlay').classList.remove('active'); }
+      function closeOnBackdrop(e) { if (e.target === document.getElementById('settingsOverlay')) closeSettings(); }
+      document.addEventListener('keydown', e => { if (e.key === 'Escape') closeSettings(); });
+    </script>
+
+  </body>
+</html>

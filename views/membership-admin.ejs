@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Admin Login - CLIMBS Membership</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800&display=swap" rel="stylesheet" />
+    <style>
+        * { margin:0; padding:0; box-sizing:border-box; }
+        body {
+            font-family:"Montserrat",sans-serif;
+            background:var(--cesla-navy);
+            background-image:
+                radial-gradient(ellipse at 20% 50%, rgba(58,72,160,0.6) 0%, transparent 60%),
+                radial-gradient(ellipse at 80% 50%, rgba(20,28,90,0.8) 0%, transparent 60%);
+            min-height:100vh;
+            display:flex;
+            flex-direction:column;
+        }
+
+        /* TOP BAR */
+        .top-bar {
+            background:linear-gradient(135deg,#0d1b3e 0%,#0d1b3e 100%);
+            margin:16px 20px 0;
+            border-radius:14px;
+            padding:18px 28px;
+            display:flex;
+            align-items:center;
+            box-shadow:0 6px 24px rgba(0,0,0,0.25);
+        }
+        .back-btn { font-size:1.6em; color:#1a1a2e; text-decoration:none; font-weight:800; transition:transform 0.2s; }
+        .back-btn:hover { transform:translateX(-4px); }
+        .top-bar h1 { font-size:1.4em; font-weight:800; color:#1a1a2e; text-align:center; flex:1; }
+        .spacer { width:1.6em; }
+
+        /* MAIN */
+        .main-content { flex:1; display:flex; align-items:center; justify-content:center; padding:40px 20px; }
+
+        /* CARD */
+        .card {
+            background:#fff;
+            border-radius:20px;
+            padding:40px 36px 36px;
+            width:100%;
+            max-width:420px;
+            box-shadow:0 16px 48px rgba(0,0,0,0.3);
+            display:flex;
+            flex-direction:column;
+            align-items:center;
+            gap:20px;
+            animation:cardIn 0.4s ease;
+        }
+        @keyframes cardIn { from{opacity:0;transform:translateY(20px)} to{opacity:1;transform:translateY(0)} }
+
+        /* ICON */
+        .admin-icon {
+            width:72px; height:72px;
+            background:var(--cesla-navy);
+            border-radius:50%;
+            display:flex; align-items:center; justify-content:center;
+            font-size:2em;
+            box-shadow:0 4px 16px rgba(42,50,114,0.3);
+        }
+
+        .card h2 { font-size:1.3em; font-weight:800; color:#1a1a2e; text-align:center; }
+        .card .subtitle { font-size:0.78em; color:#888; font-weight:600; text-align:center; margin-top:-12px; }
+
+        /* WARNING BADGE */
+        .warning-badge {
+            background:#fff3cd;
+            border:1.5px solid #ffc107;
+            border-radius:8px;
+            padding:8px 14px;
+            font-size:0.75em;
+            font-weight:700;
+            color:#856404;
+            text-align:center;
+            width:100%;
+        }
+
+        /* FIELDS */
+        .field-group { display:flex; flex-direction:column; gap:6px; width:100%; }
+        .field-group label { font-size:0.82em; font-weight:700; color:#1a1a2e; padding-left:2px; }
+        .input-wrap { position:relative; }
+        .input-wrap input {
+            width:100%;
+            padding:14px 46px 14px 18px;
+            background:#e8e8f0;
+            border:2px solid transparent;
+            border-radius:10px;
+            font-family:"Montserrat",sans-serif;
+            font-size:0.88em;
+            font-weight:500;
+            color:#1a1a2e;
+            outline:none;
+            transition:border 0.2s, background 0.2s;
+        }
+        .input-wrap input::placeholder { color:#888; }
+        .input-wrap input:focus { border-color:#2a3272; background:#f0f0f8; }
+        .input-wrap input.error { border-color:#e74c3c; }
+        .eye-btn { position:absolute; right:14px; top:50%; transform:translateY(-50%); background:none; border:none; cursor:pointer; color:#555; display:flex; align-items:center; }
+        .eye-btn svg { width:20px; height:20px; }
+
+        .error-msg { font-size:0.75em; color:#e74c3c; font-weight:700; text-align:center; display:none; }
+        .error-msg.show { display:block; }
+
+        /* BTN */
+        .btn-login {
+            width:100%;
+            padding:15px;
+            background:var(--cesla-navy);
+            color:#fff;
+            font-family:"Montserrat",sans-serif;
+            font-size:0.92em;
+            font-weight:800;
+            letter-spacing:1.5px;
+            border:none;
+            border-radius:10px;
+            cursor:pointer;
+            transition:background 0.2s, transform 0.2s;
+            margin-top:4px;
+        }
+        .btn-login:hover { background:#1a1a5e; transform:translateY(-2px); }
+
+        @media(max-width:480px){
+            .top-bar { margin:12px 10px 0; padding:14px 16px; }
+            .top-bar h1 { font-size:1.05em; }
+            .card { padding:28px 20px; }
+        }
+    </style>
+    <link rel="stylesheet" href="/css/global.css" />
+</head>
+<body>
+
+    <div class="top-bar">
+        <a href="/membership" class="back-btn">&#8592;</a>
+        <h1>Admin Login</h1>
+        <div class="spacer"></div>
+    </div>
+
+    <div class="main-content">
+        <div class="card">
+            <div class="admin-icon">🔐</div>
+            <h2>Administrator Access</h2>
+            <p class="subtitle">CLIMBS Membership Portal</p>
+
+            <div class="warning-badge">
+                ⚠️ WARNING: Restricted to authorized administrators only.
+            </div>
+
+            <div class="field-group">
+                <label>Admin Username</label>
+                <div class="input-wrap">
+                    <input type="text" id="adminUsername" placeholder="Enter admin username" autocomplete="off" />
+                </div>
+            </div>
+
+            <div class="field-group">
+                <label>Password</label>
+                <div class="input-wrap">
+                    <input type="password" id="adminPassword" placeholder="Enter password"
+                           onkeydown="if(event.key==='Enter') handleLogin()" />
+                    <button class="eye-btn" type="button" onclick="togglePw()">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+                            <circle cx="12" cy="12" r="3"/>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+
+            <div class="error-msg" id="errorMsg">❌ Invalid username or password.</div>
+
+            <button class="btn-login" onclick="handleLogin()">LOGIN AS ADMIN</button>
+        </div>
+    </div>
+
+    <script>
+        function togglePw() {
+            const input = document.getElementById('adminPassword');
+            input.type = input.type === 'password' ? 'text' : 'password';
+        }
+
+        function handleLogin() {
+            const username = document.getElementById('adminUsername').value.trim();
+            const password = document.getElementById('adminPassword').value;
+            const errorMsg = document.getElementById('errorMsg');
+
+            if (!username || !password) {
+                document.getElementById('adminUsername').classList.toggle('error', !username);
+                document.getElementById('adminPassword').classList.toggle('error', !password);
+                errorMsg.textContent = '❌ Please fill in all fields.';
+                errorMsg.classList.add('show');
+                return;
+            }
+
+            fetch('/membership/admin/login', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ username, password })
+            })
+            .then(res => res.json())
+            .then(data => {
+                if (data.success) {
+                    window.location.href = '/membership/admin/dashboard';
+                } else {
+                    errorMsg.textContent = '❌ Invalid username or password.';
+                    errorMsg.classList.add('show');
+                    document.getElementById('adminUsername').classList.add('error');
+                    document.getElementById('adminPassword').classList.add('error');
+                }
+            })
+            .catch(() => {
+                errorMsg.textContent = '❌ Server error. Please try again.';
+                errorMsg.classList.add('show');
+            });
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,2142 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Admin Dashboard - CLIMBS Membership</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      body {
+        font-family: "Montserrat", sans-serif;
+        background: var(--cesla-navy);
+        background-image:
+          radial-gradient(
+            ellipse at 20% 50%,
+            rgba(58, 72, 160, 0.6) 0%,
+            transparent 60%
+          ),
+          radial-gradient(
+            ellipse at 80% 50%,
+            rgba(20, 28, 90, 0.8) 0%,
+            transparent 60%
+          );
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+      }
+
+      /* TOP BAR */
+      .top-bar {
+        background: linear-gradient(135deg, #0d1b3e 0%, #0d1b3e 100%);
+        margin: 16px 20px 0;
+        border-radius: 14px;
+        padding: 14px 24px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        box-shadow: 0 6px 24px rgba(0, 0, 0, 0.25);
+      }
+      .top-bar-left {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+      }
+      .top-bar img.logo {
+        width: 46px;
+        height: 46px;
+        object-fit: contain;
+        border-radius: 50%;
+      }
+      .top-bar h1 {
+        font-size: 1.1em;
+        font-weight: 800;
+        color: #1a1a2e;
+      }
+      .top-bar h1 span {
+        font-size: 0.7em;
+        font-weight: 600;
+        display: block;
+        color: #555;
+      }
+      .btn-logout {
+        background: #1a1a2e;
+        color: #fff;
+        border: none;
+        border-radius: 8px;
+        padding: 9px 18px;
+        font-family: "Montserrat", sans-serif;
+        font-size: 0.78em;
+        font-weight: 700;
+        cursor: pointer;
+        transition: background 0.2s;
+      }
+      .btn-logout:hover {
+        background: #e74c3c;
+      }
+
+      /* LAYOUT */
+      .main {
+        display: flex;
+        flex: 1;
+        padding: 20px;
+        gap: 20px;
+      }
+      .sidebar {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+        width: 230px;
+        flex-shrink: 0;
+      }
+      .tab-btn {
+        background: rgba(255, 255, 255, 0.1);
+        color: #fff;
+        border: none;
+        border-radius: 10px;
+        padding: 13px 16px;
+        font-family: "Montserrat", sans-serif;
+        font-size: 0.82em;
+        font-weight: 700;
+        cursor: pointer;
+        text-align: left;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        transition:
+          background 0.2s,
+          transform 0.15s;
+        width: 100%;
+      }
+      .tab-btn:hover {
+        background: rgba(255, 255, 255, 0.18);
+        transform: translateX(3px);
+      }
+      .tab-btn.active {
+        background: #f5c518;
+        color: #1a1a2e;
+      }
+      .tab-btn .badge {
+        background: #e74c3c;
+        color: #fff;
+        border-radius: 20px;
+        padding: 2px 8px;
+        font-size: 0.75em;
+        font-weight: 800;
+        margin-left: auto;
+      }
+      .tab-btn.active .badge {
+        background: #1a1a2e;
+      }
+      .content {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+        min-width: 0;
+      }
+
+      /* SEARCH & STATS */
+      .search-bar {
+        background: rgba(255, 255, 255, 0.12);
+        border-radius: 10px;
+        padding: 10px 16px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+      .search-bar input {
+        background: none;
+        border: none;
+        outline: none;
+        font-family: "Montserrat", sans-serif;
+        font-size: 0.88em;
+        font-weight: 600;
+        color: #fff;
+        flex: 1;
+      }
+      .search-bar input::placeholder {
+        color: rgba(255, 255, 255, 0.5);
+      }
+      .stats-row {
+        display: flex;
+        gap: 12px;
+      }
+      .stat-card {
+        flex: 1;
+        background: rgba(255, 255, 255, 0.1);
+        border-radius: 12px;
+        padding: 14px 18px;
+        text-align: center;
+      }
+      .stat-card .stat-num {
+        font-size: 1.8em;
+        font-weight: 800;
+        color: #f5c518;
+      }
+      .stat-card .stat-label {
+        font-size: 0.72em;
+        font-weight: 600;
+        color: rgba(255, 255, 255, 0.8);
+        margin-top: 2px;
+      }
+
+      /* PANELS */
+      .panel {
+        display: none;
+        flex-direction: column;
+        gap: 12px;
+      }
+      .panel.active {
+        display: flex;
+      }
+      .panel-title {
+        font-size: 0.9em;
+        font-weight: 800;
+        color: #f5c518;
+        letter-spacing: 0.5px;
+        padding-bottom: 4px;
+        border-bottom: 2px solid rgba(245, 197, 24, 0.3);
+      }
+
+      /* WHITE CARD */
+      .white-card {
+        background: #fff;
+        border-radius: 12px;
+        padding: 22px 26px;
+        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+      }
+      .card-title {
+        font-size: 0.9em;
+        font-weight: 800;
+        color: #2a3272;
+        margin-bottom: 16px;
+        padding-bottom: 10px;
+        border-bottom: 2px solid #f0f0f0;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 8px;
+      }
+
+      /* TABLE */
+      .table-wrap {
+        background: #fff;
+        border-radius: 12px;
+        overflow: hidden;
+        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+      }
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 0.78em;
+      }
+      thead tr {
+        background: var(--cesla-navy);
+        color: #fff;
+      }
+      thead th {
+        padding: 11px 14px;
+        text-align: left;
+        font-weight: 700;
+      }
+      tbody tr {
+        border-bottom: 1px solid #f0f0f0;
+        transition: background 0.15s;
+      }
+      tbody tr:hover {
+        background: #fffbea;
+      }
+      tbody td {
+        padding: 10px 14px;
+        color: #1a1a2e;
+        font-weight: 500;
+        vertical-align: middle;
+      }
+      .empty-row td {
+        text-align: center;
+        color: #aaa;
+        padding: 28px;
+        font-weight: 600;
+      }
+      .status-badge {
+        display: inline-block;
+        padding: 4px 12px;
+        border-radius: 20px;
+        font-size: 0.82em;
+        font-weight: 700;
+      }
+      .status-badge.pending {
+        background: #fff3cd;
+        color: #856404;
+      }
+      .status-badge.approved {
+        background: #d4edda;
+        color: #155724;
+      }
+      .status-badge.rejected {
+        background: #f8d7da;
+        color: #721c24;
+      }
+      .action-btns {
+        display: flex;
+        gap: 6px;
+        flex-wrap: wrap;
+      }
+      .btn-approve,
+      .btn-reject,
+      .btn-view,
+      .btn-txn {
+        border: none;
+        border-radius: 6px;
+        padding: 6px 12px;
+        font-family: "Montserrat", sans-serif;
+        font-size: 0.75em;
+        font-weight: 700;
+        cursor: pointer;
+        transition:
+          opacity 0.2s,
+          transform 0.15s;
+      }
+      .btn-approve {
+        background: #28a745;
+        color: #fff;
+      }
+      .btn-reject {
+        background: #e74c3c;
+        color: #fff;
+      }
+      .btn-view {
+        background: var(--cesla-navy);
+        color: #fff;
+      }
+      .btn-txn {
+        background: #f5c518;
+        color: #1a1a2e;
+      }
+      .btn-approve:hover,
+      .btn-reject:hover,
+      .btn-view:hover,
+      .btn-txn:hover {
+        opacity: 0.85;
+        transform: translateY(-1px);
+      }
+
+      /* FORM INPUTS */
+      .form-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 12px;
+      }
+      .form-grid.three {
+        grid-template-columns: 1fr 1fr 1fr;
+      }
+      .form-grid.full {
+        grid-template-columns: 1fr;
+      }
+      .form-item {
+        display: flex;
+        flex-direction: column;
+        gap: 5px;
+      }
+      .form-item.span2 {
+        grid-column: 1/-1;
+      }
+      .form-item label {
+        font-size: 0.78em;
+        font-weight: 700;
+        color: #555;
+      }
+      .form-item input,
+      .form-item select,
+      .form-item textarea {
+        padding: 10px 14px;
+        border: 2px solid #e8e8f0;
+        border-radius: 8px;
+        font-family: "Montserrat", sans-serif;
+        font-size: 0.85em;
+        font-weight: 600;
+        color: #1a1a2e;
+        outline: none;
+        transition: border 0.2s;
+        background: #fafafa;
+      }
+      .form-item input:focus,
+      .form-item select:focus,
+      .form-item textarea:focus {
+        border-color: #2a3272;
+        background: #fff;
+      }
+      .form-item textarea {
+        resize: vertical;
+        min-height: 70px;
+      }
+      .btn-form-submit {
+        background: #28a745;
+        color: #fff;
+        border: none;
+        border-radius: 10px;
+        padding: 12px 28px;
+        font-family: "Montserrat", sans-serif;
+        font-size: 0.88em;
+        font-weight: 800;
+        cursor: pointer;
+        transition:
+          background 0.2s,
+          transform 0.2s;
+        margin-top: 4px;
+      }
+      .btn-form-submit:hover {
+        background: #218838;
+        transform: translateY(-2px);
+      }
+      .btn-form-cancel {
+        background: #eee;
+        color: #333;
+        border: none;
+        border-radius: 10px;
+        padding: 12px 28px;
+        font-family: "Montserrat", sans-serif;
+        font-size: 0.88em;
+        font-weight: 700;
+        cursor: pointer;
+        margin-top: 4px;
+      }
+
+      /* MEMBER SELECTOR */
+      .member-search-wrap {
+        position: relative;
+      }
+      .member-dropdown {
+        position: absolute;
+        top: 100%;
+        left: 0;
+        right: 0;
+        background: #fff;
+        border: 2px solid #2a3272;
+        border-radius: 8px;
+        max-height: 200px;
+        overflow-y: auto;
+        z-index: 100;
+        display: none;
+        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+      }
+      .member-dropdown.show {
+        display: block;
+      }
+      .member-option {
+        padding: 10px 14px;
+        font-size: 0.82em;
+        font-weight: 600;
+        cursor: pointer;
+        color: #1a1a2e;
+        border-bottom: 1px solid #f0f0f0;
+      }
+      .member-option:hover {
+        background: #fffbea;
+      }
+
+      /* TRANSACTION TABLE */
+      .txn-table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 0.78em;
+      }
+      .txn-table th {
+        background: var(--cesla-navy);
+        color: #fff;
+        padding: 9px 12px;
+        text-align: left;
+        font-weight: 700;
+      }
+      .txn-table td {
+        padding: 9px 12px;
+        border-bottom: 1px solid #f0f0f0;
+        color: #1a1a2e;
+        font-weight: 500;
+      }
+      .txn-table tr:hover td {
+        background: #fffbea;
+      }
+      .amount-deposit {
+        color: #28a745;
+        font-weight: 800;
+      }
+      .amount-withdraw {
+        color: #e74c3c;
+        font-weight: 800;
+      }
+
+      /* MODAL */
+      .modal-overlay {
+        display: none;
+        position: fixed;
+        inset: 0;
+        background: rgba(0, 0, 0, 0.6);
+        z-index: 300;
+        align-items: flex-start;
+        justify-content: center;
+        padding: 20px;
+        overflow-y: auto;
+      }
+      .modal-overlay.active {
+        display: flex;
+      }
+      .modal-box {
+        background: #fff;
+        border-radius: 16px;
+        width: 100%;
+        max-width: 800px;
+        padding: 32px 36px;
+        box-shadow: 0 24px 64px rgba(0, 0, 0, 0.4);
+        animation: popIn 0.25s ease;
+        margin: auto;
+      }
+      @keyframes popIn {
+        from {
+          opacity: 0;
+          transform: scale(0.95);
+        }
+        to {
+          opacity: 1;
+          transform: scale(1);
+        }
+      }
+      .modal-top {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 20px;
+      }
+      .modal-top h2 {
+        font-size: 1em;
+        font-weight: 800;
+        color: #1a1a2e;
+      }
+      .btn-close-modal {
+        background: #e74c3c;
+        color: #fff;
+        border: none;
+        border-radius: 8px;
+        padding: 8px 16px;
+        font-family: "Montserrat", sans-serif;
+        font-size: 0.8em;
+        font-weight: 700;
+        cursor: pointer;
+      }
+      .app-header {
+        display: flex;
+        align-items: center;
+        gap: 16px;
+        padding-bottom: 12px;
+        border-bottom: 2px solid #1a1a2e;
+        margin-bottom: 12px;
+      }
+      .app-header img {
+        width: 75px;
+        height: 75px;
+        object-fit: contain;
+        border-radius: 50%;
+      }
+      .app-header-info h3 {
+        font-size: 1.1em;
+        font-weight: 800;
+        color: #1a1a2e;
+      }
+      .app-header-info p {
+        font-size: 0.75em;
+        color: #555;
+        margin-top: 2px;
+      }
+      .photo-box-sm {
+        width: 65px;
+        height: 75px;
+        border: 2px solid #1a1a2e;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 0.65em;
+        color: #777;
+        text-align: center;
+        font-weight: 600;
+        margin-left: auto;
+        flex-shrink: 0;
+      }
+      .app-form-title {
+        text-align: center;
+        font-size: 0.9em;
+        font-weight: 800;
+        text-decoration: underline;
+        margin: 10px 0;
+        color: #1a1a2e;
+      }
+      .field-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 10px 20px;
+        font-size: 0.78em;
+      }
+      .field-item {
+        display: flex;
+        flex-direction: column;
+        gap: 2px;
+      }
+      .field-item label {
+        font-weight: 700;
+        color: #555;
+        font-size: 0.85em;
+      }
+      .field-item span {
+        font-weight: 600;
+        color: #1a1a2e;
+        border-bottom: 1px solid #ddd;
+        padding-bottom: 2px;
+        min-height: 20px;
+      }
+      .section-hdr {
+        background: #e8e8e8;
+        font-weight: 800;
+        text-align: center;
+        padding: 6px;
+        font-size: 0.8em;
+        letter-spacing: 1px;
+        border-radius: 4px;
+        margin: 14px 0 8px;
+        color: #1a1a2e;
+      }
+      .modal-actions {
+        display: flex;
+        gap: 10px;
+        justify-content: center;
+        margin-top: 20px;
+        padding-top: 16px;
+        border-top: 2px solid #eee;
+      }
+      .modal-btn-approve {
+        background: #28a745;
+        color: #fff;
+        border: none;
+        border-radius: 10px;
+        padding: 12px 32px;
+        font-family: "Montserrat", sans-serif;
+        font-size: 0.9em;
+        font-weight: 800;
+        cursor: pointer;
+      }
+      .modal-btn-reject {
+        background: #e74c3c;
+        color: #fff;
+        border: none;
+        border-radius: 10px;
+        padding: 12px 32px;
+        font-family: "Montserrat", sans-serif;
+        font-size: 0.9em;
+        font-weight: 800;
+        cursor: pointer;
+      }
+
+      /* CONFIRM MODAL */
+      .confirm-overlay {
+        display: none;
+        position: fixed;
+        inset: 0;
+        background: rgba(0, 0, 0, 0.6);
+        z-index: 400;
+        align-items: center;
+        justify-content: center;
+      }
+      .confirm-overlay.active {
+        display: flex;
+      }
+      .confirm-card {
+        background: #fff;
+        border-radius: 16px;
+        padding: 32px 28px;
+        max-width: 340px;
+        width: 90%;
+        text-align: center;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 14px;
+        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
+        animation: popIn 0.2s ease;
+      }
+      .confirm-icon {
+        font-size: 2.8em;
+      }
+      .confirm-card h3 {
+        font-size: 1em;
+        font-weight: 800;
+        color: #1a1a2e;
+      }
+      .confirm-card p {
+        font-size: 0.8em;
+        color: #555;
+        line-height: 1.6;
+      }
+      .confirm-btns {
+        display: flex;
+        gap: 10px;
+        width: 100%;
+      }
+      .confirm-btns button {
+        flex: 1;
+        padding: 11px;
+        border: none;
+        border-radius: 8px;
+        font-family: "Montserrat", sans-serif;
+        font-size: 0.82em;
+        font-weight: 800;
+        cursor: pointer;
+      }
+      .btn-yes-approve {
+        background: #28a745;
+        color: #fff;
+      }
+      .btn-yes-reject {
+        background: #e74c3c;
+        color: #fff;
+      }
+      .btn-cancel-confirm {
+        background: #eee;
+        color: #333;
+      }
+
+      /* TOAST */
+      .toast {
+        position: fixed;
+        bottom: 28px;
+        left: 50%;
+        transform: translateX(-50%) translateY(80px);
+        background: #1a1a2e;
+        color: #fff;
+        padding: 12px 24px;
+        border-radius: 10px;
+        font-size: 0.82em;
+        font-weight: 700;
+        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+        transition: transform 0.3s ease;
+        z-index: 500;
+        white-space: nowrap;
+      }
+      .toast.show {
+        transform: translateX(-50%) translateY(0);
+      }
+
+      /* BALANCE SUMMARY CARDS */
+      .balance-cards {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 12px;
+        margin-bottom: 4px;
+      }
+      .balance-card {
+        border-radius: 12px;
+        padding: 16px 20px;
+        color: #fff;
+      }
+      .balance-card.shares-bg {
+        background: linear-gradient(135deg, #2a3272, #1a1a5e);
+      }
+      .balance-card.savings-bg {
+        background: linear-gradient(135deg, #155724, #0d3d1a);
+      }
+      .balance-card.loans-bg {
+        background: linear-gradient(135deg, #7a1c1c, #5a0d0d);
+      }
+      .balance-card label {
+        font-size: 0.7em;
+        color: rgba(255, 255, 255, 0.7);
+        font-weight: 700;
+        letter-spacing: 0.5px;
+        display: block;
+      }
+      .balance-card .bal-amount {
+        font-size: 1.4em;
+        font-weight: 800;
+        color: #f5c518;
+        margin-top: 4px;
+      }
+
+      @media (max-width: 768px) {
+        .main {
+          flex-direction: column;
+          padding: 14px;
+        }
+        .sidebar {
+          width: 100%;
+          flex-direction: row;
+          flex-wrap: wrap;
+        }
+        .tab-btn {
+          flex: 1;
+          min-width: 100px;
+          font-size: 0.72em;
+        }
+        .form-grid,
+        .form-grid.three {
+          grid-template-columns: 1fr;
+        }
+        .field-grid {
+          grid-template-columns: 1fr;
+        }
+        .balance-cards {
+          grid-template-columns: 1fr;
+        }
+      }
+    </style>
+    <link rel="stylesheet" href="/css/global.css" />
+  </head>
+  <body>
+    <!-- TOP BAR -->
+    <div class="top-bar">
+      <div class="top-bar-left">
+        <img class="logo" src="/images/CESLA_logo.png" alt="CESLA" />
+        <h1>Admin Dashboard <span>CLIMBS Membership Portal</span></h1>
+      </div>
+      <button class="btn-logout" onclick="logout()">🚪 Logout</button>
+    </div>
+
+    <div class="main">
+      <!-- SIDEBAR -->
+      <div class="sidebar">
+        <button class="tab-btn active" onclick="switchTab('pending', this)">
+          ⏳ Pending <span class="badge" id="pendingBadge">0</span>
+        </button>
+        <button class="tab-btn" onclick="switchTab('approved', this)">
+          ✅ Approved
+          <span class="badge" style="background: #28a745" id="approvedBadge"
+            >0</span
+          >
+        </button>
+        <button class="tab-btn" onclick="switchTab('rejected', this)">
+          ❌ Rejected
+          <span class="badge" style="background: #aaa" id="rejectedBadge"
+            >0</span
+          >
+        </button>
+        <button class="tab-btn" onclick="switchTab('forms', this)">
+          📝 App. Forms <span class="badge" id="formsBadge">0</span>
+        </button>
+        <button class="tab-btn" onclick="switchTab('shares', this)">
+          💰 Shares / Savings
+        </button>
+        <button class="tab-btn" onclick="switchTab('loans', this)">
+          🏦 Loans
+        </button>
+      </div>
+
+      <!-- CONTENT -->
+      <div class="content">
+        <!-- SEARCH & STATS -->
+        <div class="search-bar">
+          <span>🔍</span>
+          <input
+            type="text"
+            id="searchInput"
+            placeholder="Search by name or username..."
+            oninput="renderAll()"
+          />
+        </div>
+        <div class="stats-row">
+          <div class="stat-card">
+            <div class="stat-num" id="statTotal">0</div>
+            <div class="stat-label">Total</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-num" id="statPending">0</div>
+            <div class="stat-label">Pending</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-num" id="statApproved">0</div>
+            <div class="stat-label">Approved</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-num" id="statRejected">0</div>
+            <div class="stat-label">Rejected</div>
+          </div>
+        </div>
+
+        <!-- ── PENDING PANEL ── -->
+        <div class="panel active" id="panel-pending">
+          <div class="panel-title">⏳ Pending Applications</div>
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>App No.</th>
+                  <th>Full Name</th>
+                  <th>Username</th>
+                  <th>Submitted</th>
+                  <th>Status</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody id="pendingTableBody"></tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- ── APPROVED PANEL ── -->
+        <div class="panel" id="panel-approved">
+          <div class="panel-title">✅ Approved Members</div>
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>App No.</th>
+                  <th>Full Name</th>
+                  <th>Username</th>
+                  <th>Approved On</th>
+                  <th>Status</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody id="approvedTableBody"></tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- ── REJECTED PANEL ── -->
+        <div class="panel" id="panel-rejected">
+          <div class="panel-title">❌ Rejected Applications</div>
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>App No.</th>
+                  <th>Full Name</th>
+                  <th>Username</th>
+                  <th>Rejected On</th>
+                  <th>Status</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody id="rejectedTableBody"></tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- ── APPLICATION FORMS PANEL ── -->
+        <div class="panel" id="panel-forms">
+          <div class="panel-title">📝 Member Application Forms</div>
+
+          <!-- Forms awaiting approval -->
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>User ID</th>
+                  <th>Full Name</th>
+                  <th>Submitted</th>
+                  <th>Form Status</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody id="formsTableBody"></tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- ── SHARES / SAVINGS PANEL ── -->
+        <div class="panel" id="panel-shares">
+          <div class="panel-title">💰 Shares & Savings Transactions</div>
+
+          <!-- ADD TRANSACTION FORM -->
+          <div class="white-card">
+            <div class="card-title">➕ Add Transaction</div>
+            <div class="form-grid">
+              <!-- Member Search -->
+              <div class="form-item span2">
+                <label>Select Member *</label>
+                <div class="member-search-wrap">
+                  <input
+                    type="text"
+                    id="txnMemberSearch"
+                    placeholder="Type member name or username..."
+                    autocomplete="off"
+                    oninput="
+                      searchMembers(
+                        this.value,
+                        'txnDropdown',
+                        'txnMemberId',
+                        'txnMemberName',
+                      )
+                    "
+                  />
+                  <div class="member-dropdown" id="txnDropdown"></div>
+                  <input type="hidden" id="txnMemberId" />
+                  <input type="hidden" id="txnMemberName" />
+                </div>
+              </div>
+              <div class="form-item">
+                <label>Transaction Type *</label>
+                <select id="txnCategory">
+                  <option value="">-- Select Type --</option>
+                  <option value="shares-deposit">Shares — Deposit</option>
+                  <option value="shares-withdrawal">Shares — Withdrawal</option>
+                  <option value="savings-deposit">Savings — Deposit</option>
+                  <option value="savings-withdrawal">
+                    Savings — Withdrawal
+                  </option>
+                </select>
+              </div>
+              <div class="form-item">
+                <label>Transaction Date *</label>
+                <input type="date" id="txnDate" />
+              </div>
+              <div class="form-item">
+                <label>Amount (₱) *</label>
+                <input
+                  type="number"
+                  id="txnAmount"
+                  placeholder="0.00"
+                  min="0.01"
+                  step="0.01"
+                />
+              </div>
+              <div class="form-item">
+                <label>OR Number</label>
+                <input type="text" id="txnOR" placeholder="e.g. OR-0001" />
+              </div>
+              <div class="form-item span2">
+                <label>Description</label>
+                <input
+                  type="text"
+                  id="txnDesc"
+                  placeholder="e.g. Monthly share contribution"
+                />
+              </div>
+            </div>
+            <div style="display: flex; gap: 10px; margin-top: 16px">
+              <button class="btn-form-submit" onclick="submitTransaction()">
+                💾 Save Transaction
+              </button>
+              <button class="btn-form-cancel" onclick="clearTxnForm()">
+                ✕ Clear
+              </button>
+            </div>
+          </div>
+
+          <!-- TRANSACTION HISTORY -->
+          <div class="white-card">
+            <div class="card-title">
+              <span>📋 Transaction History</span>
+              <div style="display: flex; gap: 8px; align-items: center">
+                <select
+                  id="txnHistoryFilter"
+                  style="
+                    padding: 6px 10px;
+                    border: 2px solid #e8e8f0;
+                    border-radius: 6px;
+                    font-family: &quot;Montserrat&quot;, sans-serif;
+                    font-size: 0.78em;
+                    font-weight: 700;
+                    outline: none;
+                  "
+                  onchange="loadTxnHistory()"
+                >
+                  <option value="all">All Members</option>
+                </select>
+                <select
+                  id="txnTypeFilter"
+                  style="
+                    padding: 6px 10px;
+                    border: 2px solid #e8e8f0;
+                    border-radius: 6px;
+                    font-family: &quot;Montserrat&quot;, sans-serif;
+                    font-size: 0.78em;
+                    font-weight: 700;
+                    outline: none;
+                  "
+                  onchange="loadTxnHistory()"
+                >
+                  <option value="all">All Types</option>
+                  <option value="shares">Shares Only</option>
+                  <option value="savings">Savings Only</option>
+                </select>
+              </div>
+            </div>
+            <div class="balance-cards" id="balanceSummaryCards">
+              <div class="balance-card shares-bg">
+                <label>TOTAL SHARES</label>
+                <div class="bal-amount" id="summaryShares">₱ 0.00</div>
+              </div>
+              <div class="balance-card savings-bg">
+                <label>TOTAL SAVINGS</label>
+                <div class="bal-amount" id="summarySavings">₱ 0.00</div>
+              </div>
+              <div class="balance-card loans-bg">
+                <label>TOTAL LOANS</label>
+                <div class="bal-amount" id="summaryLoans">₱ 0.00</div>
+              </div>
+            </div>
+            <div style="overflow-x: auto; margin-top: 12px">
+              <table class="txn-table">
+                <thead>
+                  <tr>
+                    <th>Date</th>
+                    <th>Member</th>
+                    <th>Type</th>
+                    <th>Description</th>
+                    <th>OR No.</th>
+                    <th>Amount</th>
+                    <th>Balance</th>
+                  </tr>
+                </thead>
+                <tbody id="txnHistoryBody"></tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <!-- ── LOANS PANEL ── -->
+        <div class="panel" id="panel-loans">
+          <div class="panel-title">🏦 Loan Management</div>
+
+          <!-- ADD LOAN FORM -->
+          <div class="white-card">
+            <div class="card-title">➕ Release New Loan</div>
+            <div class="form-grid">
+              <div class="form-item span2">
+                <label>Select Member *</label>
+                <div class="member-search-wrap">
+                  <input
+                    type="text"
+                    id="loanMemberSearch"
+                    placeholder="Type member name or username..."
+                    autocomplete="off"
+                    oninput="
+                      searchMembers(
+                        this.value,
+                        'loanDropdown',
+                        'loanMemberId',
+                        'loanMemberName',
+                      )
+                    "
+                  />
+                  <div class="member-dropdown" id="loanDropdown"></div>
+                  <input type="hidden" id="loanMemberId" />
+                  <input type="hidden" id="loanMemberName" />
+                </div>
+              </div>
+              <div class="form-item">
+                <label>Loan Type *</label>
+                <select id="loanType">
+                  <option value="">-- Select --</option>
+                  <option value="regular">Regular Loan</option>
+                  <option value="emergency">Emergency Loan</option>
+                  <option value="educational">Educational Loan</option>
+                  <option value="livelihood">Livelihood Loan</option>
+                  <option value="others">Others</option>
+                </select>
+              </div>
+              <div class="form-item">
+                <label>Loan Amount (₱) *</label>
+                <input
+                  type="number"
+                  id="loanAmount"
+                  placeholder="0.00"
+                  min="1"
+                  step="0.01"
+                  oninput="computeMonthly()"
+                />
+              </div>
+              <div class="form-item">
+                <label>Interest Rate (%) *</label>
+                <input
+                  type="number"
+                  id="loanInterest"
+                  placeholder="e.g. 2"
+                  min="0"
+                  step="0.01"
+                  oninput="computeMonthly()"
+                />
+              </div>
+              <div class="form-item">
+                <label>Term (Months) *</label>
+                <input
+                  type="number"
+                  id="loanTerm"
+                  placeholder="e.g. 12"
+                  min="1"
+                  oninput="computeMonthly()"
+                />
+              </div>
+              <div class="form-item">
+                <label>Date Released *</label>
+                <input type="date" id="loanDateReleased" />
+              </div>
+              <div class="form-item">
+                <label>Monthly Payment (auto-computed)</label>
+                <input
+                  type="text"
+                  id="loanMonthly"
+                  placeholder="₱ 0.00"
+                  readonly
+                  style="background: #f0f0f8; color: #2a3272; font-weight: 800"
+                />
+              </div>
+              <div class="form-item span2">
+                <label>Purpose</label>
+                <textarea
+                  id="loanPurpose"
+                  placeholder="Describe the purpose of the loan..."
+                ></textarea>
+              </div>
+            </div>
+            <div style="display: flex; gap: 10px; margin-top: 16px">
+              <button class="btn-form-submit" onclick="submitLoan()">
+                💾 Release Loan
+              </button>
+              <button class="btn-form-cancel" onclick="clearLoanForm()">
+                ✕ Clear
+              </button>
+            </div>
+          </div>
+
+          <!-- LOAN RECORDS TABLE -->
+          <div class="white-card">
+            <div class="card-title">
+              <span>📋 Active Loan Records</span>
+              <select
+                id="loanMemberFilter"
+                style="
+                  padding: 6px 10px;
+                  border: 2px solid #e8e8f0;
+                  border-radius: 6px;
+                  font-family: &quot;Montserrat&quot;, sans-serif;
+                  font-size: 0.78em;
+                  font-weight: 700;
+                  outline: none;
+                "
+                onchange="loadLoanRecords()"
+              >
+                <option value="all">All Members</option>
+              </select>
+            </div>
+            <div style="overflow-x: auto">
+              <table class="txn-table">
+                <thead>
+                  <tr>
+                    <th>Loan No.</th>
+                    <th>Member</th>
+                    <th>Type</th>
+                    <th>Amount</th>
+                    <th>Monthly</th>
+                    <th>Balance</th>
+                    <th>Due Date</th>
+                    <th>Status</th>
+                    <th>Actions</th>
+                  </tr>
+                </thead>
+                <tbody id="loanRecordsBody"></tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- end content -->
+    </div>
+    <!-- end main -->
+
+    <!-- ── APPLICATION FORM MODAL ── -->
+    <div class="modal-overlay" id="appModal">
+      <div class="modal-box">
+        <div class="modal-top">
+          <h2>📋 Membership Application Form</h2>
+          <button class="btn-close-modal" onclick="closeModal('appModal')">
+            ✕ Close
+          </button>
+        </div>
+        <div id="modalFormContent"></div>
+        <div class="modal-actions" id="modalActions"></div>
+      </div>
+    </div>
+
+    <!-- ── LOAN PAYMENT MODAL ── -->
+    <div class="modal-overlay" id="paymentModal">
+      <div class="modal-box" style="max-width: 500px">
+        <div class="modal-top">
+          <h2>💳 Record Loan Payment</h2>
+          <button class="btn-close-modal" onclick="closeModal('paymentModal')">
+            ✕ Close
+          </button>
+        </div>
+        <div
+          id="paymentLoanInfo"
+          style="
+            background: #f0f4ff;
+            border-radius: 10px;
+            padding: 14px 16px;
+            margin-bottom: 16px;
+            font-size: 0.82em;
+            font-weight: 600;
+            color: #2a3272;
+          "
+        ></div>
+        <div class="form-grid">
+          <input type="hidden" id="payLoanId" />
+          <input type="hidden" id="payMemberId" />
+          <div class="form-item">
+            <label>Payment Date *</label>
+            <input type="date" id="payDate" />
+          </div>
+          <div class="form-item">
+            <label>Amount Paid (₱) *</label>
+            <input
+              type="number"
+              id="payAmount"
+              placeholder="0.00"
+              min="0.01"
+              step="0.01"
+            />
+          </div>
+          <div class="form-item">
+            <label>Principal Portion (₱)</label>
+            <input
+              type="number"
+              id="payPrincipal"
+              placeholder="0.00"
+              min="0"
+              step="0.01"
+            />
+          </div>
+          <div class="form-item">
+            <label>Interest Portion (₱)</label>
+            <input
+              type="number"
+              id="payInterest"
+              placeholder="0.00"
+              min="0"
+              step="0.01"
+            />
+          </div>
+          <div class="form-item span2">
+            <label>OR Number</label>
+            <input type="text" id="payOR" placeholder="e.g. OR-0001" />
+          </div>
+        </div>
+        <div style="display: flex; gap: 10px; margin-top: 16px">
+          <button class="btn-form-submit" onclick="submitPayment()">
+            💾 Save Payment
+          </button>
+          <button class="btn-form-cancel" onclick="closeModal('paymentModal')">
+            Cancel
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- CONFIRM MODAL -->
+    <div class="confirm-overlay" id="confirmOverlay">
+      <div class="confirm-card">
+        <div class="confirm-icon" id="confirmIcon"></div>
+        <h3 id="confirmTitle"></h3>
+        <p id="confirmMsg"></p>
+        <div class="confirm-btns">
+          <button id="confirmYesBtn" onclick="executeAction()"></button>
+          <button class="btn-cancel-confirm" onclick="closeConfirm()">
+            Cancel
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div class="toast" id="toast"></div>
+
+    <script>
+      let applications = [];
+      let approvedMembers = [];
+      let currentAction = null;
+      let currentIndex = null;
+
+      // ── LOAD DATA ──
+      async function loadApplications() {
+        try {
+          const res = await fetch("/membership/admin/data");
+          if (res.status === 401) {
+            window.location.href = "/membership/admin";
+            return;
+          }
+          applications = await res.json();
+          approvedMembers = applications.filter((a) => a.status === "approved");
+          populateMemberFilters();
+        } catch (e) {
+          applications = [];
+        }
+        renderAll();
+      }
+
+      function populateMemberFilters() {
+        const opts =
+          `<option value="all">All Members</option>` +
+          approvedMembers
+            .map(
+              (m) =>
+                `<option value="${m.id}">${m.full_name || m.username}</option>`,
+            )
+            .join("");
+        document.getElementById("txnHistoryFilter").innerHTML = opts;
+        document.getElementById("loanMemberFilter").innerHTML = opts;
+        loadTxnHistory();
+        loadLoanRecords();
+      }
+
+      // ── RENDER MEMBER TABLES ──
+      function renderAll() {
+        const q = document.getElementById("searchInput").value.toLowerCase();
+        const filtered = applications.filter((a) => {
+          const name = (a.full_name || "").toLowerCase();
+          return (
+            name.includes(q) ||
+            (a.username || "").toLowerCase().includes(q) ||
+            (a.user_id || "").toLowerCase().includes(q)
+          );
+        });
+        const pending = filtered.filter((a) => a.status === "pending");
+        const approved = filtered.filter((a) => a.status === "approved");
+        const rejected = filtered.filter((a) => a.status === "rejected");
+
+        // Submitted forms = approved accounts with submitted/incomplete forms (excluding approved forms)
+        const formsSubmitted = applications.filter(
+          (a) => a.status === "approved" && a.form_status === "submitted",
+        );
+
+        document.getElementById("statTotal").textContent = applications.length;
+        document.getElementById("statPending").textContent =
+          applications.filter((a) => a.status === "pending").length;
+        document.getElementById("statApproved").textContent =
+          applications.filter((a) => a.status === "approved").length;
+        document.getElementById("statRejected").textContent =
+          applications.filter((a) => a.status === "rejected").length;
+        document.getElementById("pendingBadge").textContent =
+          applications.filter((a) => a.status === "pending").length;
+        document.getElementById("approvedBadge").textContent =
+          applications.filter((a) => a.status === "approved").length;
+        document.getElementById("rejectedBadge").textContent =
+          applications.filter((a) => a.status === "rejected").length;
+        document.getElementById("formsBadge").textContent =
+          formsSubmitted.length;
+
+        renderMemberTable("pendingTableBody", pending, [
+          "approve",
+          "reject",
+          "view",
+        ]);
+        renderMemberTable("approvedTableBody", approved, [
+          "reject",
+          "view",
+          "txn",
+        ]);
+        renderMemberTable("rejectedTableBody", rejected, ["approve", "view"]);
+        renderFormsTable(formsSubmitted);
+      }
+
+      function renderFormsTable(data) {
+        const tbody = document.getElementById("formsTableBody");
+        if (!data.length) {
+          tbody.innerHTML =
+            '<tr class="empty-row"><td colspan="5">No application forms pending review.</td></tr>';
+          return;
+        }
+        tbody.innerHTML = data
+          .map((a) => {
+            const ri = applications.indexOf(a);
+            const name = a.full_name || "—";
+            const uid = a.user_id || a.username || "—";
+            const sub = a.form_submitted_at
+              ? new Date(a.form_submitted_at).toLocaleDateString("en-PH", {
+                  year: "numeric",
+                  month: "short",
+                  day: "numeric",
+                })
+              : "—";
+            const fs = a.form_status || "incomplete";
+            const fsBadge = `<span class="status-badge ${fs === "submitted" ? "pending" : fs === "approved" ? "approved" : "rejected"}">${fs.toUpperCase()}</span>`;
+            return `<tr>
+            <td><strong>${uid}</strong></td>
+            <td>${name}</td>
+            <td>${sub}</td>
+            <td>${fsBadge}</td>
+            <td><div class="action-btns">
+                <button class="btn-view" onclick="viewFormModal(${ri})">👁️ View Form</button>
+                <button class="btn-approve" onclick="approveForm(${a.id},'approve',${ri})">✅ Approve</button>
+                <button class="btn-reject"  onclick="approveForm(${a.id},'reject',${ri})">❌ Return</button>
+            </div></td>
+        </tr>`;
+          })
+          .join("");
+      }
+
+      async function approveForm(memberId, action, ri) {
+        const label = action === "approve" ? "Approve" : "Return for Revision";
+        if (!confirm(`${label} this application form?`)) return;
+        try {
+          const res = await fetch("/membership/admin/approve-form", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ id: memberId, action }),
+          });
+          const data = await res.json();
+          if (data.success) {
+            applications[ri].form_status =
+              action === "approve" ? "approved" : "incomplete";
+            renderAll();
+            showToast(
+              action === "approve"
+                ? "✅ Application form approved!"
+                : "↩️ Form returned for revision.",
+            );
+          }
+        } catch (e) {
+          showToast("❌ Server error.");
+        }
+      }
+
+      async function viewFormModal(ri) {
+        const a = applications[ri];
+        try {
+          const res = await fetch(`/membership/admin/member-form/${a.id}`);
+          const data = await res.json();
+          renderFormModal(data);
+        } catch (e) {
+          renderFormModal(a);
+        }
+        document.getElementById("appModal").classList.add("active");
+      }
+
+      function renderMemberTable(tbodyId, data, actions) {
+        const tbody = document.getElementById(tbodyId);
+        if (!data.length) {
+          tbody.innerHTML =
+            '<tr class="empty-row"><td colspan="6">No records found.</td></tr>';
+          return;
+        }
+        tbody.innerHTML = data
+          .map((a) => {
+            const ri = applications.indexOf(a);
+            const name = a.full_name || "—";
+            const date =
+              a.approved_at || a.rejected_at || a.submitted_at || "—";
+            const df =
+              date !== "—"
+                ? new Date(date).toLocaleDateString("en-PH", {
+                    year: "numeric",
+                    month: "short",
+                    day: "numeric",
+                  })
+                : "—";
+            const btns = actions
+              .map((act) => {
+                if (act === "approve")
+                  return `<button class="btn-approve" onclick="confirmAction('approve',${ri})">✅ Approve</button>`;
+                if (act === "reject")
+                  return `<button class="btn-reject"  onclick="confirmAction('reject',${ri})">❌ Reject</button>`;
+                if (act === "view")
+                  return `<button class="btn-view"     onclick="viewApplication(${ri})">👁️ View Form</button>`;
+                if (act === "txn")
+                  return `<button class="btn-txn"      onclick="quickTxn(${ri})">💰 Add Txn</button>`;
+              })
+              .join("");
+            return `<tr><td>${a.application_no || "—"}</td><td>${name}</td><td><strong>${a.username || "—"}</strong></td><td>${df}</td><td><span class="status-badge ${a.status}">${a.status.toUpperCase()}</span></td><td><div class="action-btns">${btns}</div></td></tr>`;
+          })
+          .join("");
+      }
+
+      // ── TAB SWITCH ──
+      function switchTab(tab, btn) {
+        document
+          .querySelectorAll(".panel")
+          .forEach((p) => p.classList.remove("active"));
+        document
+          .querySelectorAll(".tab-btn")
+          .forEach((b) => b.classList.remove("active"));
+        document.getElementById("panel-" + tab).classList.add("active");
+        btn.classList.add("active");
+        if (tab === "shares") loadTxnHistory();
+        if (tab === "loans") loadLoanRecords();
+      }
+
+      // ── VIEW APPLICATION FORM ──
+      async function viewApplication(index) {
+        const a = applications[index];
+        currentIndex = index;
+        try {
+          const res = await fetch(`/membership/admin/member/${a.id}`);
+          const data = await res.json();
+          renderAppForm(data, index);
+        } catch (e) {
+          renderAppForm(a, index);
+        }
+        document.getElementById("appModal").classList.add("active");
+      }
+
+      function renderFormModal(a) {
+        const name =
+          [a.first_name, a.middle_name, a.last_name]
+            .filter(Boolean)
+            .join(" ") || "—";
+        const fam =
+          (a.familyMembers || [])
+            .map(
+              (f) =>
+                `<tr><td>${f.name || "—"}</td><td>${f.relation || "—"}</td><td>${f.age || "—"}</td><td>${f.occupation || "—"}</td></tr>`,
+            )
+            .join("") ||
+          '<tr><td colspan="4" style="text-align:center;color:#aaa;padding:8px">No family members listed.</td></tr>';
+        document.getElementById("modalFormContent").innerHTML = `
+        <div class="app-header">
+            <img src="/images/CESLA_logo.png" alt="CESLA" />
+            <div class="app-header-info"><h3>CESLA Multi-Purpose Cooperative</h3><p>CLIMBS Bldg., National Highway, Bulua, CDO</p></div>
+        </div>
+        <div class="app-form-title" style="text-align:center;font-weight:900;text-decoration:underline;margin:10px 0;color:#1a1a2e">MEMBERSHIP APPLICATION FORM</div>
+        <div class="field-grid">
+            <div class="field-item"><label>User ID</label><span><strong>${a.user_id || "—"}</strong></span></div>
+            <div class="field-item"><label>Form Status</label><span style="color:${a.form_status === "approved" ? "#28a745" : a.form_status === "submitted" ? "#2a3272" : "#856404"};font-weight:800">${(a.form_status || "incomplete").toUpperCase()}</span></div>
+        </div>
+        <div class="section-hdr">PERSONAL INFORMATION</div>
+        <div class="field-grid">
+            <div class="field-item"><label>Full Name</label><span>${name}</span></div>
+            <div class="field-item"><label>Date of Birth</label><span>${a.birthdate || "—"}</span></div>
+            <div class="field-item"><label>Place of Birth</label><span>${a.place_of_birth || "—"}</span></div>
+            <div class="field-item"><label>Gender</label><span>${a.gender || "—"}</span></div>
+            <div class="field-item"><label>Civil Status</label><span>${a.civil_status || "—"}</span></div>
+            <div class="field-item"><label>Nationality</label><span>${a.nationality || "—"}</span></div>
+            <div class="field-item"><label>Religion</label><span>${a.religion || "—"}</span></div>
+            <div class="field-item"><label>SSS/GSIS No.</label><span>${a.sss_number || "—"}</span></div>
+            <div class="field-item"><label>TIN No.</label><span>${a.tin_number || "—"}</span></div>
+            <div class="field-item"><label>No. of Dependents</label><span>${a.dependents || "0"}</span></div>
+        </div>
+        <div class="section-hdr">ADDRESS</div>
+        <div class="field-grid">
+            <div class="field-item"><label>Present Address</label><span>${a.present_address || "—"}</span></div>
+            <div class="field-item"><label>Permanent Address</label><span>${a.permanent_address || "—"}</span></div>
+        </div>
+        <div class="section-hdr">EMPLOYMENT</div>
+        <div class="field-grid">
+            <div class="field-item"><label>Employment Type</label><span>${a.employment_type || "—"}</span></div>
+            <div class="field-item"><label>Position</label><span>${a.position || "—"}</span></div>
+            <div class="field-item"><label>Employer/Business</label><span>${a.employer_name || "—"}</span></div>
+            <div class="field-item"><label>Monthly Income</label><span>₱${parseFloat(a.monthly_income || 0).toLocaleString("en-PH", { minimumFractionDigits: 2 })}</span></div>
+        </div>
+        <div class="section-hdr">FAMILY MEMBERS / BENEFICIARIES</div>
+        <table style="width:100%;border-collapse:collapse;font-size:0.8em;margin-top:8px">
+            <thead><tr style="background:var(--cesla-navy);color:#fff"><th style="padding:8px 10px;text-align:left">Name</th><th style="padding:8px 10px">Relation</th><th style="padding:8px 10px">Age</th><th style="padding:8px 10px">Occupation</th></tr></thead>
+            <tbody>${fam}</tbody>
+        </table>`;
+        const ri = applications.findIndex((x) => x.id === a.id);
+        let btns = "";
+        if (a.form_status === "submitted")
+          btns = `<button class="modal-btn-approve" onclick="closeModal('appModal');approveForm(${a.id},'approve',${ri})">✅ Approve Form</button><button class="modal-btn-reject" onclick="closeModal('appModal');approveForm(${a.id},'reject',${ri})">↩️ Return for Revision</button>`;
+        document.getElementById("modalActions").innerHTML = btns;
+      }
+
+      function renderAppForm(a, index) {
+        const name =
+          [a.first_name, a.middle_name, a.last_name]
+            .filter(Boolean)
+            .join(" ") || "—";
+        document.getElementById("modalFormContent").innerHTML = `
+        <div class="app-header">
+            <img src="/images/CESLA_logo.png" alt="CESLA" />
+            <div class="app-header-info"><h3>CESLA Multi-Purpose Cooperative</h3><p>CLIMBS Bldg., Upper Zone 5, National Highway, Bulua, Cagayan De Oro City</p><p>Email: cec@climbs.coop</p></div>
+            <div class="photo-box-sm">2x2<br>Photo</div>
+        </div>
+        <div class="app-form-title">APPLICATION FORM</div>
+        <div class="field-grid">
+            <div class="field-item"><label>Application No.</label><span>${a.application_no || a.applicationNo || "—"}</span></div>
+            <div class="field-item"><label>Date Submitted</label><span>${a.submitted_at || a.submittedAt ? new Date(a.submitted_at || a.submittedAt).toLocaleDateString() : "—"}</span></div>
+        </div>
+        <div class="section-hdr">PERSONAL DETAILS</div>
+        <div class="field-grid">
+            <div class="field-item"><label>Title</label><span>${a.title || "—"}</span></div>
+            <div class="field-item"><label>Gender</label><span>${a.gender || "—"}</span></div>
+            <div class="field-item"><label>Last Name</label><span>${a.last_name || a.lastName || "—"}</span></div>
+            <div class="field-item"><label>First Name</label><span>${a.first_name || a.firstName || "—"}</span></div>
+            <div class="field-item"><label>Middle Name</label><span>${a.middle_name || a.middleName || "—"}</span></div>
+            <div class="field-item"><label>Date of Birth</label><span>${a.birthdate || "—"}</span></div>
+            <div class="field-item"><label>Place of Birth</label><span>${a.place_of_birth || a.placeOfBirth || "—"}</span></div>
+            <div class="field-item"><label>Civil Status</label><span>${a.civil_status || a.civilStatus || "—"}</span></div>
+            <div class="field-item"><label>SSS/GSIS</label><span>${a.sss_number || a.sssNumber || "—"}</span></div>
+            <div class="field-item"><label>TIN</label><span>${a.tin_number || a.tinNumber || "—"}</span></div>
+        </div>
+        <div class="section-hdr">CONTACT DETAILS</div>
+        <div class="field-grid">
+            <div class="field-item"><label>Present Address</label><span>${a.present_address || a.presentAddress || "—"}</span></div>
+            <div class="field-item"><label>Permanent Address</label><span>${a.permanent_address || a.permanentAddress || "—"}</span></div>
+        </div>
+        <div class="section-hdr">ACCOUNT</div>
+        <div class="field-grid">
+            <div class="field-item"><label>Username</label><span><strong>${a.username || "—"}</strong></span></div>
+            <div class="field-item"><label>Status</label><span style="color:${a.status === "approved" ? "#28a745" : a.status === "rejected" ? "#e74c3c" : "#856404"};font-weight:800">${(a.status || "").toUpperCase()}</span></div>
+        </div>`;
+
+        let btns = "";
+        if (a.status === "pending")
+          btns = `<button class="modal-btn-approve" onclick="closeModal('appModal');confirmAction('approve',${index})">✅ Approve</button><button class="modal-btn-reject" onclick="closeModal('appModal');confirmAction('reject',${index})">❌ Reject</button>`;
+        if (a.status === "rejected")
+          btns = `<button class="modal-btn-approve" onclick="closeModal('appModal');confirmAction('approve',${index})">✅ Approve</button>`;
+        if (a.status === "approved")
+          btns = `<button class="modal-btn-reject" onclick="closeModal('appModal');confirmAction('reject',${index})">❌ Revoke</button>`;
+        document.getElementById("modalActions").innerHTML = btns;
+      }
+
+      function closeModal(id) {
+        document.getElementById(id).classList.remove("active");
+      }
+
+      // ── QUICK TXN (from approved table) ──
+      function quickTxn(index) {
+        const a = applications[index];
+        switchTab("shares", document.querySelectorAll(".tab-btn")[3]);
+        document.getElementById("txnMemberSearch").value =
+          a.full_name || a.username;
+        document.getElementById("txnMemberId").value = a.id;
+        document.getElementById("txnMemberName").value =
+          a.full_name || a.username;
+        document.getElementById("txnDate").value = new Date()
+          .toISOString()
+          .split("T")[0];
+        showToast("👤 Member selected: " + (a.full_name || a.username));
+      }
+
+      // ── MEMBER SEARCH DROPDOWN ──
+      function searchMembers(query, dropdownId, hiddenId, hiddenNameId) {
+        const dropdown = document.getElementById(dropdownId);
+        document.getElementById(hiddenId).value = "";
+        if (!query.trim()) {
+          dropdown.classList.remove("show");
+          return;
+        }
+        const q = query.toLowerCase();
+        const matches = approvedMembers.filter(
+          (m) =>
+            (m.full_name || "").toLowerCase().includes(q) ||
+            (m.username || "").toLowerCase().includes(q),
+        );
+        if (!matches.length) {
+          dropdown.innerHTML =
+            '<div class="member-option" style="color:#aaa">No approved members found</div>';
+          dropdown.classList.add("show");
+          return;
+        }
+        dropdown.innerHTML = matches
+          .map(
+            (m) =>
+              `<div class="member-option" onclick="selectMember(${m.id},'${(m.full_name || m.username).replace(/'/g, "\\'")}','${dropdownId}','${hiddenId}','${hiddenNameId}')">${m.full_name || "—"} <span style="color:#888;font-size:0.85em">(${m.username})</span></div>`,
+          )
+          .join("");
+        dropdown.classList.add("show");
+      }
+
+      function selectMember(id, name, dropdownId, hiddenId, hiddenNameId) {
+        const inputId =
+          dropdownId === "txnDropdown" ? "txnMemberSearch" : "loanMemberSearch";
+        document.getElementById(inputId).value = name;
+        document.getElementById(hiddenId).value = id;
+        document.getElementById(hiddenNameId).value = name;
+        document.getElementById(dropdownId).classList.remove("show");
+      }
+
+      // Close dropdowns on outside click
+      document.addEventListener("click", (e) => {
+        if (!e.target.closest(".member-search-wrap")) {
+          document
+            .querySelectorAll(".member-dropdown")
+            .forEach((d) => d.classList.remove("show"));
+        }
+      });
+
+      // ── SUBMIT TRANSACTION ──
+      async function submitTransaction() {
+        const memberId = document.getElementById("txnMemberId").value;
+        const category = document.getElementById("txnCategory").value;
+        const date = document.getElementById("txnDate").value;
+        const amount = document.getElementById("txnAmount").value;
+        if (!memberId || !category || !date || !amount) {
+          showToast("❌ Please fill all required fields.");
+          return;
+        }
+
+        const [table, type] = category.split("-"); // shares/savings, deposit/withdrawal
+        const endpoint = `/membership/admin/add-${table}`;
+
+        try {
+          const res = await fetch(endpoint, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              member_id: memberId,
+              transaction_date: date,
+              type,
+              description: document.getElementById("txnDesc").value,
+              amount,
+              or_number: document.getElementById("txnOR").value,
+            }),
+          });
+          const data = await res.json();
+          if (data.success) {
+            showToast(
+              `✅ ${table.charAt(0).toUpperCase() + table.slice(1)} ${type} saved! New balance: ₱${parseFloat(data.newBalance).toLocaleString("en-PH", { minimumFractionDigits: 2 })}`,
+            );
+            clearTxnForm();
+            loadTxnHistory();
+          } else {
+            showToast("❌ " + (data.message || "Failed to save transaction."));
+          }
+        } catch (e) {
+          showToast("❌ Server error.");
+        }
+      }
+
+      function clearTxnForm() {
+        ["txnMemberSearch", "txnDate", "txnAmount", "txnOR", "txnDesc"].forEach(
+          (id) => (document.getElementById(id).value = ""),
+        );
+        document.getElementById("txnCategory").value = "";
+        document.getElementById("txnMemberId").value = "";
+      }
+
+      // ── LOAD TRANSACTION HISTORY ──
+      async function loadTxnHistory() {
+        const memberFilter = document.getElementById("txnHistoryFilter").value;
+        const typeFilter = document.getElementById("txnTypeFilter").value;
+
+        try {
+          const [sharesRes, savingsRes] = await Promise.all([
+            fetch("/membership/admin/all-shares"),
+            fetch("/membership/admin/all-savings"),
+          ]);
+          let shares = await sharesRes.json();
+          let savings = await savingsRes.json();
+
+          if (memberFilter !== "all") {
+            shares = shares.filter((t) => String(t.member_id) === memberFilter);
+            savings = savings.filter(
+              (t) => String(t.member_id) === memberFilter,
+            );
+          }
+
+          let combined = [];
+          if (typeFilter !== "savings")
+            combined = combined.concat(
+              shares.map((t) => ({ ...t, table: "shares" })),
+            );
+          if (typeFilter !== "shares")
+            combined = combined.concat(
+              savings.map((t) => ({ ...t, table: "savings" })),
+            );
+          combined.sort(
+            (a, b) =>
+              new Date(b.transaction_date) - new Date(a.transaction_date),
+          );
+
+          // Summary
+          const totalShares =
+            shares
+              .filter((t) => t.type === "deposit")
+              .reduce((s, t) => s + parseFloat(t.amount), 0) -
+            shares
+              .filter((t) => t.type === "withdrawal")
+              .reduce((s, t) => s + parseFloat(t.amount), 0);
+          const totalSavings =
+            savings
+              .filter((t) => t.type === "deposit")
+              .reduce((s, t) => s + parseFloat(t.amount), 0) -
+            savings
+              .filter((t) => t.type === "withdrawal")
+              .reduce((s, t) => s + parseFloat(t.amount), 0);
+          document.getElementById("summaryShares").textContent =
+            "₱ " +
+            totalShares.toLocaleString("en-PH", { minimumFractionDigits: 2 });
+          document.getElementById("summarySavings").textContent =
+            "₱ " +
+            totalSavings.toLocaleString("en-PH", { minimumFractionDigits: 2 });
+
+          const tbody = document.getElementById("txnHistoryBody");
+          if (!combined.length) {
+            tbody.innerHTML =
+              '<tr><td colspan="7" style="text-align:center;color:#aaa;padding:20px;font-weight:600">No transactions found.</td></tr>';
+            return;
+          }
+          tbody.innerHTML = combined
+            .map((t) => {
+              const member = approvedMembers.find((m) => m.id === t.member_id);
+              const mName = member ? member.full_name || member.username : "—";
+              const isDeposit = t.type === "deposit";
+              return `<tr>
+                <td>${new Date(t.transaction_date).toLocaleDateString("en-PH")}</td>
+                <td>${mName}</td>
+                <td><span class="status-badge ${isDeposit ? "approved" : "rejected"}" style="font-size:0.75em">${t.table.toUpperCase()} ${t.type.toUpperCase()}</span></td>
+                <td>${t.description || "—"}</td>
+                <td>${t.or_number || "—"}</td>
+                <td class="${isDeposit ? "amount-deposit" : "amount-withdraw"}">${isDeposit ? "+" : "-"}₱${parseFloat(t.amount).toLocaleString("en-PH", { minimumFractionDigits: 2 })}</td>
+                <td style="font-weight:700">₱${parseFloat(t.balance).toLocaleString("en-PH", { minimumFractionDigits: 2 })}</td>
+            </tr>`;
+            })
+            .join("");
+        } catch (e) {
+          console.error(e);
+        }
+      }
+
+      // ── COMPUTE MONTHLY LOAN PAYMENT ──
+      function computeMonthly() {
+        const amount =
+          parseFloat(document.getElementById("loanAmount").value) || 0;
+        const interest =
+          parseFloat(document.getElementById("loanInterest").value) || 0;
+        const term = parseInt(document.getElementById("loanTerm").value) || 0;
+        if (amount && term) {
+          const total = amount * (1 + interest / 100);
+          const monthly = total / term;
+          document.getElementById("loanMonthly").value =
+            "₱ " + monthly.toFixed(2);
+        }
+      }
+
+      // ── SUBMIT LOAN ──
+      async function submitLoan() {
+        const memberId = document.getElementById("loanMemberId").value;
+        const type = document.getElementById("loanType").value;
+        const amount = document.getElementById("loanAmount").value;
+        const interest = document.getElementById("loanInterest").value;
+        const term = document.getElementById("loanTerm").value;
+        const date = document.getElementById("loanDateReleased").value;
+        if (!memberId || !type || !amount || !term || !date) {
+          showToast("❌ Please fill all required fields.");
+          return;
+        }
+        try {
+          const res = await fetch("/membership/admin/add-loan", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              member_id: memberId,
+              loan_type: type,
+              amount,
+              interest_rate: interest || 0,
+              term_months: term,
+              date_released: date,
+              purpose: document.getElementById("loanPurpose").value,
+            }),
+          });
+          const data = await res.json();
+          if (data.success) {
+            showToast(`✅ Loan released! Loan No: ${data.loanNo}`);
+            clearLoanForm();
+            loadLoanRecords();
+          } else {
+            showToast("❌ Failed to release loan.");
+          }
+        } catch (e) {
+          showToast("❌ Server error.");
+        }
+      }
+
+      function clearLoanForm() {
+        [
+          "loanMemberSearch",
+          "loanAmount",
+          "loanInterest",
+          "loanTerm",
+          "loanDateReleased",
+          "loanPurpose",
+          "loanMonthly",
+        ].forEach((id) => (document.getElementById(id).value = ""));
+        document.getElementById("loanType").value = "";
+        document.getElementById("loanMemberId").value = "";
+      }
+
+      // ── LOAD LOAN RECORDS ──
+      async function loadLoanRecords() {
+        const memberFilter = document.getElementById("loanMemberFilter").value;
+        try {
+          const res = await fetch("/membership/admin/all-loans");
+          let loans = await res.json();
+          if (memberFilter !== "all")
+            loans = loans.filter((l) => String(l.member_id) === memberFilter);
+
+          // Update total loans summary
+          const totalLoans = loans
+            .filter((l) => l.status === "active")
+            .reduce((s, l) => s + parseFloat(l.outstanding_balance || 0), 0);
+          document.getElementById("summaryLoans").textContent =
+            "₱ " +
+            totalLoans.toLocaleString("en-PH", { minimumFractionDigits: 2 });
+
+          const tbody = document.getElementById("loanRecordsBody");
+          if (!loans.length) {
+            tbody.innerHTML =
+              '<tr><td colspan="9" style="text-align:center;color:#aaa;padding:20px;font-weight:600">No loan records found.</td></tr>';
+            return;
+          }
+          tbody.innerHTML = loans
+            .map((l) => {
+              const member = approvedMembers.find((m) => m.id === l.member_id);
+              const mName = member ? member.full_name || member.username : "—";
+              const statusColor =
+                {
+                  active: "#2a3272",
+                  paid: "#28a745",
+                  delinquent: "#e74c3c",
+                  restructured: "#856404",
+                }[l.status] || "#333";
+              return `<tr>
+                <td><strong>${l.loan_no}</strong></td>
+                <td>${mName}</td>
+                <td>${l.loan_type?.toUpperCase() || "—"}</td>
+                <td>₱${parseFloat(l.amount).toLocaleString("en-PH", { minimumFractionDigits: 2 })}</td>
+                <td>₱${parseFloat(l.monthly_payment || 0).toLocaleString("en-PH", { minimumFractionDigits: 2 })}</td>
+                <td style="font-weight:800;color:#e74c3c">₱${parseFloat(l.outstanding_balance || 0).toLocaleString("en-PH", { minimumFractionDigits: 2 })}</td>
+                <td>${l.due_date ? new Date(l.due_date).toLocaleDateString("en-PH") : "—"}</td>
+                <td><span style="color:${statusColor};font-weight:800;font-size:0.82em">${(l.status || "").toUpperCase()}</span></td>
+                <td><button class="btn-approve" style="font-size:0.72em" onclick="openPaymentModal(${l.id},${l.member_id},'${l.loan_no}',${l.outstanding_balance},${l.monthly_payment})">💳 Payment</button></td>
+            </tr>`;
+            })
+            .join("");
+        } catch (e) {
+          console.error(e);
+        }
+      }
+
+      // ── LOAN PAYMENT MODAL ──
+      function openPaymentModal(loanId, memberId, loanNo, balance, monthly) {
+        document.getElementById("payLoanId").value = loanId;
+        document.getElementById("payMemberId").value = memberId;
+        document.getElementById("payDate").value = new Date()
+          .toISOString()
+          .split("T")[0];
+        document.getElementById("payAmount").value = monthly || "";
+        document.getElementById("payPrincipal").value = "";
+        document.getElementById("payInterest").value = "";
+        document.getElementById("payOR").value = "";
+        document.getElementById("paymentLoanInfo").innerHTML =
+          `<strong>Loan No:</strong> ${loanNo} &nbsp;|&nbsp; <strong>Outstanding Balance:</strong> <span style="color:#e74c3c;font-weight:800">₱${parseFloat(balance).toLocaleString("en-PH", { minimumFractionDigits: 2 })}</span>`;
+        document.getElementById("paymentModal").classList.add("active");
+      }
+
+      async function submitPayment() {
+        const loanId = document.getElementById("payLoanId").value;
+        const memberId = document.getElementById("payMemberId").value;
+        const date = document.getElementById("payDate").value;
+        const amount = document.getElementById("payAmount").value;
+        if (!date || !amount) {
+          showToast("❌ Please fill required fields.");
+          return;
+        }
+        try {
+          const res = await fetch("/membership/admin/add-loan-payment", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              loan_id: loanId,
+              member_id: memberId,
+              payment_date: date,
+              amount_paid: amount,
+              principal:
+                document.getElementById("payPrincipal").value || amount,
+              interest: document.getElementById("payInterest").value || 0,
+              or_number: document.getElementById("payOR").value,
+            }),
+          });
+          const data = await res.json();
+          if (data.success) {
+            showToast("✅ Payment recorded successfully!");
+            closeModal("paymentModal");
+            loadLoanRecords();
+          } else {
+            showToast("❌ Failed to record payment.");
+          }
+        } catch (e) {
+          showToast("❌ Server error.");
+        }
+      }
+
+      // ── CONFIRM APPROVE/REJECT ──
+      function confirmAction(action, index) {
+        currentAction = action;
+        currentIndex = index;
+        const a = applications[index];
+        const name = a.full_name || a.username;
+        if (action === "approve") {
+          document.getElementById("confirmIcon").textContent = "✅";
+          document.getElementById("confirmTitle").textContent =
+            "Approve Application?";
+          document.getElementById("confirmMsg").textContent =
+            `Approve membership of "${name}"?`;
+          document.getElementById("confirmYesBtn").textContent = "Yes, Approve";
+          document.getElementById("confirmYesBtn").className =
+            "btn-yes-approve";
+        } else {
+          document.getElementById("confirmIcon").textContent = "❌";
+          document.getElementById("confirmTitle").textContent =
+            "Reject Application?";
+          document.getElementById("confirmMsg").textContent =
+            `Reject application of "${name}"?`;
+          document.getElementById("confirmYesBtn").textContent = "Yes, Reject";
+          document.getElementById("confirmYesBtn").className = "btn-yes-reject";
+        }
+        document.getElementById("confirmOverlay").classList.add("active");
+      }
+      function closeConfirm() {
+        document.getElementById("confirmOverlay").classList.remove("active");
+      }
+
+      async function executeAction() {
+        closeConfirm();
+        if (currentIndex === null || !currentAction) return;
+        const a = applications[currentIndex];
+        const newStatus = currentAction === "approve" ? "approved" : "rejected";
+        try {
+          const res = await fetch("/membership/admin/update-status", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ id: a.id, status: newStatus }),
+          });
+          const data = await res.json();
+          if (data.success) {
+            applications[currentIndex].status = newStatus;
+            showToast(`✅ Member ${newStatus}!`);
+            await loadApplications();
+          }
+        } catch (e) {
+          showToast("❌ Error updating status.");
+        }
+        currentAction = null;
+        currentIndex = null;
+      }
+
+      function logout() {
+        fetch("/membership/admin/logout", { method: "POST" }).then(
+          () => (window.location.href = "/membership/admin"),
+        );
+      }
+
+      function showToast(msg) {
+        const t = document.getElementById("toast");
+        t.textContent = msg;
+        t.classList.add("show");
+        setTimeout(() => t.classList.remove("show"), 3500);
+      }
+
+      // Close modals on backdrop click
+      ["appModal", "paymentModal"].forEach((id) => {
+        document.getElementById(id).addEventListener("click", function (e) {
+          if (e.target === this) closeModal(id);
+        });
+      });
+
+      loadApplications();
+    </script>
+  </body>
+</html>

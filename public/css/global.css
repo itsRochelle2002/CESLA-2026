@@ -1,0 +1,34 @@
+/* ═══════════════════════════════════════════════════════
+   CESLA MPC — Global Shared Styles
+   Apply uniform background across all pages
+   ═══════════════════════════════════════════════════════ */
+
+:root {
+  --cesla-navy:    #0d1b3e;
+  --cesla-blue:    #1a3478;
+  --cesla-gold:    #3c359d;
+  --cesla-gold-lt: #e8c87a;
+  --cesla-white:   #ffffff;
+  --cesla-glass:   rgba(255,255,255,0.07);
+}
+
+/* ── BACKGROUND (universal) ── */
+body {
+  background-color: var(--cesla-navy) !important;
+  background-image:
+    radial-gradient(ellipse 80% 60% at 15% 20%, rgba(26,52,120,0.55) 0%, transparent 65%),
+    radial-gradient(ellipse 60% 50% at 85% 75%, rgba(13,27,62,0.8) 0%, transparent 65%),
+    url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.022'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E") !important;
+  background-attachment: fixed !important;
+}
+
+/* ── GOLD TOP LINE ── */
+body::before {
+  content: '';
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, transparent, var(--cesla-gold), var(--cesla-gold-lt), var(--cesla-gold), transparent);
+  z-index: 9999;
+  pointer-events: none;
+}

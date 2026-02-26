@@ -1,0 +1,674 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Register - CLIMBS</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      body {
+        font-family: "Montserrat", sans-serif;
+        background: var(--cesla-navy);
+        background-image:
+          radial-gradient(
+            ellipse at 20% 50%,
+            rgba(58, 72, 160, 0.6) 0%,
+            transparent 60%
+          ),
+          radial-gradient(
+            ellipse at 80% 50%,
+            rgba(20, 28, 90, 0.8) 0%,
+            transparent 60%
+          );
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+      }
+      .top-bar {
+        background: linear-gradient(135deg, #0d1b3e 0%, #0d1b3e 100%);
+        margin: 16px 20px 0;
+        border-radius: 14px;
+        padding: 18px 28px;
+        display: flex;
+        align-items: center;
+        box-shadow: 0 6px 24px rgba(0, 0, 0, 0.25);
+      }
+      .back-btn {
+        font-size: 1.6em;
+        color: #ffffff;
+        text-decoration: none;
+        font-weight: 800;
+        transition: transform 0.2s;
+      }
+      .back-btn:hover {
+        transform: translateX(-4px);
+      }
+      .top-bar h1 {
+        font-size: 1.4em;
+        font-weight: 800;
+        color: #ffffff;
+        text-align: center;
+        flex: 1;
+      }
+      .spacer {
+        width: 1.6em;
+      }
+
+      .main-content {
+        flex: 1;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 40px 20px;
+      }
+
+      .card {
+        background: #fff;
+        border-radius: 20px;
+        padding: 36px 36px 32px;
+        width: 100%;
+        max-width: 480px;
+        box-shadow: 0 16px 48px rgba(0, 0, 0, 0.3);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 20px;
+        animation: cardIn 0.4s ease;
+      }
+      @keyframes cardIn {
+        from {
+          opacity: 0;
+          transform: translateY(20px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      .card-icon {
+        width: 68px;
+        height: 68px;
+        background: var(--cesla-navy);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.9em;
+        box-shadow: 0 4px 16px rgba(42, 50, 114, 0.3);
+      }
+      .card h2 {
+        font-size: 1.25em;
+        font-weight: 800;
+        color: #1a1a2e;
+      }
+      .card .sub {
+        font-size: 0.76em;
+        color: #888;
+        font-weight: 600;
+        margin-top: -12px;
+      }
+
+      /* Steps indicator */
+      .steps {
+        display: flex;
+        align-items: center;
+        gap: 0;
+        width: 100%;
+      }
+      .step {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 4px;
+        flex: 1;
+      }
+      .step-dot {
+        width: 28px;
+        height: 28px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 0.75em;
+        font-weight: 800;
+      }
+      .step-dot.done {
+        background: var(--cesla-navy);
+        color: #fff;
+      }
+      .step-dot.curr {
+        background: #f5c518;
+        color: #1a1a2e;
+      }
+      .step-dot.next {
+        background: #e0e0e0;
+        color: #999;
+      }
+      .step span {
+        font-size: 0.62em;
+        font-weight: 700;
+        color: #999;
+        text-align: center;
+      }
+      .step.curr-step span {
+        color: #2a3272;
+      }
+      .step-line {
+        height: 2px;
+        flex: 1;
+        background: #e0e0e0;
+        margin-bottom: 14px;
+      }
+      .step-line.done {
+        background: var(--cesla-navy);
+      }
+
+      /* User ID box */
+      .userid-box {
+        background: linear-gradient(135deg, #2a3272, #1a1a5e);
+        border-radius: 12px;
+        padding: 16px 20px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+        width: 100%;
+      }
+      .uid-left label {
+        font-size: 0.65em;
+        font-weight: 700;
+        color: rgba(255, 255, 255, 0.6);
+        letter-spacing: 1px;
+        text-transform: uppercase;
+        display: block;
+        margin-bottom: 4px;
+      }
+      .uid-val {
+        font-size: 1.15em;
+        font-weight: 900;
+        color: #f5c518;
+        letter-spacing: 2px;
+        font-family: "Courier New", monospace;
+      }
+      .uid-copy {
+        background: rgba(245, 197, 24, 0.2);
+        border: 1.5px solid rgba(245, 197, 24, 0.5);
+        color: #f5c518;
+        border-radius: 8px;
+        padding: 7px 14px;
+        font-family: "Montserrat", sans-serif;
+        font-size: 0.74em;
+        font-weight: 700;
+        cursor: pointer;
+        transition: background 0.2s;
+        white-space: nowrap;
+        flex-shrink: 0;
+      }
+      .uid-copy:hover {
+        background: rgba(245, 197, 24, 0.35);
+      }
+
+      .notice {
+        background: #fff8e1;
+        border: 1.5px solid #f5c518;
+        border-radius: 10px;
+        padding: 11px 14px;
+        font-size: 0.74em;
+        font-weight: 700;
+        color: #856404;
+        line-height: 1.6;
+        width: 100%;
+      }
+      .notice strong {
+        color: #1a1a2e;
+      }
+
+      .field-group {
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+        width: 100%;
+      }
+      .field-group label {
+        font-size: 0.82em;
+        font-weight: 700;
+        color: #1a1a2e;
+        padding-left: 2px;
+      }
+      .input-wrap {
+        position: relative;
+      }
+      .input-wrap input {
+        width: 100%;
+        padding: 13px 46px 13px 16px;
+        background: #e8e8f0;
+        border: 2px solid transparent;
+        border-radius: 10px;
+        font-family: "Montserrat", sans-serif;
+        font-size: 0.87em;
+        font-weight: 500;
+        color: #1a1a2e;
+        outline: none;
+        transition:
+          border 0.2s,
+          background 0.2s;
+      }
+      .input-wrap input::placeholder {
+        color: #888;
+      }
+      .input-wrap input:focus {
+        border-color: #2a3272;
+        background: #f0f0f8;
+      }
+      .input-wrap input.error {
+        border-color: #e74c3c;
+      }
+      .eye-btn {
+        position: absolute;
+        right: 14px;
+        top: 50%;
+        transform: translateY(-50%);
+        background: none;
+        border: none;
+        cursor: pointer;
+        display: flex;
+        color: #555;
+      }
+      .eye-btn svg {
+        width: 20px;
+        height: 20px;
+      }
+      .field-hint {
+        font-size: 0.72em;
+        color: #e74c3c;
+        font-weight: 600;
+        padding-left: 4px;
+        display: none;
+      }
+      .field-hint.show {
+        display: block;
+      }
+
+      /* password strength */
+      .strength-row {
+        display: flex;
+        gap: 4px;
+        margin-top: 4px;
+      }
+      .seg {
+        height: 4px;
+        flex: 1;
+        border-radius: 4px;
+        background: #e0e0e0;
+        transition: background 0.3s;
+      }
+      .s-weak {
+        background: #e74c3c;
+      }
+      .s-med {
+        background: #f5c518;
+      }
+      .s-str {
+        background: #28a745;
+      }
+
+      .btn-register {
+        width: 100%;
+        padding: 15px;
+        background: var(--cesla-navy);
+        color: #fff;
+        font-family: "Montserrat", sans-serif;
+        font-size: 0.9em;
+        font-weight: 800;
+        letter-spacing: 2px;
+        border: none;
+        border-radius: 10px;
+        cursor: pointer;
+        transition:
+          background 0.2s,
+          transform 0.2s;
+      }
+      .btn-register:hover {
+        background: #1a1a5e;
+        transform: translateY(-2px);
+      }
+      .login-link {
+        font-size: 0.78em;
+        font-weight: 700;
+        color: #2a3272;
+        text-decoration: none;
+      }
+      .login-link:hover {
+        text-decoration: underline;
+      }
+
+      /* SUCCESS MODAL */
+      .modal-overlay {
+        display: none;
+        position: fixed;
+        inset: 0;
+        background: rgba(0, 0, 0, 0.6);
+        z-index: 200;
+        align-items: center;
+        justify-content: center;
+      }
+      .modal-overlay.show {
+        display: flex;
+      }
+      .modal-card {
+        background: #fff;
+        border-radius: 20px;
+        padding: 36px 32px;
+        max-width: 400px;
+        width: 90%;
+        text-align: center;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 16px;
+        animation: popIn 0.3s ease;
+      }
+      @keyframes popIn {
+        from {
+          opacity: 0;
+          transform: scale(0.9);
+        }
+        to {
+          opacity: 1;
+          transform: scale(1);
+        }
+      }
+      .success-icon {
+        width: 72px;
+        height: 72px;
+        background: #d4edda;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 2.2em;
+      }
+      .modal-card h3 {
+        font-size: 1.15em;
+        font-weight: 800;
+        color: #1a1a2e;
+      }
+      .modal-card p {
+        font-size: 0.8em;
+        color: #555;
+        line-height: 1.7;
+        font-weight: 600;
+      }
+      .uid-display-modal {
+        background: #f4f4fb;
+        border-radius: 10px;
+        padding: 12px 20px;
+        width: 100%;
+      }
+      .uid-display-modal label {
+        font-size: 0.68em;
+        font-weight: 700;
+        color: #888;
+        letter-spacing: 1px;
+        display: block;
+        margin-bottom: 4px;
+      }
+      .uid-display-modal span {
+        font-size: 1.1em;
+        font-weight: 900;
+        color: #2a3272;
+        letter-spacing: 2px;
+        font-family: "Courier New", monospace;
+      }
+      .btn-modal-home {
+        background: var(--cesla-navy);
+        color: #fff;
+        border: none;
+        border-radius: 10px;
+        padding: 13px 32px;
+        font-family: "Montserrat", sans-serif;
+        font-size: 0.88em;
+        font-weight: 800;
+        cursor: pointer;
+        width: 100%;
+      }
+    </style>
+    <link rel="stylesheet" href="/css/global.css" />
+  </head>
+  <body>
+    <div class="top-bar">
+      <a href="/membership" class="back-btn">&#8592;</a>
+      <h1>Register as New Member</h1>
+      <div class="spacer"></div>
+    </div>
+
+    <div class="main-content">
+      <div class="card">
+        <div class="card-icon">👤</div>
+        <h2>Create Your Account</h2>
+        <p class="sub">CLIMBS Membership Portal</p>
+
+        <!-- Steps -->
+        <div class="steps">
+          <div class="step curr-step">
+            <div class="step-dot curr">1</div>
+            <span>Create Account</span>
+          </div>
+          <div class="step-line"></div>
+          <div class="step">
+            <div class="step-dot next">2</div>
+            <span>Admin Approval</span>
+          </div>
+          <div class="step-line"></div>
+          <div class="step">
+            <div class="step-dot next">3</div>
+            <span>Fill Application</span>
+          </div>
+        </div>
+
+        <!-- Auto-generated User ID -->
+        <div class="userid-box">
+          <div class="uid-left">
+            <label>Your User ID (Auto-Generated)</label>
+            <span class="uid-val" id="displayUid">Generating...</span>
+          </div>
+          <button class="uid-copy" onclick="copyUid()">📋 Copy</button>
+        </div>
+
+        <div class="notice">
+          ⚠️ <strong>Save your User ID!</strong> You will use this to
+          <strong>log in</strong> after your account is approved by the
+          administrator.
+        </div>
+
+        <!-- Password -->
+        <div class="field-group">
+          <label>Password</label>
+          <div class="input-wrap">
+            <input
+              type="password"
+              id="pw"
+              placeholder="Create a password (min. 6 characters)"
+              oninput="checkStr()"
+            />
+            <button class="eye-btn" type="button" onclick="togglePw('pw')">
+              <svg
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+              >
+                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
+                <circle cx="12" cy="12" r="3" />
+              </svg>
+            </button>
+          </div>
+          <div class="strength-row">
+            <div class="seg" id="s1"></div>
+            <div class="seg" id="s2"></div>
+            <div class="seg" id="s3"></div>
+            <div class="seg" id="s4"></div>
+          </div>
+          <span class="field-hint" id="h-pw"
+            >Password must be at least 6 characters.</span
+          >
+        </div>
+
+        <!-- Confirm Password -->
+        <div class="field-group">
+          <label>Confirm Password</label>
+          <div class="input-wrap">
+            <input
+              type="password"
+              id="cpw"
+              placeholder="Re-enter your password"
+            />
+            <button class="eye-btn" type="button" onclick="togglePw('cpw')">
+              <svg
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+              >
+                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
+                <circle cx="12" cy="12" r="3" />
+              </svg>
+            </button>
+          </div>
+          <span class="field-hint" id="h-cpw">Passwords do not match.</span>
+        </div>
+
+        <button class="btn-register" onclick="doRegister()">
+          CREATE ACCOUNT
+        </button>
+        <a href="/membership/login" class="login-link"
+          >Already have an account? Login here</a
+        >
+      </div>
+    </div>
+
+    <!-- SUCCESS MODAL -->
+    <div class="modal-overlay" id="successModal">
+      <div class="modal-card">
+        <div class="success-icon">✅</div>
+        <h3>Account Created!</h3>
+        <p>
+          Your account has been submitted for <strong>admin approval</strong>.
+          Once approved, you can log in and complete your application form.
+        </p>
+        <div class="uid-display-modal">
+          <label>YOUR USER ID</label>
+          <span id="modalUid">—</span>
+        </div>
+        <p style="font-size: 0.75em; color: #e74c3c; font-weight: 700">
+          📋 Please save your User ID before closing!
+        </p>
+        <button
+          class="btn-modal-home"
+          onclick="window.location.href = '/membership/login'"
+        >
+          Go to Login Page
+        </button>
+      </div>
+    </div>
+
+    <script>
+      let generatedUid = "";
+
+      async function genUid() {
+        try {
+          const res = await fetch("/membership/generate-userid");
+          const data = await res.json();
+          generatedUid = data.userId;
+        } catch (e) {
+          const yr = new Date().getFullYear();
+          generatedUid = `CESLA-${yr}-${String(Math.floor(10000 + Math.random() * 89999))}`;
+        }
+        document.getElementById("displayUid").textContent = generatedUid;
+      }
+
+      function copyUid() {
+        navigator.clipboard.writeText(generatedUid).then(() => {
+          const btn = document.querySelector(".uid-copy");
+          btn.textContent = "✅ Copied!";
+          setTimeout(() => (btn.textContent = "📋 Copy"), 2000);
+        });
+      }
+
+      function togglePw(id) {
+        const el = document.getElementById(id);
+        el.type = el.type === "password" ? "text" : "password";
+      }
+
+      function checkStr() {
+        const pw = document.getElementById("pw").value;
+        const segs = ["s1", "s2", "s3", "s4"].map((id) =>
+          document.getElementById(id),
+        );
+        segs.forEach((s) => (s.className = "seg"));
+        let score = 0;
+        if (pw.length >= 6) score++;
+        if (pw.length >= 10) score++;
+        if (/[A-Z]/.test(pw) && /[0-9]/.test(pw)) score++;
+        if (/[^A-Za-z0-9]/.test(pw)) score++;
+        const cls = score <= 1 ? "s-weak" : score <= 2 ? "s-med" : "s-str";
+        for (let i = 0; i < score; i++) segs[i].classList.add(cls);
+      }
+
+      async function doRegister() {
+        const pw = document.getElementById("pw").value;
+        const cpw = document.getElementById("cpw").value;
+        let ok = true;
+
+        if (pw.length < 6) {
+          document.getElementById("h-pw").classList.add("show");
+          document.getElementById("pw").classList.add("error");
+          ok = false;
+        } else {
+          document.getElementById("h-pw").classList.remove("show");
+          document.getElementById("pw").classList.remove("error");
+        }
+        if (pw !== cpw || !cpw) {
+          document.getElementById("h-cpw").classList.add("show");
+          document.getElementById("cpw").classList.add("error");
+          ok = false;
+        } else {
+          document.getElementById("h-cpw").classList.remove("show");
+          document.getElementById("cpw").classList.remove("error");
+        }
+        if (!ok) return;
+
+        try {
+          const res = await fetch("/membership/register/submit", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ userId: generatedUid, password: pw }),
+          });
+          const data = await res.json();
+          if (data.success) {
+            document.getElementById("modalUid").textContent = generatedUid;
+            document.getElementById("successModal").classList.add("show");
+          } else {
+            alert(
+              "❌ " +
+                (data.message || "Registration failed. Please try again."),
+            );
+          }
+        } catch (e) {
+          alert("❌ Server error. Please try again.");
+        }
+      }
+
+      genUid();
+    </script>
+  </body>
+</html>

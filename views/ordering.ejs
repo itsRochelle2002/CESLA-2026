@@ -1,0 +1,452 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>CLIMBS Canteen Ordering System</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;800&family=DM+Sans:wght@300;400;500;600&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="/css/global.css" />
+    <style>
+      *,
+      *::before,
+      *::after {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: "DM Sans", sans-serif;
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+        overflow-x: hidden;
+      }
+
+      /* ── HEADER ── */
+      header {
+        padding: 16px 40px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        border-bottom: 1px solid rgba(201, 168, 76, 0.2);
+        background: rgba(13, 27, 62, 0.6);
+        backdrop-filter: blur(10px);
+        animation: slideDown 0.6s ease both;
+      }
+
+      @keyframes slideDown {
+        from {
+          opacity: 0;
+          transform: translateY(-16px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      .header-back {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        background: rgba(255, 255, 255, 0.08);
+        border: 1px solid rgba(255, 255, 255, 0.15);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #fff;
+        font-size: 1.1rem;
+        text-decoration: none;
+        transition:
+          background 0.2s ease,
+          transform 0.2s ease;
+        flex-shrink: 0;
+      }
+      .header-back:hover {
+        background: rgba(201, 168, 76, 0.2);
+        border-color: rgba(201, 168, 76, 0.5);
+        transform: translateX(-3px);
+      }
+
+      .header-center {
+        flex: 1;
+        text-align: center;
+      }
+      .header-center h1 {
+        font-family: "Playfair Display", serif;
+        font-size: 1.35rem;
+        font-weight: 800;
+        color: #fff;
+        letter-spacing: 0.5px;
+      }
+      .header-center h1 span {
+        color: #c9a84c;
+      }
+      .header-center p {
+        font-size: 0.68rem;
+        color: rgba(232, 200, 122, 0.65);
+        letter-spacing: 2.5px;
+        text-transform: uppercase;
+        margin-top: 3px;
+        font-weight: 300;
+      }
+
+      .header-spacer {
+        width: 40px;
+        flex-shrink: 0;
+      }
+
+      /* ── MAIN ── */
+      main {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        padding: 50px 40px 40px;
+        gap: 48px;
+      }
+
+      .section-label {
+        text-align: center;
+        animation: fadeUp 0.5s 0.2s ease both;
+      }
+      .section-label h2 {
+        font-family: "Playfair Display", serif;
+        font-size: 0.78rem;
+        font-weight: 700;
+        letter-spacing: 5px;
+        text-transform: uppercase;
+        color: rgba(201, 168, 76, 0.8);
+        margin-bottom: 7px;
+      }
+      .section-label p {
+        font-size: 0.8rem;
+        color: rgba(255, 255, 255, 0.38);
+        font-weight: 300;
+        letter-spacing: 0.4px;
+      }
+
+      /* ── CARDS GRID ── */
+      .cards-grid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 28px;
+        max-width: 680px;
+        width: 100%;
+      }
+
+      /* ── CARD ── */
+      .module-card {
+        position: relative;
+        background: rgba(255, 255, 255, 0.07);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 22px;
+        padding: 48px 32px 38px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+        gap: 20px;
+        cursor: pointer;
+        text-decoration: none;
+        overflow: hidden;
+        backdrop-filter: blur(10px);
+        transition:
+          transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1),
+          box-shadow 0.3s ease,
+          border-color 0.3s ease;
+        animation: fadeUp 0.65s ease both;
+      }
+
+      .module-card:nth-child(1) {
+        animation-delay: 0.15s;
+      }
+      .module-card:nth-child(2) {
+        animation-delay: 0.28s;
+      }
+
+      @keyframes fadeUp {
+        from {
+          opacity: 0;
+          transform: translateY(30px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      /* Glow overlay */
+      .module-card::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        border-radius: 22px;
+        background: radial-gradient(
+          circle at 50% 0%,
+          var(--card-glow, rgba(201, 168, 76, 0.1)) 0%,
+          transparent 70%
+        );
+        opacity: 0;
+        transition: opacity 0.4s ease;
+      }
+      .module-card:hover::before {
+        opacity: 1;
+      }
+
+      /* Bottom accent line */
+      .module-card::after {
+        content: "";
+        position: absolute;
+        bottom: 0;
+        left: 18%;
+        right: 18%;
+        height: 2px;
+        background: linear-gradient(
+          90deg,
+          transparent,
+          var(--card-accent, #c9a84c),
+          transparent
+        );
+        border-radius: 2px;
+        transform: scaleX(0);
+        transition: transform 0.4s ease;
+      }
+      .module-card:hover::after {
+        transform: scaleX(1);
+      }
+
+      .module-card:hover {
+        transform: translateY(-12px) scale(1.03);
+        border-color: rgba(201, 168, 76, 0.35);
+        box-shadow:
+          0 28px 64px rgba(0, 0, 0, 0.5),
+          0 0 0 1px rgba(201, 168, 76, 0.15),
+          inset 0 1px 0 rgba(255, 255, 255, 0.1);
+      }
+
+      /* Card color themes */
+      .card-member {
+        --card-glow: rgba(100, 160, 255, 0.18);
+        --card-accent: #6fa3f7;
+      }
+      .card-visitor {
+        --card-glow: rgba(180, 120, 255, 0.18);
+        --card-accent: #b47aff;
+      }
+
+      /* Icon circle */
+      .card-icon-wrap {
+        width: 96px;
+        height: 96px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 3rem;
+        background: rgba(255, 255, 255, 0.06);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        position: relative;
+        transition: transform 0.3s ease;
+        flex-shrink: 0;
+      }
+      .module-card:hover .card-icon-wrap {
+        transform: scale(1.1) rotate(-5deg);
+      }
+
+      /* Spinning dashed ring */
+      .card-icon-ring {
+        position: absolute;
+        inset: -6px;
+        border-radius: 50%;
+        border: 1.5px dashed rgba(201, 168, 76, 0.25);
+        animation: spinSlow 14s linear infinite;
+      }
+      @keyframes spinSlow {
+        to {
+          transform: rotate(360deg);
+        }
+      }
+
+      /* Card text */
+      .card-name {
+        font-family: "Playfair Display", serif;
+        font-size: 1.25rem;
+        font-weight: 800;
+        color: #fff;
+        letter-spacing: 1px;
+        text-transform: uppercase;
+      }
+      .card-desc {
+        font-size: 0.76rem;
+        color: rgba(255, 255, 255, 0.45);
+        font-weight: 300;
+        line-height: 1.65;
+        letter-spacing: 0.3px;
+      }
+
+      /* Arrow button */
+      .card-arrow {
+        width: 36px;
+        height: 36px;
+        border-radius: 50%;
+        background: rgba(255, 255, 255, 0.06);
+        border: 1px solid rgba(255, 255, 255, 0.12);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 0.9rem;
+        color: rgba(255, 255, 255, 0.5);
+        transition:
+          background 0.3s ease,
+          color 0.3s ease,
+          transform 0.3s ease;
+        margin-top: 4px;
+      }
+      .module-card:hover .card-arrow {
+        background: #c9a84c;
+        color: #0d1b3e;
+        border-color: #c9a84c;
+        transform: translateX(5px);
+      }
+
+      /* ── FOOTER TAGLINE ── */
+      .tagline {
+        text-align: center;
+        animation: fadeUp 0.6s 0.45s ease both;
+        display: flex;
+        flex-direction: column;
+        gap: 5px;
+      }
+      .tagline p {
+        font-size: 0.74rem;
+        color: rgba(255, 255, 255, 0.3);
+        font-weight: 300;
+        line-height: 1.7;
+        letter-spacing: 0.3px;
+      }
+      .tagline .highlight {
+        color: rgba(201, 168, 76, 0.7);
+        font-weight: 500;
+      }
+
+      /* ── FOOTER ── */
+      footer {
+        text-align: center;
+        padding: 16px 40px 24px;
+        border-top: 1px solid rgba(255, 255, 255, 0.06);
+        animation: fadeUp 0.6s 0.55s ease both;
+      }
+      footer p {
+        font-size: 0.7rem;
+        color: rgba(255, 255, 255, 0.25);
+        font-weight: 300;
+        letter-spacing: 0.4px;
+      }
+
+      /* ── RESPONSIVE ── */
+      @media (max-width: 560px) {
+        header {
+          padding: 12px 20px;
+        }
+        .header-center h1 {
+          font-size: 1rem;
+        }
+        main {
+          padding: 32px 16px 28px;
+          gap: 32px;
+        }
+        .cards-grid {
+          grid-template-columns: 1fr;
+          max-width: 300px;
+          gap: 16px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <a href="/" class="header-back">&#8592;</a>
+      <div class="header-center">
+        <h1><span>CLIMBS</span> Canteen Ordering System</h1>
+        <p>Select your account type to continue</p>
+      </div>
+      <div class="header-spacer"></div>
+    </header>
+
+    <main>
+      <div class="section-label">
+        <h2>Who are you?</h2>
+        <p>Choose how you would like to place your order</p>
+      </div>
+
+      <div class="cards-grid">
+        <!-- MEMBER -->
+        <a
+          href="/membership/login?from=canteen"
+          class="module-card card-member"
+        >
+          <div class="card-icon-wrap">
+            <span>👤</span>
+            <div class="card-icon-ring"></div>
+          </div>
+          <div>
+            <div class="card-name">Member</div>
+            <div class="card-desc">
+              Order food with your<br />employee account
+            </div>
+          </div>
+          <div class="card-arrow">&#8594;</div>
+        </a>
+
+        <!-- VISITOR -->
+        <a href="/canteen/order/guest" class="module-card card-visitor">
+          <div class="card-icon-wrap">
+            <span>🚶</span>
+            <div class="card-icon-ring"></div>
+          </div>
+          <div>
+            <div class="card-name">Visitor</div>
+            <div class="card-desc">Order as a walk-in<br />customer</div>
+          </div>
+          <div class="card-arrow">&#8594;</div>
+        </a>
+      </div>
+
+      <div class="tagline">
+        <p>
+          Welcome to
+          <strong style="color: rgba(255, 255, 255, 0.55)"
+            >CLIMBS Canteen Ordering System!</strong
+          >
+        </p>
+        <p>
+          Order smart, dine happily, and always follow
+          <span class="highlight">CLAYGO</span>.
+        </p>
+        <p>
+          <em
+            style="
+              color: rgba(201, 168, 76, 0.5);
+              font-style: normal;
+              font-size: 0.7rem;
+            "
+            >Clean As You Go.</em
+          >
+        </p>
+      </div>
+    </main>
+
+    <footer>
+      <p>
+        CESLA Multi-Purpose Cooperative &nbsp;&bull;&nbsp; Canteen System
+        &nbsp;&bull;&nbsp;; Developed by OJT Student in CESLA
+      </p>
+    </footer>
+  </body>
+</html>
