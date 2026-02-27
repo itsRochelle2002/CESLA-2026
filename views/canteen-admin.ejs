@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Canteen Admin Monitor</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;800&family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/css/global.css" />
+  <style>
+    *, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+    body { font-family:'DM Sans',sans-serif; min-height:100vh; display:flex; flex-direction:column; }
+
+    header {
+      padding:14px 32px; display:flex; align-items:center; justify-content:space-between;
+      border-bottom:1px solid rgba(201,168,76,0.2); background:rgba(13,27,62,0.7);
+      backdrop-filter:blur(12px); flex-shrink:0;
+    }
+    .header-back { width:38px; height:38px; border-radius:50%; background:rgba(255,255,255,0.08); border:1px solid rgba(255,255,255,0.15); display:flex; align-items:center; justify-content:center; color:#fff; text-decoration:none; font-size:1rem; transition:background 0.2s,transform 0.2s; }
+    .header-back:hover { background:rgba(201,168,76,0.2); transform:translateX(-2px); }
+    .header-center { flex:1; text-align:center; }
+    .header-center h1 { font-family:'Playfair Display',serif; font-size:1.2rem; font-weight:800; color:#fff; }
+    .header-center h1 span { color:#c9a84c; }
+    .header-center p { font-size:0.65rem; color:rgba(232,200,122,0.6); letter-spacing:2.5px; text-transform:uppercase; margin-top:3px; }
+
+    /* Live indicator */
+    .live-badge { display:flex; align-items:center; gap:7px; background:rgba(39,174,96,0.15); border:1px solid rgba(39,174,96,0.3); border-radius:20px; padding:6px 14px; }
+    .live-dot { width:8px; height:8px; border-radius:50%; background:#2ecc71; animation:livePulse 1.4s ease-in-out infinite; }
+    @keyframes livePulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:0.4;transform:scale(0.7)} }
+    .live-badge span { font-size:0.7rem; font-weight:700; color:#2ecc71; letter-spacing:1px; }
+
+    /* Stats row */
+    .stats-row { display:flex; gap:14px; padding:18px 24px 0; flex-shrink:0; }
+    .stat-card { background:rgba(255,255,255,0.06); border:1px solid rgba(255,255,255,0.1); border-radius:14px; padding:16px 20px; display:flex; flex-direction:column; gap:5px; flex:1; backdrop-filter:blur(8px); }
+    .stat-card .stat-val { font-family:'Playfair Display',serif; font-size:1.8rem; font-weight:800; color:#fff; }
+    .stat-card .stat-lbl { font-size:0.68rem; color:rgba(255,255,255,0.4); letter-spacing:1.5px; text-transform:uppercase; font-weight:500; }
+    .stat-card.preparing .stat-val { color:#f1c40f; }
+    .stat-card.ready .stat-val     { color:#2ecc71; }
+    .stat-card.total .stat-val     { color:#c9a84c; }
+
+    /* Orders grid */
+    main { flex:1; padding:18px 24px 24px; overflow-y:auto; }
+    .section-title { font-family:'Playfair Display',serif; font-size:0.8rem; font-weight:700; color:rgba(255,255,255,0.5); letter-spacing:3px; text-transform:uppercase; margin-bottom:14px; display:flex; align-items:center; gap:10px; }
+    .section-title::after { content:''; flex:1; height:1px; background:rgba(255,255,255,0.07); }
+
+    .orders-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(300px,1fr)); gap:14px; }
+
+    .order-card {
+      background:rgba(255,255,255,0.07); border:1px solid rgba(255,255,255,0.1);
+      border-radius:18px; padding:20px; display:flex; flex-direction:column; gap:14px;
+      backdrop-filter:blur(10px); transition:transform 0.2s,box-shadow 0.2s;
+      animation:cardIn 0.4s ease both;
+      position:relative; overflow:hidden;
+    }
+    @keyframes cardIn { from{opacity:0;transform:translateY(16px)} to{opacity:1;transform:translateY(0)} }
+    .order-card:hover { transform:translateY(-2px); box-shadow:0 12px 32px rgba(0,0,0,0.3); }
+
+    /* Status accent on left edge */
+    .order-card::before { content:''; position:absolute; left:0; top:0; bottom:0; width:4px; border-radius:18px 0 0 18px; }
+    .order-card.preparing::before { background:linear-gradient(180deg,#f39c12,#f1c40f); }
+    .order-card.ready::before     { background:linear-gradient(180deg,#27ae60,#2ecc71); }
+
+    .order-head { display:flex; align-items:flex-start; justify-content:space-between; gap:10px; }
+    .order-id { font-family:'Playfair Display',serif; font-size:0.9rem; font-weight:800; color:#fff; }
+    .order-time { font-size:0.65rem; color:rgba(255,255,255,0.35); margin-top:3px; }
+
+    .status-pill { padding:5px 12px; border-radius:20px; font-size:0.65rem; font-weight:700; letter-spacing:1.5px; text-transform:uppercase; flex-shrink:0; }
+    .status-pill.preparing { background:rgba(243,156,18,0.2); color:#f39c12; border:1px solid rgba(243,156,18,0.3); animation:pillPulse 1.8s ease-in-out infinite; }
+    .status-pill.ready     { background:rgba(39,174,96,0.2);   color:#2ecc71; border:1px solid rgba(39,174,96,0.3); }
+    @keyframes pillPulse { 0%,100%{opacity:1} 50%{opacity:0.6} }
+
+    .customer-row { display:flex; align-items:center; gap:8px; }
+    .customer-icon { width:30px; height:30px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:0.9rem; flex-shrink:0; }
+    .customer-icon.member  { background:rgba(52,152,219,0.2); border:1px solid rgba(52,152,219,0.3); }
+    .customer-icon.visitor { background:rgba(155,89,182,0.2); border:1px solid rgba(155,89,182,0.3); }
+    .customer-name { font-size:0.78rem; font-weight:600; color:rgba(255,255,255,0.8); }
+    .customer-type { font-size:0.62rem; color:rgba(255,255,255,0.35); }
+
+    .order-items { display:flex; flex-direction:column; gap:5px; }
+    .order-item-row { display:flex; justify-content:space-between; align-items:center; font-size:0.73rem; color:rgba(255,255,255,0.65); }
+    .order-item-row span:last-child { color:rgba(201,168,76,0.8); font-weight:600; }
+
+    .order-footer { display:flex; align-items:center; justify-content:space-between; padding-top:10px; border-top:1px solid rgba(255,255,255,0.07); }
+    .order-total { font-family:'Playfair Display',serif; font-size:1rem; font-weight:800; color:#c9a84c; }
+    .pay-badge { font-size:0.62rem; font-weight:700; letter-spacing:1px; text-transform:uppercase; padding:4px 10px; border-radius:6px; }
+    .pay-badge.cash   { background:rgba(39,174,96,0.15);   color:#2ecc71; border:1px solid rgba(39,174,96,0.25); }
+    .pay-badge.credit { background:rgba(231,76,60,0.15);   color:#e74c3c; border:1px solid rgba(231,76,60,0.25); }
+
+    .order-actions { display:flex; gap:8px; }
+    .btn-ready { flex:1; padding:10px; background:linear-gradient(135deg,#27ae60,#2ecc71); border:none; border-radius:10px; color:#fff; font-family:'DM Sans',sans-serif; font-size:0.76rem; font-weight:700; letter-spacing:0.5px; cursor:pointer; transition:filter 0.2s,transform 0.2s; box-shadow:0 4px 12px rgba(39,174,96,0.3); }
+    .btn-ready:hover { filter:brightness(1.1); transform:translateY(-1px); }
+    .btn-done-admin { padding:10px 14px; background:rgba(255,255,255,0.07); border:1px solid rgba(255,255,255,0.12); border-radius:10px; color:rgba(255,255,255,0.6); font-family:'DM Sans',sans-serif; font-size:0.76rem; font-weight:600; cursor:pointer; transition:background 0.2s; }
+    .btn-done-admin:hover { background:rgba(255,255,255,0.12); }
+    .already-ready-actions { display:flex; gap:8px; width:100%; }
+    .ready-indicator { display:flex; align-items:center; gap:6px; font-size:0.73rem; color:#2ecc71; font-weight:600; flex:1; }
+
+    .empty-state { text-align:center; padding:60px 20px; color:rgba(255,255,255,0.3); }
+    .empty-state .empty-icon { font-size:3.5rem; margin-bottom:16px; opacity:0.5; }
+    .empty-state p { font-size:0.85rem; font-weight:300; line-height:1.7; }
+
+    /* Toast */
+    .toast { position:fixed; bottom:24px; left:50%; transform:translateX(-50%) translateY(80px); background:rgba(13,27,62,0.95); border:1px solid rgba(201,168,76,0.4); border-radius:12px; padding:12px 24px; color:#fff; font-size:0.82rem; font-weight:500; box-shadow:0 8px 28px rgba(0,0,0,0.4); transition:transform 0.3s ease; z-index:999; white-space:nowrap; }
+    .toast.show { transform:translateX(-50%) translateY(0); }
+
+    /* Notification popup */
+    .notif-popup {
+      position:fixed; top:80px; right:24px; max-width:300px; width:calc(100vw - 48px);
+      background:rgba(13,27,62,0.97); border:1px solid rgba(201,168,76,0.3);
+      border-radius:16px; padding:18px 20px; display:flex; gap:14px; align-items:flex-start;
+      box-shadow:0 16px 48px rgba(0,0,0,0.5);
+      transform:translateX(120%); transition:transform 0.4s cubic-bezier(0.34,1.56,0.64,1);
+      z-index:800;
+    }
+    .notif-popup.show { transform:translateX(0); }
+    .notif-icon { font-size:1.8rem; flex-shrink:0; }
+    .notif-content h4 { font-size:0.82rem; font-weight:700; color:#fff; margin-bottom:4px; }
+    .notif-content p  { font-size:0.72rem; color:rgba(255,255,255,0.5); line-height:1.5; }
+    .notif-close { position:absolute; top:10px; right:12px; background:none; border:none; color:rgba(255,255,255,0.35); cursor:pointer; font-size:0.9rem; }
+
+    ::-webkit-scrollbar { width:5px; }
+    ::-webkit-scrollbar-thumb { background:rgba(255,255,255,0.12); border-radius:4px; }
+  </style>
+</head>
+<body>
+
+  <header>
+    <a href="/membership/admin/dashboard" class="header-back">&#8592;</a>
+    <div class="header-center">
+      <h1><span>Canteen</span> Order Monitor</h1>
+      <p>CESLA Canteen Admin Panel</p>
+    </div>
+    <div class="live-badge">
+      <div class="live-dot"></div>
+      <span>LIVE</span>
+    </div>
+  </header>
+
+  <!-- Stats -->
+  <div class="stats-row">
+    <div class="stat-card preparing">
+      <div class="stat-val" id="statPreparing">0</div>
+      <div class="stat-lbl">Preparing</div>
+    </div>
+    <div class="stat-card ready">
+      <div class="stat-val" id="statReady">0</div>
+      <div class="stat-lbl">Ready</div>
+    </div>
+    <div class="stat-card total">
+      <div class="stat-val" id="statTotal">0</div>
+      <div class="stat-lbl">Total Today</div>
+    </div>
+  </div>
+
+  <!-- Orders -->
+  <main>
+    <div class="section-title">Active Orders</div>
+    <div class="orders-grid" id="ordersGrid">
+      <div class="empty-state">
+        <div class="empty-icon">🍽️</div>
+        <p>No active orders yet.<br/>Orders will appear here in real-time.</p>
+      </div>
+    </div>
+  </main>
+
+  <!-- Notification popup -->
+  <div class="notif-popup" id="notifPopup">
+    <div class="notif-icon" id="notifIcon">🔔</div>
+    <div class="notif-content">
+      <h4 id="notifTitle">New Order!</h4>
+      <p id="notifMsg">—</p>
+    </div>
+    <button class="notif-close" onclick="closeNotif()">&#10005;</button>
+  </div>
+
+  <div class="toast" id="toast"></div>
+
+  <script>
+    let knownOrders  = {};
+    let totalToday   = 0;
+    let notifTimer;
+
+    // Format time
+    function timeAgo(iso) {
+      const diff = Math.floor((Date.now() - new Date(iso)) / 1000);
+      if (diff < 60)  return diff + 's ago';
+      if (diff < 3600) return Math.floor(diff/60) + 'm ago';
+      return Math.floor(diff/3600) + 'h ago';
+    }
+    function fmtTime(iso) {
+      return new Date(iso).toLocaleTimeString('en-PH', { hour:'2-digit', minute:'2-digit', hour12:true });
+    }
+
+    function renderOrders(orders) {
+      const grid = document.getElementById('ordersGrid');
+
+      // Detect new orders for notification
+      orders.forEach(o => {
+        if (!knownOrders[o.id] && o.status === 'preparing') {
+          showNotif('🛎️ New Order!', `${o.customerName} placed an order — ₱${parseFloat(o.total).toFixed(2)}`);
+        }
+        knownOrders[o.id] = o.status;
+      });
+
+      // Stats
+      const preparing = orders.filter(o => o.status === 'preparing').length;
+      const ready     = orders.filter(o => o.status === 'ready').length;
+      totalToday = Math.max(totalToday, orders.length);
+      document.getElementById('statPreparing').textContent = preparing;
+      document.getElementById('statReady').textContent     = ready;
+      document.getElementById('statTotal').textContent     = totalToday;
+
+      if (!orders.length) {
+        grid.innerHTML = `<div class="empty-state"><div class="empty-icon">🍽️</div><p>No active orders yet.<br/>Orders will appear here in real-time.</p></div>`;
+        return;
+      }
+
+      grid.innerHTML = orders.map(o => `
+        <div class="order-card ${o.status}" id="card-${o.id}">
+          <div class="order-head">
+            <div>
+              <div class="order-id">${o.id}</div>
+              <div class="order-time">🕐 ${fmtTime(o.placedAt)} &nbsp;·&nbsp; ${timeAgo(o.placedAt)}</div>
+            </div>
+            <div class="status-pill ${o.status}">${o.status === 'preparing' ? '⏳ Preparing' : '✅ Ready'}</div>
+          </div>
+
+          <div class="customer-row">
+            <div class="customer-icon ${o.customerType}">${o.customerType === 'member' ? '👤' : '🚶'}</div>
+            <div>
+              <div class="customer-name">${o.customerName}</div>
+              <div class="customer-type">${o.customerType === 'member' ? 'Member' : 'Walk-in Visitor'}</div>
+            </div>
+          </div>
+
+          <div class="order-items">
+            ${o.items.map(item => `
+              <div class="order-item-row">
+                <span>${item.name} ×${item.qty}</span>
+                <span>₱${(item.price * item.qty).toFixed(2)}</span>
+              </div>`).join('')}
+          </div>
+
+          <div class="order-footer">
+            <div class="order-total">₱${parseFloat(o.total).toFixed(2)}</div>
+            <span class="pay-badge ${o.payMode}">${o.payMode === 'cash' ? '💵 Cash' : '💳 Credit'}</span>
+          </div>
+
+          <div class="order-actions">
+            ${o.status === 'preparing' ? `
+              <button class="btn-ready" onclick="markReady('${o.id}')">✅ &nbsp; Mark as Ready</button>
+              <button class="btn-done-admin" onclick="markDone('${o.id}')">Skip</button>
+            ` : `
+              <div class="already-ready-actions">
+                <div class="ready-indicator">✅ Notified customer — awaiting pickup</div>
+                <button class="btn-done-admin" onclick="markDone('${o.id}')">Done</button>
+              </div>
+            `}
+          </div>
+        </div>`).join('');
+    }
+
+    async function markReady(id) {
+      try {
+        const res  = await fetch(`/canteen/api/order/${id}/ready`, { method:'POST', headers:{'Content-Type':'application/json'} });
+        const data = await res.json();
+        if (data.success) {
+          showToast('✅ Customer notified — Ready for Pickup!');
+          showNotif('🔔 Order Ready!', `Order ${id} marked as ready. Customer has been notified.`);
+          fetchOrders();
+        }
+      } catch (e) { showToast('❌ Server error.'); }
+    }
+
+    async function markDone(id) {
+      try {
+        await fetch(`/canteen/api/order/${id}/done`, { method:'POST', headers:{'Content-Type':'application/json'} });
+        delete knownOrders[id];
+        showToast('🏁 Order marked as done!');
+        fetchOrders();
+      } catch (e) { /* ignore */ }
+    }
+
+    async function fetchOrders() {
+      try {
+        const res    = await fetch('/canteen/api/orders/pending');
+        const orders = await res.json();
+        renderOrders(orders);
+      } catch (e) { /* ignore */ }
+    }
+
+    // Notification popup
+    let notifHideTimer;
+    function showNotif(title, msg) {
+      document.getElementById('notifTitle').textContent = title;
+      document.getElementById('notifMsg').textContent   = msg;
+      const el = document.getElementById('notifPopup');
+      el.classList.add('show');
+      clearTimeout(notifHideTimer);
+      notifHideTimer = setTimeout(() => el.classList.remove('show'), 5000);
+    }
+    function closeNotif() {
+      document.getElementById('notifPopup').classList.remove('show');
+    }
+
+    let toastTimer;
+    function showToast(msg) {
+      const t = document.getElementById('toast');
+      t.textContent = msg; t.classList.add('show');
+      clearTimeout(toastTimer);
+      toastTimer = setTimeout(() => t.classList.remove('show'), 2500);
+    }
+
+    // Initial load + polling every 2.5s
+    fetchOrders();
+    setInterval(fetchOrders, 2500);
+
+    // Update time-ago labels every 30s
+    setInterval(() => { if (Object.keys(knownOrders).length) fetchOrders(); }, 30000);
+  </script>
+</body>
+</html>
