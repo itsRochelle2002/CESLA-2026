@@ -475,6 +475,22 @@
           </div>
         </div>
 
+        <!-- Full Name -->
+        <div class="field-group" style="width: 100%">
+          <label>Full Name</label>
+          <div class="input-wrap">
+            <input
+              type="text"
+              id="fullname"
+              placeholder="e.g. Juan Dela Cruz"
+              autocomplete="name"
+            />
+          </div>
+          <span class="field-hint" id="h-name"
+            >Please enter your full name.</span
+          >
+        </div>
+
         <!-- Auto-generated User ID -->
         <div class="userid-box">
           <div class="uid-left">
@@ -562,8 +578,9 @@
         <div class="success-icon">✅</div>
         <h3>Account Created!</h3>
         <p>
-          Your account has been submitted for <strong>admin approval</strong>.
-          Once approved, you can log in and complete your application form.
+          Welcome, <strong id="modalName">—</strong>! Your account has been
+          submitted for <strong>admin approval</strong>. Once approved, you can
+          log in and complete your application form.
         </p>
         <div class="uid-display-modal">
           <label>YOUR USER ID</label>
@@ -625,10 +642,19 @@
       }
 
       async function doRegister() {
+        const name = document.getElementById("fullname").value.trim();
         const pw = document.getElementById("pw").value;
         const cpw = document.getElementById("cpw").value;
         let ok = true;
 
+        if (!name) {
+          document.getElementById("h-name").classList.add("show");
+          document.getElementById("fullname").classList.add("error");
+          ok = false;
+        } else {
+          document.getElementById("h-name").classList.remove("show");
+          document.getElementById("fullname").classList.remove("error");
+        }
         if (pw.length < 6) {
           document.getElementById("h-pw").classList.add("show");
           document.getElementById("pw").classList.add("error");
@@ -651,10 +677,15 @@
           const res = await fetch("/membership/register/submit", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ userId: generatedUid, password: pw }),
+            body: JSON.stringify({
+              fullName: name,
+              userId: generatedUid,
+              password: pw,
+            }),
           });
           const data = await res.json();
           if (data.success) {
+            document.getElementById("modalName").textContent = name;
             document.getElementById("modalUid").textContent = generatedUid;
             document.getElementById("successModal").classList.add("show");
           } else {

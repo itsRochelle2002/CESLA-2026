@@ -1,379 +1,1390 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>CLIMBS Canteen Ordering System</title>
-  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;800&family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="/css/global.css" />
-  <style>
-    *, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
-    body { font-family:'DM Sans',sans-serif; min-height:100vh; display:flex; flex-direction:column; overflow:hidden; }
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>CLIMBS Canteen Ordering System</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;800&family=DM+Sans:wght@300;400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="/css/global.css" />
+    <style>
+      *,
+      *::before,
+      *::after {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      body {
+        font-family: "DM Sans", sans-serif;
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+        overflow: hidden;
+      }
 
-    header {
-      padding:13px 28px; display:flex; align-items:center; justify-content:space-between;
-      border-bottom:1px solid rgba(201,168,76,0.2); background:rgba(13,27,62,0.7);
-      backdrop-filter:blur(12px); flex-shrink:0; animation:slideDown 0.5s ease both;
-    }
-    @keyframes slideDown { from{opacity:0;transform:translateY(-12px)} to{opacity:1;transform:translateY(0)} }
-    .header-back {
-      width:36px; height:36px; border-radius:50%; background:rgba(255,255,255,0.08);
-      border:1px solid rgba(255,255,255,0.15); display:flex; align-items:center; justify-content:center;
-      color:#fff; font-size:1rem; text-decoration:none; transition:background 0.2s,transform 0.2s;
-    }
-    .header-back:hover { background:rgba(201,168,76,0.2); transform:translateX(-2px); }
-    .header-title { font-family:'Playfair Display',serif; font-size:1.2rem; font-weight:800; color:#fff; flex:1; text-align:center; }
-    .header-title span { color:#c9a84c; }
-    .header-menu-btn {
-      width:36px; height:36px; border-radius:50%; background:rgba(255,255,255,0.08);
-      border:1px solid rgba(255,255,255,0.15); display:flex; align-items:center; justify-content:center;
-      color:#fff; font-size:1rem; cursor:pointer; transition:background 0.2s;
-    }
-    .header-menu-btn:hover { background:rgba(201,168,76,0.2); }
+      header {
+        padding: 13px 28px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        border-bottom: 1px solid rgba(201, 168, 76, 0.2);
+        background: rgba(13, 27, 62, 0.7);
+        backdrop-filter: blur(12px);
+        flex-shrink: 0;
+        animation: slideDown 0.5s ease both;
+      }
+      @keyframes slideDown {
+        from {
+          opacity: 0;
+          transform: translateY(-12px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+      .header-back {
+        width: 36px;
+        height: 36px;
+        border-radius: 50%;
+        background: rgba(255, 255, 255, 0.08);
+        border: 1px solid rgba(255, 255, 255, 0.15);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #fff;
+        font-size: 1rem;
+        text-decoration: none;
+        transition:
+          background 0.2s,
+          transform 0.2s;
+      }
+      .header-back:hover {
+        background: rgba(201, 168, 76, 0.2);
+        transform: translateX(-2px);
+      }
+      .header-title {
+        font-family: "Playfair Display", serif;
+        font-size: 1.2rem;
+        font-weight: 800;
+        color: #fff;
+        flex: 1;
+        text-align: center;
+      }
+      .header-title span {
+        color: #c9a84c;
+      }
+      .header-menu-btn {
+        width: 36px;
+        height: 36px;
+        border-radius: 50%;
+        background: rgba(255, 255, 255, 0.08);
+        border: 1px solid rgba(255, 255, 255, 0.15);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #fff;
+        font-size: 1rem;
+        cursor: pointer;
+        transition: background 0.2s;
+      }
+      .header-menu-btn:hover {
+        background: rgba(201, 168, 76, 0.2);
+      }
 
-    .layout { display:flex; flex:1; gap:14px; padding:14px; overflow:hidden; animation:fadeUp 0.5s 0.1s ease both; }
-    @keyframes fadeUp { from{opacity:0;transform:translateY(16px)} to{opacity:1;transform:translateY(0)} }
+      .layout {
+        display: flex;
+        flex: 1;
+        gap: 14px;
+        padding: 14px;
+        overflow: hidden;
+        animation: fadeUp 0.5s 0.1s ease both;
+      }
+      @keyframes fadeUp {
+        from {
+          opacity: 0;
+          transform: translateY(16px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
 
-    .panel { background:rgba(255,255,255,0.07); border:1px solid rgba(255,255,255,0.1); border-radius:18px; backdrop-filter:blur(10px); overflow:hidden; display:flex; flex-direction:column; }
-    .panel-head { padding:14px 18px 10px; border-bottom:1px solid rgba(255,255,255,0.08); }
-    .panel-head h2 { font-family:'Playfair Display',serif; font-size:0.85rem; font-weight:700; color:#fff; letter-spacing:2px; text-transform:uppercase; padding-bottom:8px; border-bottom:2px solid #c9a84c; display:inline-block; }
+      .panel {
+        background: rgba(255, 255, 255, 0.07);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 18px;
+        backdrop-filter: blur(10px);
+        overflow: hidden;
+        display: flex;
+        flex-direction: column;
+      }
+      .panel-head {
+        padding: 14px 18px 10px;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+      }
+      .panel-head h2 {
+        font-family: "Playfair Display", serif;
+        font-size: 0.85rem;
+        font-weight: 700;
+        color: #fff;
+        letter-spacing: 2px;
+        text-transform: uppercase;
+        padding-bottom: 8px;
+        border-bottom: 2px solid #c9a84c;
+        display: inline-block;
+      }
 
-    /* Categories */
-    .col-cats { width:170px; flex-shrink:0; padding-bottom:14px; }
-    .cat-list { display:flex; flex-direction:column; gap:8px; padding:12px 14px; overflow-y:auto; flex:1; }
-    .cat-btn { width:100%; padding:11px 14px; border-radius:10px; background:rgba(255,255,255,0.08); border:1px solid rgba(255,255,255,0.1); color:rgba(255,255,255,0.8); font-family:'DM Sans',sans-serif; font-size:0.8rem; font-weight:600; cursor:pointer; text-align:center; transition:background 0.2s,transform 0.15s; }
-    .cat-btn:hover { background:rgba(255,255,255,0.14); transform:translateX(2px); }
-    .cat-btn.active { background:linear-gradient(135deg,#c9a84c,#e8c87a); border-color:transparent; color:#0d1b3e; font-weight:700; box-shadow:0 4px 14px rgba(201,168,76,0.35); }
+      /* Categories */
+      .col-cats {
+        width: 170px;
+        flex-shrink: 0;
+        padding-bottom: 14px;
+      }
+      .cat-list {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+        padding: 12px 14px;
+        overflow-y: auto;
+        flex: 1;
+      }
+      .cat-btn {
+        width: 100%;
+        padding: 11px 14px;
+        border-radius: 10px;
+        background: rgba(255, 255, 255, 0.08);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        color: rgba(255, 255, 255, 0.8);
+        font-family: "DM Sans", sans-serif;
+        font-size: 0.8rem;
+        font-weight: 600;
+        cursor: pointer;
+        text-align: center;
+        transition:
+          background 0.2s,
+          transform 0.15s;
+      }
+      .cat-btn:hover {
+        background: rgba(255, 255, 255, 0.14);
+        transform: translateX(2px);
+      }
+      .cat-btn.active {
+        background: linear-gradient(135deg, #c9a84c, #e8c87a);
+        border-color: transparent;
+        color: #0d1b3e;
+        font-weight: 700;
+        box-shadow: 0 4px 14px rgba(201, 168, 76, 0.35);
+      }
 
-    /* Items */
-    .col-items { flex:1; min-width:0; }
-    .items-toolbar { display:flex; align-items:center; justify-content:space-between; gap:12px; padding:12px 16px 10px; border-bottom:1px solid rgba(255,255,255,0.08); }
-    .items-toolbar h2 { font-family:'Playfair Display',serif; font-size:0.85rem; font-weight:700; color:#fff; letter-spacing:2px; text-transform:uppercase; padding-bottom:8px; border-bottom:2px solid #c9a84c; display:inline-block; white-space:nowrap; }
-    .search-wrap { display:flex; align-items:center; gap:8px; background:rgba(255,255,255,0.08); border:1px solid rgba(255,255,255,0.12); border-radius:20px; padding:7px 14px; flex:1; max-width:280px; transition:border-color 0.2s; }
-    .search-wrap:focus-within { border-color:rgba(201,168,76,0.5); }
-    .search-wrap input { background:none; border:none; outline:none; font-family:'DM Sans',sans-serif; font-size:0.78rem; color:#fff; flex:1; }
-    .search-wrap input::placeholder { color:rgba(255,255,255,0.35); }
-    .search-icon { color:rgba(255,255,255,0.4); font-size:0.8rem; }
-    .items-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(150px,1fr)); gap:12px; padding:14px; overflow-y:auto; flex:1; }
-    .item-card { background:rgba(255,255,255,0.06); border:1px solid rgba(255,255,255,0.1); border-radius:14px; padding:14px 12px 12px; display:flex; flex-direction:column; align-items:center; gap:8px; transition:transform 0.2s,border-color 0.2s,box-shadow 0.2s; }
-    .item-card:hover { transform:translateY(-3px); border-color:rgba(201,168,76,0.3); box-shadow:0 8px 24px rgba(0,0,0,0.3); }
-    .item-img { width:64px; height:64px; border-radius:50%; background:rgba(255,255,255,0.08); display:flex; align-items:center; justify-content:center; font-size:2rem; }
-    .item-name { font-size:0.76rem; font-weight:600; color:#fff; text-align:center; line-height:1.4; }
-    .item-stock { font-size:0.65rem; color:rgba(255,255,255,0.4); }
-    .item-price { font-size:0.85rem; font-weight:700; color:#c9a84c; }
-    .btn-add-cart { width:100%; padding:8px; background:rgba(26,52,120,0.6); border:1px solid rgba(255,255,255,0.15); border-radius:8px; color:#fff; font-family:'DM Sans',sans-serif; font-size:0.72rem; font-weight:600; cursor:pointer; transition:background 0.2s,transform 0.15s; }
-    .btn-add-cart:hover { background:linear-gradient(135deg,#c9a84c,#e8c87a); color:#0d1b3e; border-color:transparent; transform:scale(1.03); }
-    .btn-add-cart:disabled { background:rgba(255,255,255,0.04); color:rgba(255,255,255,0.2); cursor:not-allowed; transform:none; }
-    .no-items { grid-column:1/-1; text-align:center; padding:40px 20px; color:rgba(255,255,255,0.3); font-size:0.82rem; }
+      /* Items */
+      .col-items {
+        flex: 1;
+        min-width: 0;
+      }
+      .items-toolbar {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+        padding: 12px 16px 10px;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+      }
+      .items-toolbar h2 {
+        font-family: "Playfair Display", serif;
+        font-size: 0.85rem;
+        font-weight: 700;
+        color: #fff;
+        letter-spacing: 2px;
+        text-transform: uppercase;
+        padding-bottom: 8px;
+        border-bottom: 2px solid #c9a84c;
+        display: inline-block;
+        white-space: nowrap;
+      }
+      .search-wrap {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        background: rgba(255, 255, 255, 0.08);
+        border: 1px solid rgba(255, 255, 255, 0.12);
+        border-radius: 20px;
+        padding: 7px 14px;
+        flex: 1;
+        max-width: 280px;
+        transition: border-color 0.2s;
+      }
+      .search-wrap:focus-within {
+        border-color: rgba(201, 168, 76, 0.5);
+      }
+      .search-wrap input {
+        background: none;
+        border: none;
+        outline: none;
+        font-family: "DM Sans", sans-serif;
+        font-size: 0.78rem;
+        color: #fff;
+        flex: 1;
+      }
+      .search-wrap input::placeholder {
+        color: rgba(255, 255, 255, 0.35);
+      }
+      .search-icon {
+        color: rgba(255, 255, 255, 0.4);
+        font-size: 0.8rem;
+      }
+      .items-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+        gap: 12px;
+        padding: 14px;
+        overflow-y: auto;
+        flex: 1;
+      }
+      .item-card {
+        background: rgba(255, 255, 255, 0.06);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 14px;
+        padding: 14px 12px 12px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 8px;
+        transition:
+          transform 0.2s,
+          border-color 0.2s,
+          box-shadow 0.2s;
+      }
+      .item-card:hover {
+        transform: translateY(-3px);
+        border-color: rgba(201, 168, 76, 0.3);
+        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+      }
+      .item-img {
+        width: 64px;
+        height: 64px;
+        border-radius: 50%;
+        background: rgba(255, 255, 255, 0.08);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 2rem;
+      }
+      .item-name {
+        font-size: 0.76rem;
+        font-weight: 600;
+        color: #fff;
+        text-align: center;
+        line-height: 1.4;
+      }
+      .item-stock {
+        font-size: 0.65rem;
+        color: rgba(255, 255, 255, 0.4);
+      }
+      .item-price {
+        font-size: 0.85rem;
+        font-weight: 700;
+        color: #c9a84c;
+      }
+      .btn-add-cart {
+        width: 100%;
+        padding: 8px;
+        background: rgba(26, 52, 120, 0.6);
+        border: 1px solid rgba(255, 255, 255, 0.15);
+        border-radius: 8px;
+        color: #fff;
+        font-family: "DM Sans", sans-serif;
+        font-size: 0.72rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition:
+          background 0.2s,
+          transform 0.15s;
+      }
+      .btn-add-cart:hover {
+        background: linear-gradient(135deg, #c9a84c, #e8c87a);
+        color: #0d1b3e;
+        border-color: transparent;
+        transform: scale(1.03);
+      }
+      .btn-add-cart:disabled {
+        background: rgba(255, 255, 255, 0.04);
+        color: rgba(255, 255, 255, 0.2);
+        cursor: not-allowed;
+        transform: none;
+      }
+      .no-items {
+        grid-column: 1/-1;
+        text-align: center;
+        padding: 40px 20px;
+        color: rgba(255, 255, 255, 0.3);
+        font-size: 0.82rem;
+      }
 
-    /* Cart */
-    .col-cart { width:240px; flex-shrink:0; }
-    .cart-body { display:flex; flex-direction:column; flex:1; overflow:hidden; padding:10px 14px; gap:10px; }
-    .cart-empty { background:rgba(255,255,255,0.04); border-radius:10px; padding:24px 12px; text-align:center; font-size:0.75rem; color:rgba(255,255,255,0.3); }
-    .cart-items { display:flex; flex-direction:column; gap:6px; max-height:180px; overflow-y:auto; }
-    .cart-item { display:flex; align-items:center; gap:8px; background:rgba(255,255,255,0.05); border-radius:8px; padding:7px 9px; }
-    .cart-item-name { flex:1; font-size:0.7rem; color:rgba(255,255,255,0.8); font-weight:500; line-height:1.3; }
-    .cart-item-qty { display:flex; align-items:center; gap:4px; }
-    .qty-btn { width:20px; height:20px; border-radius:50%; background:rgba(255,255,255,0.1); border:none; color:#fff; font-size:0.75rem; cursor:pointer; display:flex; align-items:center; justify-content:center; transition:background 0.15s; }
-    .qty-btn:hover { background:rgba(201,168,76,0.4); }
-    .qty-num { font-size:0.72rem; font-weight:700; color:#fff; min-width:16px; text-align:center; }
-    .cart-item-price { font-size:0.7rem; font-weight:700; color:#c9a84c; white-space:nowrap; }
-    .cart-item-del { background:none; border:none; color:rgba(231,76,60,0.6); cursor:pointer; font-size:0.75rem; padding:0 2px; transition:color 0.15s; }
-    .cart-item-del:hover { color:#e74c3c; }
-    .cart-total-row { display:flex; justify-content:space-between; align-items:center; padding:8px 0; border-top:1px solid rgba(255,255,255,0.1); }
-    .cart-total-label { font-size:0.82rem; font-weight:700; color:#fff; }
-    .cart-total-val { font-size:1rem; font-weight:800; color:#c9a84c; }
-    .pay-opts { display:flex; flex-direction:column; gap:6px; }
-    .pay-opt { display:flex; align-items:center; gap:8px; font-size:0.74rem; color:rgba(255,255,255,0.65); cursor:pointer; }
-    .pay-opt input[type="radio"] { accent-color:#c9a84c; }
-    .amount-group { display:flex; flex-direction:column; gap:5px; }
-    .amount-group label { font-size:0.7rem; color:rgba(255,255,255,0.5); font-weight:500; }
-    .amount-input { background:rgba(255,255,255,0.08); border:1px solid rgba(255,255,255,0.12); border-radius:8px; padding:8px 12px; color:#fff; font-family:'DM Sans',sans-serif; font-size:0.8rem; font-weight:600; outline:none; width:100%; transition:border-color 0.2s; }
-    .amount-input:focus { border-color:rgba(201,168,76,0.5); }
-    .change-row { display:flex; justify-content:space-between; align-items:center; }
-    .change-label { font-size:0.72rem; color:rgba(255,255,255,0.5); }
-    .change-val { font-size:0.82rem; font-weight:700; color:rgba(255,255,255,0.8); }
+      /* Cart */
+      .col-cart {
+        width: 240px;
+        flex-shrink: 0;
+      }
+      .cart-body {
+        display: flex;
+        flex-direction: column;
+        flex: 1;
+        overflow: hidden;
+        padding: 10px 14px;
+        gap: 10px;
+      }
+      .cart-empty {
+        background: rgba(255, 255, 255, 0.04);
+        border-radius: 10px;
+        padding: 24px 12px;
+        text-align: center;
+        font-size: 0.75rem;
+        color: rgba(255, 255, 255, 0.3);
+      }
+      .cart-items {
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+        max-height: 180px;
+        overflow-y: auto;
+      }
+      .cart-item {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        background: rgba(255, 255, 255, 0.05);
+        border-radius: 8px;
+        padding: 7px 9px;
+      }
+      .cart-item-name {
+        flex: 1;
+        font-size: 0.7rem;
+        color: rgba(255, 255, 255, 0.8);
+        font-weight: 500;
+        line-height: 1.3;
+      }
+      .cart-item-qty {
+        display: flex;
+        align-items: center;
+        gap: 4px;
+      }
+      .qty-btn {
+        width: 20px;
+        height: 20px;
+        border-radius: 50%;
+        background: rgba(255, 255, 255, 0.1);
+        border: none;
+        color: #fff;
+        font-size: 0.75rem;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: background 0.15s;
+      }
+      .qty-btn:hover {
+        background: rgba(201, 168, 76, 0.4);
+      }
+      .qty-num {
+        font-size: 0.72rem;
+        font-weight: 700;
+        color: #fff;
+        min-width: 16px;
+        text-align: center;
+      }
+      .cart-item-price {
+        font-size: 0.7rem;
+        font-weight: 700;
+        color: #c9a84c;
+        white-space: nowrap;
+      }
+      .cart-item-del {
+        background: none;
+        border: none;
+        color: rgba(231, 76, 60, 0.6);
+        cursor: pointer;
+        font-size: 0.75rem;
+        padding: 0 2px;
+        transition: color 0.15s;
+      }
+      .cart-item-del:hover {
+        color: #e74c3c;
+      }
+      .cart-total-row {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 8px 0;
+        border-top: 1px solid rgba(255, 255, 255, 0.1);
+      }
+      .cart-total-label {
+        font-size: 0.82rem;
+        font-weight: 700;
+        color: #fff;
+      }
+      .cart-total-val {
+        font-size: 1rem;
+        font-weight: 800;
+        color: #c9a84c;
+      }
+      .pay-opts {
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+      }
+      .pay-opt {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-size: 0.74rem;
+        color: rgba(255, 255, 255, 0.65);
+        cursor: pointer;
+      }
+      .pay-opt input[type="radio"] {
+        accent-color: #c9a84c;
+      }
+      .amount-group {
+        display: flex;
+        flex-direction: column;
+        gap: 5px;
+      }
+      .amount-group label {
+        font-size: 0.7rem;
+        color: rgba(255, 255, 255, 0.5);
+        font-weight: 500;
+      }
+      .amount-input {
+        background: rgba(255, 255, 255, 0.08);
+        border: 1px solid rgba(255, 255, 255, 0.12);
+        border-radius: 8px;
+        padding: 8px 12px;
+        color: #fff;
+        font-family: "DM Sans", sans-serif;
+        font-size: 0.8rem;
+        font-weight: 600;
+        outline: none;
+        width: 100%;
+        transition: border-color 0.2s;
+      }
+      .amount-input:focus {
+        border-color: rgba(201, 168, 76, 0.5);
+      }
+      .change-row {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+      .change-label {
+        font-size: 0.72rem;
+        color: rgba(255, 255, 255, 0.5);
+      }
+      .change-val {
+        font-size: 0.82rem;
+        font-weight: 700;
+        color: rgba(255, 255, 255, 0.8);
+      }
 
-    .btn-place { width:100%; padding:11px; background:linear-gradient(135deg,#27ae60,#2ecc71); border:none; border-radius:10px; color:#fff; font-family:'DM Sans',sans-serif; font-size:0.78rem; font-weight:700; letter-spacing:0.5px; cursor:pointer; box-shadow:0 4px 14px rgba(39,174,96,0.35); transition:filter 0.2s,transform 0.2s; }
-    .btn-place:hover { filter:brightness(1.1); transform:translateY(-1px); }
-    .btn-place:disabled { background:rgba(255,255,255,0.1); box-shadow:none; transform:none; cursor:not-allowed; }
-    .btn-clear { width:100%; padding:10px; background:rgba(231,76,60,0.15); border:1px solid rgba(231,76,60,0.3); border-radius:10px; color:rgba(231,76,60,0.9); font-family:'DM Sans',sans-serif; font-size:0.78rem; font-weight:600; cursor:pointer; transition:background 0.2s,transform 0.2s; }
-    .btn-clear:hover { background:rgba(231,76,60,0.25); transform:translateY(-1px); }
-    .btn-receipt { width:100%; padding:10px; background:rgba(201,168,76,0.15); border:1px solid rgba(201,168,76,0.3); border-radius:10px; color:#c9a84c; font-family:'DM Sans',sans-serif; font-size:0.78rem; font-weight:600; cursor:pointer; transition:background 0.2s,transform 0.2s; }
-    .btn-receipt:hover { background:rgba(201,168,76,0.25); transform:translateY(-1px); }
+      .btn-place {
+        width: 100%;
+        padding: 11px;
+        background: linear-gradient(135deg, #27ae60, #2ecc71);
+        border: none;
+        border-radius: 10px;
+        color: #fff;
+        font-family: "DM Sans", sans-serif;
+        font-size: 0.78rem;
+        font-weight: 700;
+        letter-spacing: 0.5px;
+        cursor: pointer;
+        box-shadow: 0 4px 14px rgba(39, 174, 96, 0.35);
+        transition:
+          filter 0.2s,
+          transform 0.2s;
+      }
+      .btn-place:hover {
+        filter: brightness(1.1);
+        transform: translateY(-1px);
+      }
+      .btn-place:disabled {
+        background: rgba(255, 255, 255, 0.1);
+        box-shadow: none;
+        transform: none;
+        cursor: not-allowed;
+      }
+      .btn-clear {
+        width: 100%;
+        padding: 10px;
+        background: rgba(231, 76, 60, 0.15);
+        border: 1px solid rgba(231, 76, 60, 0.3);
+        border-radius: 10px;
+        color: rgba(231, 76, 60, 0.9);
+        font-family: "DM Sans", sans-serif;
+        font-size: 0.78rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition:
+          background 0.2s,
+          transform 0.2s;
+      }
+      .btn-clear:hover {
+        background: rgba(231, 76, 60, 0.25);
+        transform: translateY(-1px);
+      }
+      .btn-receipt {
+        width: 100%;
+        padding: 10px;
+        background: rgba(201, 168, 76, 0.15);
+        border: 1px solid rgba(201, 168, 76, 0.3);
+        border-radius: 10px;
+        color: #c9a84c;
+        font-family: "DM Sans", sans-serif;
+        font-size: 0.78rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition:
+          background 0.2s,
+          transform 0.2s;
+      }
+      .btn-receipt:hover {
+        background: rgba(201, 168, 76, 0.25);
+        transform: translateY(-1px);
+      }
 
-    /* ── ORDER STATUS OVERLAY ── */
-    .status-overlay {
-      display:none; position:fixed; inset:0;
-      background:rgba(0,0,0,0.7); backdrop-filter:blur(8px);
-      z-index:500; align-items:center; justify-content:center;
-    }
-    .status-overlay.active { display:flex; animation:fadeIn 0.3s ease; }
-    @keyframes fadeIn { from{opacity:0} to{opacity:1} }
+      /* ── ORDER STATUS OVERLAY ── */
+      .status-overlay {
+        display: none;
+        position: fixed;
+        inset: 0;
+        background: rgba(0, 0, 0, 0.7);
+        backdrop-filter: blur(8px);
+        z-index: 500;
+        align-items: center;
+        justify-content: center;
+      }
+      .status-overlay.active {
+        display: flex;
+        animation: fadeIn 0.3s ease;
+      }
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+        }
+        to {
+          opacity: 1;
+        }
+      }
 
-    .status-card {
-      background:rgba(13,27,62,0.96); border-radius:28px;
-      padding:48px 44px 40px; max-width:380px; width:90%;
-      display:flex; flex-direction:column; align-items:center; gap:20px;
-      border:1px solid rgba(255,255,255,0.1);
-      box-shadow:0 32px 80px rgba(0,0,0,0.6);
-      position:relative; overflow:hidden; text-align:center;
-      animation:popIn 0.4s cubic-bezier(0.34,1.56,0.64,1);
-    }
-    @keyframes popIn { from{opacity:0;transform:scale(0.8)} to{opacity:1;transform:scale(1)} }
-    .status-card::before { content:''; position:absolute; top:0; left:10%; right:10%; height:1px; background:linear-gradient(90deg,transparent,rgba(201,168,76,0.5),transparent); }
+      .status-card {
+        background: rgba(13, 27, 62, 0.96);
+        border-radius: 28px;
+        padding: 48px 44px 40px;
+        max-width: 380px;
+        width: 90%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 20px;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        box-shadow: 0 32px 80px rgba(0, 0, 0, 0.6);
+        position: relative;
+        overflow: hidden;
+        text-align: center;
+        animation: popIn 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+      }
+      @keyframes popIn {
+        from {
+          opacity: 0;
+          transform: scale(0.8);
+        }
+        to {
+          opacity: 1;
+          transform: scale(1);
+        }
+      }
+      .status-card::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 10%;
+        right: 10%;
+        height: 1px;
+        background: linear-gradient(
+          90deg,
+          transparent,
+          rgba(201, 168, 76, 0.5),
+          transparent
+        );
+      }
 
-    .status-icon-wrap {
-      width:90px; height:90px; border-radius:50%;
-      display:flex; align-items:center; justify-content:center;
-      font-size:2.8rem; position:relative;
-    }
-    .status-icon-wrap.preparing { background:rgba(255,193,7,0.15); border:2px solid rgba(255,193,7,0.3); }
-    .status-icon-wrap.ready     { background:rgba(39,174,96,0.15);  border:2px solid rgba(39,174,96,0.4); }
+      .status-icon-wrap {
+        width: 90px;
+        height: 90px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 2.8rem;
+        position: relative;
+      }
+      .status-icon-wrap.preparing {
+        background: rgba(255, 193, 7, 0.15);
+        border: 2px solid rgba(255, 193, 7, 0.3);
+      }
+      .status-icon-wrap.ready {
+        background: rgba(39, 174, 96, 0.15);
+        border: 2px solid rgba(39, 174, 96, 0.4);
+      }
 
-    /* Pulse ring for preparing */
-    .pulse-ring {
-      position:absolute; inset:-8px; border-radius:50%;
-      border:2px solid rgba(255,193,7,0.4);
-      animation:pulse 1.8s ease-in-out infinite;
-    }
-    @keyframes pulse { 0%,100%{transform:scale(1);opacity:0.6} 50%{transform:scale(1.12);opacity:0.15} }
+      /* Pulse ring for preparing */
+      .pulse-ring {
+        position: absolute;
+        inset: -8px;
+        border-radius: 50%;
+        border: 2px solid rgba(255, 193, 7, 0.4);
+        animation: pulse 1.8s ease-in-out infinite;
+      }
+      @keyframes pulse {
+        0%,
+        100% {
+          transform: scale(1);
+          opacity: 0.6;
+        }
+        50% {
+          transform: scale(1.12);
+          opacity: 0.15;
+        }
+      }
 
-    /* Bounce for ready */
-    .ready-bounce { animation:bounceIn 0.6s cubic-bezier(0.34,1.56,0.64,1); }
-    @keyframes bounceIn { 0%{transform:scale(0.3);opacity:0} 60%{transform:scale(1.1)} 100%{transform:scale(1);opacity:1} }
+      /* Bounce for ready */
+      .ready-bounce {
+        animation: bounceIn 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+      }
+      @keyframes bounceIn {
+        0% {
+          transform: scale(0.3);
+          opacity: 0;
+        }
+        60% {
+          transform: scale(1.1);
+        }
+        100% {
+          transform: scale(1);
+          opacity: 1;
+        }
+      }
 
-    .status-title { font-family:'Playfair Display',serif; font-size:1.4rem; font-weight:800; color:#fff; }
-    .status-subtitle { font-size:0.82rem; color:rgba(255,255,255,0.5); font-weight:300; line-height:1.7; margin-top:-8px; }
+      .status-title {
+        font-family: "Playfair Display", serif;
+        font-size: 1.4rem;
+        font-weight: 800;
+        color: #fff;
+      }
+      .status-subtitle {
+        font-size: 0.82rem;
+        color: rgba(255, 255, 255, 0.5);
+        font-weight: 300;
+        line-height: 1.7;
+        margin-top: -8px;
+      }
 
-    .order-id-badge {
-      background:rgba(255,255,255,0.07); border:1px solid rgba(255,255,255,0.12);
-      border-radius:8px; padding:8px 18px;
-      font-size:0.8rem; font-weight:700; color:#c9a84c; letter-spacing:1px;
-    }
+      .order-id-badge {
+        background: rgba(255, 255, 255, 0.07);
+        border: 1px solid rgba(255, 255, 255, 0.12);
+        border-radius: 8px;
+        padding: 8px 18px;
+        font-size: 0.8rem;
+        font-weight: 700;
+        color: #c9a84c;
+        letter-spacing: 1px;
+      }
 
-    /* Progress dots */
-    .progress-steps { display:flex; align-items:center; gap:0; width:100%; }
-    .step { display:flex; flex-direction:column; align-items:center; gap:6px; flex:1; }
-    .step-dot { width:28px; height:28px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:0.75rem; font-weight:700; transition:all 0.4s; }
-    .step-dot.done    { background:linear-gradient(135deg,#27ae60,#2ecc71); color:#fff; box-shadow:0 4px 12px rgba(39,174,96,0.4); }
-    .step-dot.active  { background:linear-gradient(135deg,#f39c12,#f1c40f); color:#fff; box-shadow:0 4px 12px rgba(243,156,18,0.4); animation:dotPulse 1.2s ease-in-out infinite; }
-    .step-dot.pending { background:rgba(255,255,255,0.1); color:rgba(255,255,255,0.3); border:1px solid rgba(255,255,255,0.15); }
-    @keyframes dotPulse { 0%,100%{transform:scale(1)} 50%{transform:scale(1.15)} }
-    .step-label { font-size:0.6rem; color:rgba(255,255,255,0.4); font-weight:500; text-align:center; }
-    .step-label.active { color:rgba(255,193,7,0.9); }
-    .step-label.done   { color:rgba(39,174,96,0.9); }
-    .step-line { flex:1; height:2px; background:rgba(255,255,255,0.1); margin-bottom:18px; transition:background 0.4s; }
-    .step-line.done { background:linear-gradient(90deg,#27ae60,#2ecc71); }
+      /* Progress dots */
+      .progress-steps {
+        display: flex;
+        align-items: center;
+        gap: 0;
+        width: 100%;
+      }
+      .step {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 6px;
+        flex: 1;
+      }
+      .step-dot {
+        width: 28px;
+        height: 28px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 0.75rem;
+        font-weight: 700;
+        transition: all 0.4s;
+      }
+      .step-dot.done {
+        background: linear-gradient(135deg, #27ae60, #2ecc71);
+        color: #fff;
+        box-shadow: 0 4px 12px rgba(39, 174, 96, 0.4);
+      }
+      .step-dot.active {
+        background: linear-gradient(135deg, #f39c12, #f1c40f);
+        color: #fff;
+        box-shadow: 0 4px 12px rgba(243, 156, 18, 0.4);
+        animation: dotPulse 1.2s ease-in-out infinite;
+      }
+      .step-dot.pending {
+        background: rgba(255, 255, 255, 0.1);
+        color: rgba(255, 255, 255, 0.3);
+        border: 1px solid rgba(255, 255, 255, 0.15);
+      }
+      @keyframes dotPulse {
+        0%,
+        100% {
+          transform: scale(1);
+        }
+        50% {
+          transform: scale(1.15);
+        }
+      }
+      .step-label {
+        font-size: 0.6rem;
+        color: rgba(255, 255, 255, 0.4);
+        font-weight: 500;
+        text-align: center;
+      }
+      .step-label.active {
+        color: rgba(255, 193, 7, 0.9);
+      }
+      .step-label.done {
+        color: rgba(39, 174, 96, 0.9);
+      }
+      .step-line {
+        flex: 1;
+        height: 2px;
+        background: rgba(255, 255, 255, 0.1);
+        margin-bottom: 18px;
+        transition: background 0.4s;
+      }
+      .step-line.done {
+        background: linear-gradient(90deg, #27ae60, #2ecc71);
+      }
 
-    /* Ready confetti dots */
-    .confetti { position:absolute; inset:0; pointer-events:none; overflow:hidden; border-radius:28px; }
-    .confetti-dot { position:absolute; width:6px; height:6px; border-radius:50%; animation:fall 2.5s ease-in forwards; }
-    @keyframes fall { 0%{transform:translateY(-10px) rotate(0deg);opacity:1} 100%{transform:translateY(400px) rotate(720deg);opacity:0} }
+      /* Ready confetti dots */
+      .confetti {
+        position: absolute;
+        inset: 0;
+        pointer-events: none;
+        overflow: hidden;
+        border-radius: 28px;
+      }
+      .confetti-dot {
+        position: absolute;
+        width: 6px;
+        height: 6px;
+        border-radius: 50%;
+        animation: fall 2.5s ease-in forwards;
+      }
+      @keyframes fall {
+        0% {
+          transform: translateY(-10px) rotate(0deg);
+          opacity: 1;
+        }
+        100% {
+          transform: translateY(400px) rotate(720deg);
+          opacity: 0;
+        }
+      }
 
-    .btn-done {
-      width:100%; padding:13px;
-      background:linear-gradient(135deg,#c9a84c,#e8c87a);
-      border:none; border-radius:12px; color:#0d1b3e;
-      font-family:'DM Sans',sans-serif; font-size:0.82rem; font-weight:700;
-      letter-spacing:1px; cursor:pointer;
-      box-shadow:0 4px 20px rgba(201,168,76,0.35);
-      transition:transform 0.2s,filter 0.2s;
-      display:none;
-    }
-    .btn-done:hover { transform:translateY(-2px); filter:brightness(1.07); }
+      .btn-done {
+        width: 100%;
+        padding: 13px;
+        background: linear-gradient(135deg, #c9a84c, #e8c87a);
+        border: none;
+        border-radius: 12px;
+        color: #0d1b3e;
+        font-family: "DM Sans", sans-serif;
+        font-size: 0.82rem;
+        font-weight: 700;
+        letter-spacing: 1px;
+        cursor: pointer;
+        box-shadow: 0 4px 20px rgba(201, 168, 76, 0.35);
+        transition:
+          transform 0.2s,
+          filter 0.2s;
+        display: none;
+      }
+      .btn-done:hover {
+        transform: translateY(-2px);
+        filter: brightness(1.07);
+      }
 
-    /* Toast */
-    .toast { position:fixed; bottom:24px; left:50%; transform:translateX(-50%) translateY(80px); background:rgba(13,27,62,0.95); border:1px solid rgba(201,168,76,0.4); border-radius:12px; padding:12px 24px; color:#fff; font-size:0.82rem; font-weight:500; box-shadow:0 8px 28px rgba(0,0,0,0.4); transition:transform 0.3s ease; z-index:999; white-space:nowrap; }
-    .toast.show { transform:translateX(-50%) translateY(0); }
+      /* X close button on status overlay */
+      .status-close-btn {
+        position: absolute;
+        top: 14px;
+        right: 16px;
+        width: 30px;
+        height: 30px;
+        border-radius: 50%;
+        background: rgba(255, 255, 255, 0.08);
+        border: 1px solid rgba(255, 255, 255, 0.18);
+        color: rgba(255, 255, 255, 0.6);
+        font-size: 0.78rem;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition:
+          background 0.2s,
+          color 0.2s;
+        z-index: 10;
+      }
+      .status-close-btn:hover {
+        background: rgba(231, 76, 60, 0.25);
+        color: #e74c3c;
+      }
 
-    ::-webkit-scrollbar { width:4px; }
-    ::-webkit-scrollbar-track { background:transparent; }
-    ::-webkit-scrollbar-thumb { background:rgba(255,255,255,0.15); border-radius:4px; }
+      /* Active Orders panel (visitor) */
+      .visitor-orders-btn {
+        position: fixed;
+        bottom: 20px;
+        right: 20px;
+        background: linear-gradient(135deg, #1a3478, #0d1b3e);
+        border: 1px solid rgba(201, 168, 76, 0.5);
+        border-radius: 50px;
+        padding: 10px 18px;
+        color: #c9a84c;
+        font-family: "DM Sans", sans-serif;
+        font-size: 0.78rem;
+        font-weight: 700;
+        cursor: pointer;
+        box-shadow: 0 4px 18px rgba(0, 0, 0, 0.4);
+        z-index: 400;
+        display: none;
+        gap: 8px;
+        align-items: center;
+        animation: popIn 0.3s ease;
+      }
+      .visitor-orders-btn.has-orders {
+        display: flex;
+      }
+      .vob-badge {
+        background: #c9a84c;
+        color: #0d1b3e;
+        border-radius: 50%;
+        width: 18px;
+        height: 18px;
+        font-size: 0.65rem;
+        font-weight: 800;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
 
-    @media (max-width:860px) { .col-cats{width:130px;} .col-cart{width:200px;} }
-  </style>
-</head>
-<body>
+      /* Active Orders Side Panel */
+      .active-orders-panel {
+        position: fixed;
+        top: 0;
+        right: -340px;
+        width: 320px;
+        height: 100vh;
+        background: rgba(13, 27, 62, 0.97);
+        border-left: 1px solid rgba(201, 168, 76, 0.2);
+        z-index: 600;
+        display: flex;
+        flex-direction: column;
+        transition: right 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+        backdrop-filter: blur(16px);
+      }
+      .active-orders-panel.open {
+        right: 0;
+      }
+      .aop-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 18px 20px;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+      }
+      .aop-title {
+        font-family: "Playfair Display", serif;
+        font-size: 1rem;
+        font-weight: 700;
+        color: #fff;
+      }
+      .aop-close {
+        width: 32px;
+        height: 32px;
+        border-radius: 50%;
+        background: rgba(255, 255, 255, 0.08);
+        border: 1px solid rgba(255, 255, 255, 0.15);
+        color: rgba(255, 255, 255, 0.7);
+        font-size: 0.85rem;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: background 0.2s;
+      }
+      .aop-close:hover {
+        background: rgba(231, 76, 60, 0.3);
+        color: #e74c3c;
+      }
+      .aop-body {
+        flex: 1;
+        overflow-y: auto;
+        padding: 14px;
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+      }
+      .aop-empty {
+        text-align: center;
+        color: rgba(255, 255, 255, 0.3);
+        font-size: 0.8rem;
+        padding: 40px 20px;
+      }
+      .aop-order-card {
+        background: rgba(255, 255, 255, 0.06);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 12px;
+        padding: 14px;
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+      }
+      .aop-order-card.ready {
+        border-color: rgba(39, 174, 96, 0.4);
+        background: rgba(39, 174, 96, 0.06);
+      }
+      .aop-order-no {
+        font-size: 0.78rem;
+        font-weight: 700;
+        color: #c9a84c;
+        letter-spacing: 1px;
+      }
+      .aop-status {
+        font-size: 0.72rem;
+        font-weight: 600;
+      }
+      .aop-status.waiting {
+        color: rgba(255, 193, 7, 0.9);
+      }
+      .aop-status.ready-text {
+        color: rgba(39, 174, 96, 0.9);
+      }
+      .aop-total {
+        font-size: 0.75rem;
+        color: rgba(255, 255, 255, 0.6);
+      }
+      .aop-dismiss-btn {
+        width: 100%;
+        padding: 8px;
+        background: rgba(39, 174, 96, 0.15);
+        border: 1px solid rgba(39, 174, 96, 0.3);
+        border-radius: 8px;
+        color: rgba(39, 174, 96, 0.9);
+        font-family: "DM Sans", sans-serif;
+        font-size: 0.72rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: background 0.2s;
+      }
+      .aop-dismiss-btn:hover {
+        background: rgba(39, 174, 96, 0.25);
+      }
 
-  <header>
-    <a href="/ordering" class="header-back">&#8592;</a>
-    <div>
-      <div class="header-title"><span>CLIMBS</span> Canteen Ordering System</div>
-      <div style="text-align:center;margin-top:3px;"><span style="display:inline-block;background:rgba(80,200,150,0.2);border:1px solid rgba(80,200,150,0.4);color:#50c896;font-size:0.6rem;font-weight:700;letter-spacing:2px;text-transform:uppercase;padding:2px 10px;border-radius:20px;">&#128100; Visitor / Walk-in</span></div>
-    </div>
-    <button class="header-menu-btn">&#9776;</button>
-  </header>
+      /* Panel backdrop overlay */
+      .panel-backdrop {
+        position: fixed;
+        inset: 0;
+        background: rgba(0, 0, 0, 0.4);
+        z-index: 590;
+        display: none;
+      }
+      .panel-backdrop.show {
+        display: block;
+      }
 
-  <div class="layout">
+      /* Toast */
+      .toast {
+        position: fixed;
+        bottom: 24px;
+        left: 50%;
+        transform: translateX(-50%) translateY(80px);
+        background: rgba(13, 27, 62, 0.95);
+        border: 1px solid rgba(201, 168, 76, 0.4);
+        border-radius: 12px;
+        padding: 12px 24px;
+        color: #fff;
+        font-size: 0.82rem;
+        font-weight: 500;
+        box-shadow: 0 8px 28px rgba(0, 0, 0, 0.4);
+        transition: transform 0.3s ease;
+        z-index: 999;
+        white-space: nowrap;
+      }
+      .toast.show {
+        transform: translateX(-50%) translateY(0);
+      }
 
-    <!-- Categories -->
-    <div class="panel col-cats">
-      <div class="panel-head"><h2>Categories</h2></div>
-      <div class="cat-list" id="catList">
-        <button class="cat-btn active" onclick="filterCat('all',this)">All</button>
-        <button class="cat-btn" onclick="filterCat('meals',this)">Meals</button>
-        <button class="cat-btn" onclick="filterCat('drinks',this)">Drinks</button>
-        <button class="cat-btn" onclick="filterCat('snacks',this)">Snacks</button>
-        <button class="cat-btn" onclick="filterCat('junkfoods',this)">Junk Foods</button>
-        <button class="cat-btn" onclick="filterCat('others',this)">Others</button>
+      ::-webkit-scrollbar {
+        width: 4px;
+      }
+      ::-webkit-scrollbar-track {
+        background: transparent;
+      }
+      ::-webkit-scrollbar-thumb {
+        background: rgba(255, 255, 255, 0.15);
+        border-radius: 4px;
+      }
+
+      @media (max-width: 860px) {
+        .col-cats {
+          width: 130px;
+        }
+        .col-cart {
+          width: 200px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <a href="/ordering" class="header-back">&#8592;</a>
+      <div>
+        <div class="header-title">
+          <span>CLIMBS</span> Canteen Ordering System
+        </div>
+        <div style="text-align: center; margin-top: 3px">
+          <span
+            style="
+              display: inline-block;
+              background: rgba(80, 200, 150, 0.2);
+              border: 1px solid rgba(80, 200, 150, 0.4);
+              color: #50c896;
+              font-size: 0.6rem;
+              font-weight: 700;
+              letter-spacing: 2px;
+              text-transform: uppercase;
+              padding: 2px 10px;
+              border-radius: 20px;
+            "
+            >&#128100; Visitor / Walk-in</span
+          >
+        </div>
+      </div>
+      <button class="header-menu-btn">&#9776;</button>
+    </header>
+
+    <div class="layout">
+      <!-- Categories -->
+      <div class="panel col-cats">
+        <div class="panel-head"><h2>Categories</h2></div>
+        <div class="cat-list" id="catList">
+          <button class="cat-btn active" onclick="filterCat('all', this)">
+            All
+          </button>
+          <button class="cat-btn" onclick="filterCat('meals', this)">
+            Meals
+          </button>
+          <button class="cat-btn" onclick="filterCat('drinks', this)">
+            Drinks
+          </button>
+          <button class="cat-btn" onclick="filterCat('snacks', this)">
+            Snacks
+          </button>
+          <button class="cat-btn" onclick="filterCat('junkfoods', this)">
+            Junk Foods
+          </button>
+          <button class="cat-btn" onclick="filterCat('others', this)">
+            Others
+          </button>
+        </div>
+      </div>
+
+      <!-- Items -->
+      <div class="panel col-items">
+        <div class="items-toolbar">
+          <h2 id="catTitle">ALL ITEMS</h2>
+          <div class="search-wrap">
+            <span class="search-icon">&#128269;</span>
+            <input
+              type="text"
+              id="searchInput"
+              placeholder="Search items..."
+              oninput="renderItems()"
+            />
+          </div>
+        </div>
+        <div class="items-grid" id="itemsGrid"></div>
+      </div>
+
+      <!-- Cart -->
+      <div class="panel col-cart">
+        <div class="panel-head"><h2>Cart</h2></div>
+        <div class="cart-body">
+          <div id="cartEmpty" class="cart-empty">Cart is empty.</div>
+          <div class="cart-items" id="cartItems" style="display: none"></div>
+          <div class="cart-total-row">
+            <span class="cart-total-label">Total :</span>
+            <span class="cart-total-val" id="cartTotal">&#8369; 0.00</span>
+          </div>
+          <div
+            style="
+              background: rgba(80, 200, 150, 0.1);
+              border: 1px solid rgba(80, 200, 150, 0.25);
+              border-radius: 9px;
+              padding: 9px 12px;
+              font-size: 0.72rem;
+              color: rgba(80, 200, 150, 0.9);
+              text-align: center;
+            "
+          >
+            &#128100; Ordering as <strong>Visitor</strong> — Cash Only
+          </div>
+          <div class="amount-group">
+            <label>Amount Paid (&#8369;)</label>
+            <input
+              type="number"
+              class="amount-input"
+              id="amountPaid"
+              value="0.00"
+              min="0"
+              step="0.01"
+              oninput="
+                this.dataset.manuallySet = '1';
+                calcChange();
+              "
+            />
+          </div>
+          <div class="change-row">
+            <span class="change-label">Change :</span>
+            <span class="change-val" id="changeVal">&#8369; 0.00</span>
+          </div>
+          <div class="insufficient-warn" id="insufficientWarn">
+            ⚠️ Kulang pa ang bayad!
+          </div>
+          <button class="btn-place" id="btnPlace" onclick="placeOrder()">
+            Place Order
+          </button>
+          <button class="btn-clear" onclick="clearCart()">Clear cart</button>
+          <button class="btn-receipt" onclick="printReceipt()">
+            Print Receipt
+          </button>
+        </div>
       </div>
     </div>
 
-    <!-- Items -->
-    <div class="panel col-items">
-      <div class="items-toolbar">
-        <h2 id="catTitle">ALL ITEMS</h2>
-        <div class="search-wrap">
-          <span class="search-icon">&#128269;</span>
-          <input type="text" id="searchInput" placeholder="Search items..." oninput="renderItems()" />
+    <!-- Order Status Overlay -->
+    <div class="status-overlay" id="statusOverlay">
+      <div class="status-card" id="statusCard">
+        <!-- X close/minimize button — visible during preparing -->
+        <button
+          class="status-close-btn"
+          id="statusCloseBtn"
+          onclick="minimizeOrder()"
+          title="Minimize — order stays active"
+        >
+          ✕
+        </button>
+
+        <div class="confetti" id="confetti"></div>
+
+        <div class="status-icon-wrap preparing" id="statusIconWrap">
+          <div class="pulse-ring" id="pulseRing"></div>
+          <span id="statusEmoji">⏳</span>
         </div>
+
+        <div class="status-title" id="statusTitle">Preparing Your Order</div>
+        <div class="status-subtitle" id="statusSubtitle">
+          Please wait while the canteen prepares your food.<br />We'll notify
+          you when it's ready!
+        </div>
+
+        <div class="order-id-badge" id="orderIdBadge">ORDER #—</div>
+
+        <!-- Progress steps -->
+        <div class="progress-steps">
+          <div class="step">
+            <div class="step-dot done" id="dot1">✓</div>
+            <div class="step-label done">Ordered</div>
+          </div>
+          <div class="step-line" id="line1"></div>
+          <div class="step">
+            <div class="step-dot active" id="dot2">🍳</div>
+            <div class="step-label active" id="lbl2">Preparing</div>
+          </div>
+          <div class="step-line" id="line2"></div>
+          <div class="step">
+            <div class="step-dot pending" id="dot3">🔔</div>
+            <div class="step-label pending" id="lbl3">Ready</div>
+          </div>
+        </div>
+
+        <button class="btn-done" id="btnDone" onclick="dismissOrder()">
+          &#10003; &nbsp; Got it! Order Claimed
+        </button>
       </div>
-      <div class="items-grid" id="itemsGrid"></div>
     </div>
 
-    <!-- Cart -->
-    <div class="panel col-cart">
-      <div class="panel-head"><h2>Cart</h2></div>
-      <div class="cart-body">
-        <div id="cartEmpty" class="cart-empty">Cart is empty.</div>
-        <div class="cart-items" id="cartItems" style="display:none"></div>
-        <div class="cart-total-row">
-          <span class="cart-total-label">Total :</span>
-          <span class="cart-total-val" id="cartTotal">&#8369; 0.00</span>
-        </div>
-        <div style="background:rgba(80,200,150,0.1);border:1px solid rgba(80,200,150,0.25);border-radius:9px;padding:9px 12px;font-size:0.72rem;color:rgba(80,200,150,0.9);text-align:center;">
-          &#128100; Ordering as <strong>Visitor</strong> — Cash Only
-        </div>
-        <div class="amount-group">
-          <label>Amount Paid (&#8369;)</label>
-          <input type="number" class="amount-input" id="amountPaid" value="0.00" min="0" step="0.01" oninput="calcChange()" />
-        </div>
-        <div class="change-row">
-          <span class="change-label">Change :</span>
-          <span class="change-val" id="changeVal">&#8369; 0.00</span>
-        </div>
-        <button class="btn-place" id="btnPlace" onclick="placeOrder()">Place Order</button>
-        <button class="btn-clear" onclick="clearCart()">Clear cart</button>
-        <button class="btn-receipt" onclick="printReceipt()">Print Receipt</button>
+    <!-- Active Orders floating button (visitor) -->
+    <button
+      class="visitor-orders-btn"
+      id="visitorOrdersBtn"
+      onclick="openActiveOrders()"
+    >
+      🍽️ Active Orders
+      <span class="vob-badge" id="vobBadge">0</span>
+    </button>
+
+    <!-- Active Orders Side Panel -->
+    <div
+      class="panel-backdrop"
+      id="panelBackdrop"
+      onclick="closeActiveOrders()"
+    ></div>
+    <div class="active-orders-panel" id="activeOrdersPanel">
+      <div class="aop-header">
+        <span class="aop-title">🍽️ Active Orders</span>
+        <button class="aop-close" onclick="closeActiveOrders()">✕</button>
+      </div>
+      <div class="aop-body" id="aopBody">
+        <div class="aop-empty">No active orders</div>
       </div>
     </div>
 
-  </div>
+    <div class="toast" id="toast"></div>
 
-  <!-- Order Status Overlay -->
-  <div class="status-overlay" id="statusOverlay">
-    <div class="status-card" id="statusCard">
-      <div class="confetti" id="confetti"></div>
+    <script>
+      // ── MENU ITEMS — fetched from DB ──
+      let menuItems = [];
+      let currentCat = "all";
+      let cart = {};
+      let orderTotal = 0;
+      let currentOrderId = null;
+      let pollInterval = null;
+      let isMinimized = false;
 
-      <div class="status-icon-wrap preparing" id="statusIconWrap">
-        <div class="pulse-ring" id="pulseRing"></div>
-        <span id="statusEmoji">⏳</span>
-      </div>
+      // localStorage key for visitor active orders
+      const STORAGE_KEY = "climbs_visitor_orders";
 
-      <div class="status-title" id="statusTitle">Preparing Your Order</div>
-      <div class="status-subtitle" id="statusSubtitle">
-        Please wait while the canteen prepares your food.<br/>We'll notify you when it's ready!
-      </div>
+      // ── LOAD MENU FROM DB ──
+      async function loadMenuItems() {
+        try {
+          const res = await fetch("/canteen/api/items");
+          menuItems = await res.json();
+        } catch (e) {
+          menuItems = [];
+        }
+        renderItems();
+      }
 
-      <div class="order-id-badge" id="orderIdBadge">ORDER #—</div>
-
-      <!-- Progress steps -->
-      <div class="progress-steps">
-        <div class="step">
-          <div class="step-dot done" id="dot1">✓</div>
-          <div class="step-label done">Ordered</div>
-        </div>
-        <div class="step-line" id="line1"></div>
-        <div class="step">
-          <div class="step-dot active" id="dot2">🍳</div>
-          <div class="step-label active" id="lbl2">Preparing</div>
-        </div>
-        <div class="step-line" id="line2"></div>
-        <div class="step">
-          <div class="step-dot pending" id="dot3">🔔</div>
-          <div class="step-label pending" id="lbl3">Ready</div>
-        </div>
-      </div>
-
-      <button class="btn-done" id="btnDone" onclick="dismissOrder()">&#10003; &nbsp; Got it! Order Claimed</button>
-    </div>
-  </div>
-
-  <div class="toast" id="toast"></div>
-
-  <script>
-    const menuItems = [
-      { id:1,  name:'Lugaw with Egg', category:'meals',     price:55, stock:50, emoji:'🍚' },
-      { id:2,  name:'Sinangag',       category:'meals',     price:30, stock:30, emoji:'🍛' },
-      { id:3,  name:'Pork Adobo',     category:'meals',     price:75, stock:20, emoji:'🍖' },
-      { id:4,  name:'Fried Chicken',  category:'meals',     price:80, stock:15, emoji:'🍗' },
-      { id:5,  name:'Pancit Canton',  category:'meals',     price:65, stock:25, emoji:'🍜' },
-      { id:6,  name:'Softdrinks',     category:'drinks',    price:25, stock:100,emoji:'🥤' },
-      { id:7,  name:'Bottled Water',  category:'drinks',    price:15, stock:80, emoji:'💧' },
-      { id:8,  name:'Juice',          category:'drinks',    price:20, stock:60, emoji:'🧃' },
-      { id:9,  name:'Chips',          category:'snacks',    price:20, stock:50, emoji:'🍟' },
-      { id:10, name:'Biscuit',        category:'snacks',    price:15, stock:40, emoji:'🍪' },
-      { id:11, name:'Junk Food Pack', category:'junkfoods', price:18, stock:45, emoji:'🍿' },
-      { id:12, name:'Mixed Nuts',     category:'others',    price:35, stock:30, emoji:'🥜' },
-    ];
-
-    let currentCat  = 'all';
-    let cart        = {};
-    let orderTotal  = 0;
-    let currentOrderId = null;
-    let pollInterval   = null;
-
-    // ── RENDER ITEMS ──
-    function renderItems() {
-      const search   = document.getElementById('searchInput').value.toLowerCase();
-      const grid     = document.getElementById('itemsGrid');
-      const filtered = menuItems.filter(i =>
-        (currentCat === 'all' || i.category === currentCat) &&
-        i.name.toLowerCase().includes(search)
-      );
-      if (!filtered.length) { grid.innerHTML = '<div class="no-items">No items found.</div>'; return; }
-      grid.innerHTML = filtered.map(item => `
+      // ── RENDER ITEMS ──
+      function renderItems() {
+        const search = document
+          .getElementById("searchInput")
+          .value.toLowerCase();
+        const grid = document.getElementById("itemsGrid");
+        const filtered = menuItems.filter(
+          (i) =>
+            (currentCat === "all" || i.category === currentCat) &&
+            i.name.toLowerCase().includes(search),
+        );
+        if (!filtered.length) {
+          grid.innerHTML = '<div class="no-items">No items found.</div>';
+          return;
+        }
+        grid.innerHTML = filtered
+          .map(
+            (item) => `
         <div class="item-card">
-          <div class="item-img">${item.emoji}</div>
+          <div class="item-img">${item.emoji || "🍽️"}</div>
           <div class="item-name">${item.name}</div>
           <div class="item-stock">Stock: ${item.stock}</div>
-          <div class="item-price">&#8369;${item.price.toFixed(2)}</div>
-          <button class="btn-add-cart" onclick="addToCart(${item.id})" ${item.stock<=0?'disabled':''}>Add To Cart</button>
-        </div>`).join('');
-    }
+          <div class="item-price">&#8369;${parseFloat(item.price).toFixed(2)}</div>
+          <button class="btn-add-cart" onclick="addToCart(${item.id})" ${item.stock <= 0 ? "disabled" : ""}>Add To Cart</button>
+        </div>`,
+          )
+          .join("");
+      }
 
-    function filterCat(cat, btn) {
-      currentCat = cat;
-      document.querySelectorAll('.cat-btn').forEach(b => b.classList.remove('active'));
-      btn.classList.add('active');
-      document.getElementById('catTitle').textContent = cat === 'all' ? 'ALL ITEMS' : cat.toUpperCase();
-      renderItems();
-    }
+      function filterCat(cat, btn) {
+        currentCat = cat;
+        document
+          .querySelectorAll(".cat-btn")
+          .forEach((b) => b.classList.remove("active"));
+        btn.classList.add("active");
+        document.getElementById("catTitle").textContent =
+          cat === "all" ? "ALL ITEMS" : cat.toUpperCase();
+        renderItems();
+      }
 
-    // ── CART ──
-    function addToCart(id) {
-      const item = menuItems.find(i => i.id === id);
-      if (!item) return;
-      if (cart[id]) { if (cart[id].qty >= item.stock) { showToast('⚠️ Max stock reached!'); return; } cart[id].qty++; }
-      else cart[id] = { ...item, qty:1 };
-      showToast(`✓ ${item.name} added`);
-      renderCart();
-    }
-    function removeFromCart(id) { delete cart[id]; renderCart(); }
-    function changeQty(id, delta) { if (!cart[id]) return; cart[id].qty += delta; if (cart[id].qty <= 0) delete cart[id]; renderCart(); }
-    function clearCart() { cart = {}; document.getElementById('amountPaid').value = '0.00'; renderCart(); showToast('🗑️ Cart cleared'); }
+      // ── CART ──
+      function addToCart(id) {
+        const item = menuItems.find((i) => i.id === id);
+        if (!item) return;
+        if (cart[id]) {
+          if (cart[id].qty >= item.stock) {
+            showToast("⚠️ Max stock reached!");
+            return;
+          }
+          cart[id].qty++;
+        } else cart[id] = { ...item, qty: 1 };
+        showToast(`✓ ${item.name} added`);
+        renderCart();
+      }
+      function removeFromCart(id) {
+        delete cart[id];
+        renderCart();
+      }
+      function changeQty(id, delta) {
+        if (!cart[id]) return;
+        cart[id].qty += delta;
+        if (cart[id].qty <= 0) delete cart[id];
+        renderCart();
+      }
+      function clearCart() {
+        cart = {};
+        document.getElementById("amountPaid").value = "0.00";
+        document.getElementById("amountPaid").dataset.manuallySet = "";
+        renderCart();
+        showToast("🗑️ Cart cleared");
+      }
 
-    function renderCart() {
-      const keys = Object.keys(cart);
-      orderTotal = keys.reduce((s,id) => s + cart[id].price * cart[id].qty, 0);
-      document.getElementById('cartTotal').textContent = '₱' + orderTotal.toFixed(2);
-      calcChange();
-      const cartItemsEl = document.getElementById('cartItems');
-      const cartEmptyEl = document.getElementById('cartEmpty');
-      if (!keys.length) { cartEmptyEl.style.display='block'; cartItemsEl.style.display='none'; cartItemsEl.innerHTML=''; return; }
-      cartEmptyEl.style.display = 'none'; cartItemsEl.style.display = 'flex';
-      cartItemsEl.innerHTML = keys.map(id => { const it = cart[id]; return `
+      function renderCart() {
+        const keys = Object.keys(cart);
+        orderTotal = keys.reduce(
+          (s, id) => s + cart[id].price * cart[id].qty,
+          0,
+        );
+        document.getElementById("cartTotal").textContent =
+          "₱" + orderTotal.toFixed(2);
+        const paidInput = document.getElementById("amountPaid");
+        if (!paidInput.dataset.manuallySet)
+          paidInput.value = orderTotal.toFixed(2);
+        calcChange();
+        const cartItemsEl = document.getElementById("cartItems");
+        const cartEmptyEl = document.getElementById("cartEmpty");
+        if (!keys.length) {
+          cartEmptyEl.style.display = "block";
+          cartItemsEl.style.display = "none";
+          cartItemsEl.innerHTML = "";
+          return;
+        }
+        cartEmptyEl.style.display = "none";
+        cartItemsEl.style.display = "flex";
+        cartItemsEl.innerHTML = keys
+          .map((id) => {
+            const it = cart[id];
+            return `
         <div class="cart-item">
           <div class="cart-item-name">${it.name}</div>
           <div class="cart-item-qty">
@@ -381,146 +1392,353 @@
             <span class="qty-num">${it.qty}</span>
             <button class="qty-btn" onclick="changeQty(${id},1)">+</button>
           </div>
-          <span class="cart-item-price">₱${(it.price*it.qty).toFixed(2)}</span>
+          <span class="cart-item-price">₱${(it.price * it.qty).toFixed(2)}</span>
           <button class="cart-item-del" onclick="removeFromCart(${id})">✕</button>
-        </div>`; }).join('');
-    }
-
-    function calcChange() {
-      const paid = parseFloat(document.getElementById('amountPaid').value) || 0;
-      document.getElementById('changeVal').textContent = '₱' + Math.max(paid - orderTotal, 0).toFixed(2);
-    }
-
-    // ── PLACE ORDER ──
-    async function placeOrder() {
-      if (!Object.keys(cart).length) { showToast('⚠️ Cart is empty!'); return; }
-      const mode = document.querySelector('input[name="payMode"]:checked').value;
-      const paid = parseFloat(document.getElementById('amountPaid').value) || 0;
-      if (mode === 'cash' && paid < orderTotal) { showToast('⚠️ Insufficient amount paid!'); return; }
-
-      document.getElementById('btnPlace').disabled = true;
-
-      const payload = {
-        items:        Object.values(cart).map(i => ({ id:i.id, name:i.name, price:i.price, qty:i.qty })),
-        total:        orderTotal,
-        payMode:      mode,
-        amountPaid:   paid,
-        change:       Math.max(paid - orderTotal, 0),
-        customerType: 'visitor',
-      };
-
-      try {
-        const res  = await fetch('/canteen/api/order', { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify(payload) });
-        const data = await res.json();
-        if (!data.success) { showToast('❌ ' + (data.message || 'Order failed.')); document.getElementById('btnPlace').disabled = false; return; }
-
-        currentOrderId = data.orderId;
-        clearCart();
-        showOrderStatus('preparing');
-        startPolling();
-      } catch (e) {
-        showToast('❌ Server error. Try again.');
-        document.getElementById('btnPlace').disabled = false;
+        </div>`;
+          })
+          .join("");
       }
-    }
 
-    // ── STATUS OVERLAY ──
-    function showOrderStatus(status) {
-      const overlay   = document.getElementById('statusOverlay');
-      const iconWrap  = document.getElementById('statusIconWrap');
-      const pulseRing = document.getElementById('pulseRing');
-      const emoji     = document.getElementById('statusEmoji');
-      const title     = document.getElementById('statusTitle');
-      const subtitle  = document.getElementById('statusSubtitle');
-      const badge     = document.getElementById('orderIdBadge');
-      const dot2      = document.getElementById('dot2');
-      const dot3      = document.getElementById('dot3');
-      const lbl2      = document.getElementById('lbl2');
-      const lbl3      = document.getElementById('lbl3');
-      const line2     = document.getElementById('line2');
-      const btnDone   = document.getElementById('btnDone');
-      const confetti  = document.getElementById('confetti');
-
-      badge.textContent = 'ORDER #' + (currentOrderId || '—');
-      overlay.classList.add('active');
-
-      if (status === 'preparing') {
-        iconWrap.className = 'status-icon-wrap preparing';
-        pulseRing.style.display = 'block';
-        emoji.textContent  = '⏳';
-        title.textContent  = 'Preparing Your Order';
-        subtitle.innerHTML = 'Please wait while the canteen prepares your food.<br/>We\'ll notify you when it\'s ready!';
-        dot2.className = 'step-dot active'; dot2.textContent = '🍳';
-        dot3.className = 'step-dot pending'; dot3.textContent = '🔔';
-        lbl2.className = 'step-label active'; lbl2.textContent = 'Preparing';
-        lbl3.className = 'step-label pending'; lbl3.textContent = 'Ready';
-        line2.className = 'step-line';
-        btnDone.style.display = 'none';
-        confetti.innerHTML = '';
-
-      } else if (status === 'ready') {
-        iconWrap.className = 'status-icon-wrap ready';
-        pulseRing.style.display = 'none';
-        emoji.textContent  = '🎉';
-        emoji.classList.add('ready-bounce');
-        title.textContent  = 'Ready for Pickup!';
-        subtitle.innerHTML = '🔔 Your order is ready!<br/>Please proceed to the canteen counter to claim your order.';
-        dot2.className = 'step-dot done'; dot2.textContent = '✓';
-        dot3.className = 'step-dot done'; dot3.textContent = '✓';
-        lbl2.className = 'step-label done'; lbl2.textContent = 'Prepared';
-        lbl3.className = 'step-label done'; lbl3.textContent = 'Ready!';
-        line2.className = 'step-line done';
-        btnDone.style.display = 'block';
-        spawnConfetti();
+      function calcChange() {
+        const paid =
+          parseFloat(document.getElementById("amountPaid").value) || 0;
+        const change = paid - orderTotal;
+        const warn = document.getElementById("insufficientWarn");
+        const val = document.getElementById("changeVal");
+        if (change < 0) {
+          val.textContent = "- ₱" + Math.abs(change).toFixed(2);
+          warn && warn.classList.add("show");
+        } else {
+          val.textContent = "₱" + Math.max(change, 0).toFixed(2);
+          warn && warn.classList.remove("show");
+        }
       }
-    }
 
-    function spawnConfetti() {
-      const colors = ['#c9a84c','#e8c87a','#27ae60','#3498db','#e74c3c','#9b59b6'];
-      const el     = document.getElementById('confetti');
-      el.innerHTML = '';
-      for (let i = 0; i < 24; i++) {
-        const dot = document.createElement('div');
-        dot.className = 'confetti-dot';
-        dot.style.cssText = `left:${Math.random()*100}%;background:${colors[i%colors.length]};animation-delay:${Math.random()*1.2}s;animation-duration:${1.8+Math.random()*1.2}s;`;
-        el.appendChild(dot);
-      }
-    }
-
-    function startPolling() {
-      if (pollInterval) clearInterval(pollInterval);
-      pollInterval = setInterval(async () => {
-        if (!currentOrderId) return;
+      // ── VISITOR ORDERS (localStorage) ──
+      function getVisitorOrders() {
         try {
-          const res  = await fetch(`/canteen/api/order/${currentOrderId}/status`);
-          const data = await res.json();
-          if (data.found && data.status === 'ready') {
-            clearInterval(pollInterval);
-            pollInterval = null;
-            showOrderStatus('ready');
+          return JSON.parse(localStorage.getItem(STORAGE_KEY) || "[]");
+        } catch (e) {
+          return [];
+        }
+      }
+      function saveVisitorOrders(orders) {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(orders));
+      }
+      function addVisitorOrder(orderNo, total) {
+        const orders = getVisitorOrders();
+        orders.unshift({
+          orderNo,
+          total,
+          status: "preparing",
+          placedAt: new Date().toISOString(),
+        });
+        // Keep max 20 orders
+        if (orders.length > 20) orders.splice(20);
+        saveVisitorOrders(orders);
+        updateVisitorOrdersUI();
+      }
+      function dismissVisitorOrder(orderNo) {
+        const orders = getVisitorOrders().filter((o) => o.orderNo !== orderNo);
+        saveVisitorOrders(orders);
+        updateVisitorOrdersUI();
+        renderActiveOrdersPanel();
+      }
+      function updateVisitorOrdersUI() {
+        const orders = getVisitorOrders().filter(
+          (o) => o.status !== "dismissed",
+        );
+        const btn = document.getElementById("visitorOrdersBtn");
+        const badge = document.getElementById("vobBadge");
+        const active = orders.filter(
+          (o) => o.status === "preparing" || o.status === "ready",
+        );
+        if (active.length > 0) {
+          btn.classList.add("has-orders");
+          badge.textContent = active.length;
+        } else {
+          btn.classList.remove("has-orders");
+        }
+      }
+      function openActiveOrders() {
+        renderActiveOrdersPanel();
+        document.getElementById("activeOrdersPanel").classList.add("open");
+        document.getElementById("panelBackdrop").classList.add("show");
+      }
+      function closeActiveOrders() {
+        document.getElementById("activeOrdersPanel").classList.remove("open");
+        document.getElementById("panelBackdrop").classList.remove("show");
+      }
+      function renderActiveOrdersPanel() {
+        const body = document.getElementById("aopBody");
+        const orders = getVisitorOrders().filter(
+          (o) => o.status !== "dismissed",
+        );
+        if (!orders.length) {
+          body.innerHTML = '<div class="aop-empty">No active orders</div>';
+          return;
+        }
+        body.innerHTML = orders
+          .map((o) => {
+            const statusLabel =
+              o.status === "ready"
+                ? "✅ Ready for Pick-up!"
+                : "⏳ Preparing...";
+            const statusClass = o.status === "ready" ? "ready-text" : "waiting";
+            const dismissBtn = `<button class="aop-dismiss-btn" onclick="dismissVisitorOrder('${o.orderNo}')">✓ Done / Dismiss</button>`;
+            return `<div class="aop-order-card ${o.status === "ready" ? "ready" : ""}">
+            <div class="aop-order-no">${o.orderNo}</div>
+            <div class="aop-status ${statusClass}">${statusLabel}</div>
+            <div class="aop-total">Total: ₱${parseFloat(o.total).toFixed(2)}</div>
+            ${o.status === "ready" ? dismissBtn : ""}
+          </div>`;
+          })
+          .join("");
+      }
+
+      // Poll all active visitor orders in background
+      function pollVisitorOrders() {
+        setInterval(async () => {
+          const orders = getVisitorOrders().filter(
+            (o) => o.status === "preparing",
+          );
+          for (const o of orders) {
+            try {
+              const res = await fetch(`/canteen/api/order/${o.orderNo}/status`);
+              const data = await res.json();
+              if (data.found && data.status === "ready") {
+                const all = getVisitorOrders();
+                const idx = all.findIndex((x) => x.orderNo === o.orderNo);
+                if (idx !== -1) {
+                  all[idx].status = "ready";
+                  saveVisitorOrders(all);
+                }
+                updateVisitorOrdersUI();
+                if (
+                  document
+                    .getElementById("activeOrdersPanel")
+                    .classList.contains("open")
+                )
+                  renderActiveOrdersPanel();
+                // If this is the current order being shown in overlay, update it
+                if (currentOrderId === o.orderNo) showOrderStatus("ready");
+                showToast(`🔔 Order ${o.orderNo} is ready for pick-up!`);
+              }
+            } catch (e) {
+              /* ignore */
+            }
           }
-        } catch (e) { /* ignore */ }
-      }, 2500); // poll every 2.5s
-    }
+        }, 3000);
+      }
 
-    function dismissOrder() {
-      document.getElementById('statusOverlay').classList.remove('active');
-      document.getElementById('btnPlace').disabled = false;
-      currentOrderId = null;
-      if (pollInterval) { clearInterval(pollInterval); pollInterval = null; }
-    }
+      // ── PLACE ORDER ──
+      async function placeOrder() {
+        if (!Object.keys(cart).length) {
+          showToast("⚠️ Cart is empty!");
+          return;
+        }
+        const paid =
+          parseFloat(document.getElementById("amountPaid").value) || 0;
+        if (paid < orderTotal) {
+          showToast("⚠️ Insufficient amount paid!");
+          return;
+        }
 
-    function printReceipt() { showToast('🖨️ Printing receipt...'); }
+        document.getElementById("btnPlace").disabled = true;
 
-    let toastTimer;
-    function showToast(msg) {
-      const t = document.getElementById('toast');
-      t.textContent = msg; t.classList.add('show');
-      clearTimeout(toastTimer);
-      toastTimer = setTimeout(() => t.classList.remove('show'), 2200);
-    }
+        const payload = {
+          items: Object.values(cart).map((i) => ({
+            id: i.id,
+            name: i.name,
+            price: i.price,
+            qty: i.qty,
+          })),
+          total: orderTotal,
+          payMode: "cash",
+          amountPaid: paid,
+          change: Math.max(paid - orderTotal, 0),
+          customerType: "visitor",
+        };
 
-    renderItems();
-  </script>
-</body>
+        try {
+          const res = await fetch("/canteen/api/order", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(payload),
+          });
+          const data = await res.json();
+          if (!data.success) {
+            showToast("❌ " + (data.message || "Order failed."));
+            document.getElementById("btnPlace").disabled = false;
+            return;
+          }
+          currentOrderId = data.orderId;
+          addVisitorOrder(data.orderId, orderTotal);
+          clearCart();
+          showOrderStatus("preparing");
+          startPolling();
+        } catch (e) {
+          showToast("❌ Server error. Try again.");
+          document.getElementById("btnPlace").disabled = false;
+        }
+      }
+
+      // ── STATUS OVERLAY ──
+      function showOrderStatus(status) {
+        const overlay = document.getElementById("statusOverlay");
+        const iconWrap = document.getElementById("statusIconWrap");
+        const pulseRing = document.getElementById("pulseRing");
+        const emoji = document.getElementById("statusEmoji");
+        const title = document.getElementById("statusTitle");
+        const subtitle = document.getElementById("statusSubtitle");
+        const badge = document.getElementById("orderIdBadge");
+        const dot2 = document.getElementById("dot2");
+        const dot3 = document.getElementById("dot3");
+        const lbl2 = document.getElementById("lbl2");
+        const lbl3 = document.getElementById("lbl3");
+        const line2 = document.getElementById("line2");
+        const btnDone = document.getElementById("btnDone");
+        const closeBtn = document.getElementById("statusCloseBtn");
+        const confetti = document.getElementById("confetti");
+
+        badge.textContent = "ORDER #" + (currentOrderId || "—");
+        overlay.classList.add("active");
+        isMinimized = false;
+
+        if (status === "preparing") {
+          iconWrap.className = "status-icon-wrap preparing";
+          pulseRing.style.display = "block";
+          emoji.textContent = "⏳";
+          title.textContent = "Preparing Your Order";
+          subtitle.innerHTML =
+            "Please wait while the canteen prepares your food.<br/>We'll notify you when it's ready!";
+          dot2.className = "step-dot active";
+          dot2.textContent = "🍳";
+          dot3.className = "step-dot pending";
+          dot3.textContent = "🔔";
+          lbl2.className = "step-label active";
+          lbl2.textContent = "Preparing";
+          lbl3.className = "step-label pending";
+          lbl3.textContent = "Ready";
+          line2.className = "step-line";
+          btnDone.style.display = "none";
+          // Show X button — user can minimize and keep ordering
+          if (closeBtn) closeBtn.style.display = "flex";
+          confetti.innerHTML = "";
+        } else if (status === "ready") {
+          iconWrap.className = "status-icon-wrap ready";
+          pulseRing.style.display = "none";
+          emoji.textContent = "🎉";
+          title.textContent = "Ready for Pickup!";
+          subtitle.innerHTML =
+            "🔔 Your order is ready!<br/>Please proceed to the canteen counter to claim your order.";
+          dot2.className = "step-dot done";
+          dot2.textContent = "✓";
+          dot3.className = "step-dot done";
+          dot3.textContent = "✓";
+          lbl2.className = "step-label done";
+          lbl2.textContent = "Prepared";
+          lbl3.className = "step-label done";
+          lbl3.textContent = "Ready!";
+          line2.className = "step-line done";
+          btnDone.style.display = "block";
+          // Hide X button when ready — must tap "Got it"
+          if (closeBtn) closeBtn.style.display = "none";
+          spawnConfetti();
+        }
+      }
+
+      function minimizeOrder() {
+        // X pressed during preparing — hide overlay, poll continues in background
+        document.getElementById("statusOverlay").classList.remove("active");
+        isMinimized = true;
+        document.getElementById("btnPlace").disabled = false;
+      }
+
+      function spawnConfetti() {
+        const colors = [
+          "#c9a84c",
+          "#e8c87a",
+          "#27ae60",
+          "#3498db",
+          "#e74c3c",
+          "#9b59b6",
+        ];
+        const el = document.getElementById("confetti");
+        el.innerHTML = "";
+        for (let i = 0; i < 24; i++) {
+          const dot = document.createElement("div");
+          dot.className = "confetti-dot";
+          dot.style.cssText = `left:${Math.random() * 100}%;background:${colors[i % colors.length]};animation-delay:${Math.random() * 1.2}s;animation-duration:${1.8 + Math.random() * 1.2}s;`;
+          el.appendChild(dot);
+        }
+      }
+
+      function startPolling() {
+        if (pollInterval) clearInterval(pollInterval);
+        pollInterval = setInterval(async () => {
+          if (!currentOrderId) return;
+          try {
+            const res = await fetch(
+              `/canteen/api/order/${currentOrderId}/status`,
+            );
+            const data = await res.json();
+            if (data.found && data.status === "ready") {
+              clearInterval(pollInterval);
+              pollInterval = null;
+              // Update localStorage
+              const all = getVisitorOrders();
+              const idx = all.findIndex((x) => x.orderNo === currentOrderId);
+              if (idx !== -1) {
+                all[idx].status = "ready";
+                saveVisitorOrders(all);
+              }
+              updateVisitorOrdersUI();
+              if (isMinimized) {
+                // Was minimized — show notification toast and open panel
+                showToast(
+                  "🔔 Order " + currentOrderId + " is ready for pick-up!",
+                );
+                openActiveOrders();
+              } else {
+                showOrderStatus("ready");
+              }
+            }
+          } catch (e) {
+            /* ignore */
+          }
+        }, 2500);
+      }
+
+      function dismissOrder() {
+        document.getElementById("statusOverlay").classList.remove("active");
+        document.getElementById("btnPlace").disabled = false;
+        isMinimized = false;
+        if (currentOrderId) dismissVisitorOrder(currentOrderId);
+        currentOrderId = null;
+        if (pollInterval) {
+          clearInterval(pollInterval);
+          pollInterval = null;
+        }
+      }
+
+      function printReceipt() {
+        showToast("🖨️ Printing receipt...");
+      }
+
+      let toastTimer;
+      function showToast(msg) {
+        const t = document.getElementById("toast");
+        t.textContent = msg;
+        t.classList.add("show");
+        clearTimeout(toastTimer);
+        toastTimer = setTimeout(() => t.classList.remove("show"), 2800);
+      }
+
+      // Init
+      loadMenuItems();
+      updateVisitorOrdersUI();
+      pollVisitorOrders();
+    </script>
+  </body>
 </html>

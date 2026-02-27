@@ -77,22 +77,109 @@
       .header-title span {
         color: #c9a84c;
       }
-      .header-menu-btn {
-        width: 36px;
-        height: 36px;
-        border-radius: 50%;
+      /* ── Topbar Right: Member chip + dropdown ── */
+      .header-right {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        position: relative;
+      }
+      .member-chip {
+        display: flex;
+        align-items: center;
+        gap: 7px;
         background: rgba(255, 255, 255, 0.08);
         border: 1px solid rgba(255, 255, 255, 0.15);
+        border-radius: 20px;
+        padding: 5px 12px 5px 7px;
+        cursor: pointer;
+        transition: background 0.2s;
+        user-select: none;
+      }
+      .member-chip:hover {
+        background: rgba(201, 168, 76, 0.18);
+      }
+      .member-chip-avatar {
+        width: 26px;
+        height: 26px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, #c9a84c, #e8c87a);
         display: flex;
         align-items: center;
         justify-content: center;
-        color: #fff;
-        font-size: 1rem;
-        cursor: pointer;
-        transition: background 0.2s;
+        font-size: 0.75rem;
+        font-weight: 700;
+        color: #0d1b3e;
+        flex-shrink: 0;
       }
-      .header-menu-btn:hover {
-        background: rgba(201, 168, 76, 0.2);
+      .member-chip-name {
+        font-size: 0.78rem;
+        font-weight: 600;
+        color: #fff;
+        max-width: 110px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+      .member-chip-arrow {
+        font-size: 0.6rem;
+        color: rgba(255, 255, 255, 0.5);
+        transition: transform 0.2s;
+      }
+      .member-chip.open .member-chip-arrow {
+        transform: rotate(180deg);
+      }
+      .header-dropdown {
+        position: absolute;
+        top: calc(100% + 10px);
+        right: 0;
+        background: #0d1b3e;
+        border: 1px solid rgba(201, 168, 76, 0.3);
+        border-radius: 12px;
+        min-width: 170px;
+        box-shadow: 0 8px 30px rgba(0, 0, 0, 0.4);
+        overflow: hidden;
+        display: none;
+        z-index: 999;
+        animation: dropIn 0.15s ease;
+      }
+      @keyframes dropIn {
+        from {
+          opacity: 0;
+          transform: translateY(-6px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+      .header-dropdown.show {
+        display: block;
+      }
+      .hd-item {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 11px 16px;
+        font-size: 0.82rem;
+        font-weight: 500;
+        color: rgba(255, 255, 255, 0.85);
+        cursor: pointer;
+        transition: background 0.15s;
+        text-decoration: none;
+      }
+      .hd-item:hover {
+        background: rgba(201, 168, 76, 0.15);
+        color: #c9a84c;
+      }
+      .hd-item.danger:hover {
+        background: rgba(231, 76, 60, 0.15);
+        color: #e74c3c;
+      }
+      .hd-divider {
+        border: none;
+        border-top: 1px solid rgba(255, 255, 255, 0.08);
+        margin: 0;
       }
 
       .layout {
@@ -143,7 +230,230 @@
       .col-cats {
         width: 170px;
         flex-shrink: 0;
-        padding-bottom: 14px;
+        padding-bottom: 0;
+        display: flex;
+        flex-direction: column;
+        overflow: hidden;
+      }
+      /* Sidebar nav tabs */
+      .sidebar-tabs {
+        display: flex;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+        flex-shrink: 0;
+      }
+      .sidebar-tab {
+        flex: 1;
+        padding: 9px 4px;
+        font-size: 0.62rem;
+        font-weight: 700;
+        letter-spacing: 0.3px;
+        color: rgba(255, 255, 255, 0.45);
+        background: none;
+        border: none;
+        cursor: pointer;
+        text-align: center;
+        transition:
+          color 0.2s,
+          background 0.2s;
+        font-family: "DM Sans", sans-serif;
+      }
+      .sidebar-tab.active {
+        color: #c9a84c;
+        background: rgba(201, 168, 76, 0.08);
+        border-bottom: 2px solid #c9a84c;
+      }
+      .sidebar-tab:hover:not(.active) {
+        color: rgba(255, 255, 255, 0.75);
+      }
+      /* Sidebar panels */
+      .sidebar-panel {
+        display: none;
+        flex-direction: column;
+        flex: 1;
+        overflow: hidden;
+      }
+      .sidebar-panel.active {
+        display: flex;
+      }
+      /* View Order panel */
+      .my-order-card {
+        margin: 10px 10px 0;
+        background: rgba(255, 255, 255, 0.06);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 12px;
+        padding: 12px;
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+      }
+      .moc-no {
+        font-size: 0.75rem;
+        font-weight: 700;
+        color: #c9a84c;
+      }
+      .moc-status {
+        font-size: 0.7rem;
+        font-weight: 600;
+        padding: 3px 8px;
+        border-radius: 20px;
+        display: inline-block;
+        width: fit-content;
+      }
+      .moc-status.waiting {
+        background: rgba(243, 156, 18, 0.2);
+        color: #f39c12;
+      }
+      .moc-status.ready {
+        background: rgba(39, 174, 96, 0.2);
+        color: #27ae60;
+      }
+      .moc-status.done {
+        background: rgba(255, 255, 255, 0.1);
+        color: rgba(255, 255, 255, 0.45);
+      }
+      .moc-total {
+        font-size: 0.72rem;
+        color: rgba(255, 255, 255, 0.7);
+      }
+      .moc-time {
+        font-size: 0.65rem;
+        color: rgba(255, 255, 255, 0.35);
+      }
+      .moc-empty {
+        text-align: center;
+        padding: 24px 12px;
+        font-size: 0.72rem;
+        color: rgba(255, 255, 255, 0.3);
+      }
+      /* Order History */
+      .hist-list {
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+        padding: 8px 10px;
+        overflow-y: auto;
+        flex: 1;
+      }
+      .hist-card {
+        background: rgba(255, 255, 255, 0.05);
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        border-radius: 10px;
+        padding: 9px 10px;
+        cursor: pointer;
+        transition: background 0.15s;
+      }
+      .hist-card:hover {
+        background: rgba(201, 168, 76, 0.1);
+      }
+      .hist-no {
+        font-size: 0.72rem;
+        font-weight: 700;
+        color: #c9a84c;
+      }
+      .hist-row {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-top: 3px;
+      }
+      .hist-total {
+        font-size: 0.7rem;
+        color: rgba(255, 255, 255, 0.75);
+        font-weight: 600;
+      }
+      .hist-date {
+        font-size: 0.62rem;
+        color: rgba(255, 255, 255, 0.35);
+      }
+      .hist-pay {
+        font-size: 0.62rem;
+        color: rgba(255, 255, 255, 0.45);
+      }
+      /* Modal for order detail */
+      .order-detail-modal {
+        position: fixed;
+        inset: 0;
+        z-index: 1000;
+        background: rgba(0, 0, 0, 0.6);
+        backdrop-filter: blur(4px);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        display: none;
+      }
+      .order-detail-modal.show {
+        display: flex;
+      }
+      .odm-card {
+        background: #0d1b3e;
+        border: 1px solid rgba(201, 168, 76, 0.3);
+        border-radius: 18px;
+        padding: 24px;
+        width: 340px;
+        max-width: 92vw;
+        max-height: 80vh;
+        overflow-y: auto;
+      }
+      .odm-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 14px;
+      }
+      .odm-title {
+        font-family: "Playfair Display", serif;
+        font-size: 1rem;
+        color: #c9a84c;
+        font-weight: 700;
+      }
+      .odm-close {
+        background: none;
+        border: none;
+        color: rgba(255, 255, 255, 0.5);
+        font-size: 1.2rem;
+        cursor: pointer;
+      }
+      .odm-close:hover {
+        color: #fff;
+      }
+      .odm-row {
+        display: flex;
+        justify-content: space-between;
+        font-size: 0.78rem;
+        color: rgba(255, 255, 255, 0.8);
+        padding: 5px 0;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+      }
+      .odm-row:last-child {
+        border: none;
+      }
+      .odm-label {
+        color: rgba(255, 255, 255, 0.45);
+      }
+      .odm-items-title {
+        font-size: 0.72rem;
+        font-weight: 700;
+        color: rgba(255, 255, 255, 0.5);
+        letter-spacing: 1px;
+        text-transform: uppercase;
+        margin: 12px 0 6px;
+      }
+      .odm-item-row {
+        display: flex;
+        justify-content: space-between;
+        font-size: 0.78rem;
+        color: rgba(255, 255, 255, 0.8);
+        padding: 4px 0;
+      }
+      .odm-total-row {
+        display: flex;
+        justify-content: space-between;
+        font-size: 0.85rem;
+        font-weight: 700;
+        color: #c9a84c;
+        padding: 8px 0 0;
+        border-top: 1px solid rgba(201, 168, 76, 0.2);
+        margin-top: 6px;
       }
       .cat-list {
         display: flex;
@@ -487,6 +797,31 @@
         font-size: 0.82rem;
         font-weight: 700;
         color: rgba(255, 255, 255, 0.8);
+        transition:
+          color 0.2s,
+          transform 0.2s;
+      }
+      .change-val.has-change {
+        color: #2ecc71;
+        font-size: 1rem;
+        transform: scale(1.05);
+      }
+      .change-val.insufficient {
+        color: #e74c3c;
+      }
+      .insufficient-warn {
+        display: none;
+        font-size: 0.68rem;
+        color: #e74c3c;
+        font-weight: 500;
+        background: rgba(231, 76, 60, 0.1);
+        border: 1px solid rgba(231, 76, 60, 0.2);
+        border-radius: 7px;
+        padding: 6px 10px;
+        text-align: center;
+      }
+      .insufficient-warn.show {
+        display: block;
       }
 
       .btn-place {
@@ -569,6 +904,86 @@
       .status-overlay.active {
         display: flex;
         animation: fadeIn 0.3s ease;
+      }
+      /* Close / minimize button */
+      .status-close-btn {
+        position: absolute;
+        top: 14px;
+        right: 14px;
+        width: 32px;
+        height: 32px;
+        border-radius: 50%;
+        background: rgba(255, 255, 255, 0.1);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        color: rgba(255, 255, 255, 0.6);
+        font-size: 0.85rem;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition:
+          background 0.2s,
+          color 0.2s;
+        z-index: 2;
+      }
+      .status-close-btn:hover {
+        background: rgba(255, 255, 255, 0.2);
+        color: #fff;
+      }
+      .status-close-btn.hidden {
+        display: none;
+      }
+      /* Ready notification banner */
+      .ready-notif {
+        position: fixed;
+        bottom: -100px;
+        left: 50%;
+        transform: translateX(-50%);
+        background: linear-gradient(135deg, #27ae60, #2ecc71);
+        border-radius: 16px;
+        padding: 14px 20px;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        min-width: 300px;
+        max-width: 90vw;
+        box-shadow: 0 8px 30px rgba(39, 174, 96, 0.5);
+        cursor: pointer;
+        z-index: 600;
+        transition: bottom 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+      }
+      .ready-notif.show {
+        bottom: 24px;
+      }
+      .rn-icon {
+        font-size: 1.6rem;
+        animation: bellShake 0.5s ease infinite alternate;
+      }
+      @keyframes bellShake {
+        from {
+          transform: rotate(-15deg);
+        }
+        to {
+          transform: rotate(15deg);
+        }
+      }
+      .rn-text {
+        flex: 1;
+        color: #fff;
+      }
+      .rn-text strong {
+        display: block;
+        font-size: 0.9rem;
+        font-weight: 700;
+      }
+      .rn-text span {
+        font-size: 0.75rem;
+        opacity: 0.9;
+      }
+      .rn-arrow {
+        color: #fff;
+        font-size: 1.1rem;
+        font-weight: 700;
       }
       @keyframes fadeIn {
         from {
@@ -874,32 +1289,138 @@
       <div class="header-title">
         <span>CLIMBS</span> Canteen Ordering System
       </div>
-      <button class="header-menu-btn">&#9776;</button>
+      <div class="header-right">
+        <div
+          class="member-chip"
+          id="memberChip"
+          onclick="toggleHeaderDropdown()"
+        >
+          <div class="member-chip-avatar" id="chipInitial">M</div>
+          <span class="member-chip-name" id="chipName"
+            ><%= (typeof memberName !== 'undefined' ? memberName : 'Member')
+            %></span
+          >
+          <span class="member-chip-arrow">▼</span>
+        </div>
+        <div class="header-dropdown" id="headerDropdown">
+          <a class="hd-item" href="/membership/dashboard">
+            ⚙️ Profile Settings
+          </a>
+          <hr class="hd-divider" />
+          <div class="hd-item danger" onclick="doLogout()">🚪 Logout</div>
+        </div>
+      </div>
     </header>
 
     <div class="layout">
-      <!-- Categories -->
+      <!-- Sidebar -->
       <div class="panel col-cats">
-        <div class="panel-head"><h2>Categories</h2></div>
-        <div class="cat-list" id="catList">
-          <button class="cat-btn active" onclick="filterCat('all', this)">
-            All
+        <!-- Sidebar Tabs -->
+        <div class="sidebar-tabs">
+          <button
+            class="sidebar-tab active"
+            id="tabCats"
+            onclick="switchSideTab('cats')"
+          >
+            Menu
           </button>
-          <button class="cat-btn" onclick="filterCat('meals', this)">
-            Meals
+          <button
+            class="sidebar-tab"
+            id="tabMyOrder"
+            onclick="switchSideTab('myorder')"
+          >
+            Order
           </button>
-          <button class="cat-btn" onclick="filterCat('drinks', this)">
-            Drinks
+          <button
+            class="sidebar-tab"
+            id="tabHistory"
+            onclick="switchSideTab('history')"
+          >
+            History
           </button>
-          <button class="cat-btn" onclick="filterCat('snacks', this)">
-            Snacks
-          </button>
-          <button class="cat-btn" onclick="filterCat('junkfoods', this)">
-            Junk Foods
-          </button>
-          <button class="cat-btn" onclick="filterCat('others', this)">
-            Others
-          </button>
+        </div>
+
+        <!-- Panel: Categories -->
+        <div class="sidebar-panel active" id="panelCats">
+          <div class="cat-list" id="catList">
+            <button class="cat-btn active" onclick="filterCat('all', this)">
+              All
+            </button>
+            <button class="cat-btn" onclick="filterCat('meals', this)">
+              Meals
+            </button>
+            <button class="cat-btn" onclick="filterCat('drinks', this)">
+              Drinks
+            </button>
+            <button class="cat-btn" onclick="filterCat('snacks', this)">
+              Snacks
+            </button>
+            <button class="cat-btn" onclick="filterCat('junkfoods', this)">
+              Junk Foods
+            </button>
+            <button class="cat-btn" onclick="filterCat('others', this)">
+              Others
+            </button>
+          </div>
+        </div>
+
+        <!-- Panel: View Order (active orders) -->
+        <div class="sidebar-panel" id="panelMyOrder">
+          <div
+            style="
+              padding: 10px 10px 4px;
+              font-size: 0.65rem;
+              font-weight: 700;
+              letter-spacing: 1px;
+              color: rgba(255, 255, 255, 0.35);
+              text-transform: uppercase;
+            "
+          >
+            Active Orders
+          </div>
+          <div
+            id="myOrderList"
+            style="
+              display: flex;
+              flex-direction: column;
+              gap: 6px;
+              padding: 0 10px 10px;
+              overflow-y: auto;
+              flex: 1;
+            "
+          >
+            <div class="moc-empty">No active orders</div>
+          </div>
+        </div>
+
+        <!-- Panel: Order History -->
+        <div class="sidebar-panel" id="panelHistory">
+          <div
+            style="
+              padding: 10px 10px 4px;
+              font-size: 0.65rem;
+              font-weight: 700;
+              letter-spacing: 1px;
+              color: rgba(255, 255, 255, 0.35);
+              text-transform: uppercase;
+            "
+          >
+            Order History
+          </div>
+          <div class="hist-list" id="histList">
+            <div class="moc-empty">No orders yet</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Order Detail Modal -->
+      <div class="order-detail-modal" id="orderDetailModal">
+        <div class="odm-card">
+          <div class="odm-header">
+            <span class="odm-title">Order Details</span>
+            <button class="odm-close" onclick="closeOrderDetail()">✕</button>
+          </div>
+          <div id="odmContent">Loading...</div>
         </div>
       </div>
 
@@ -931,16 +1452,37 @@
             <span class="cart-total-val" id="cartTotal">&#8369; 0.00</span>
           </div>
           <div class="pay-opts">
-            <label class="pay-opt"
-              ><input type="radio" name="payMode" value="cash" checked /> Pay
-              with Cash</label
-            >
-            <label class="pay-opt"
-              ><input type="radio" name="payMode" value="credit" /> Use Credit
-              (Pay Later)</label
-            >
+            <label class="pay-opt">
+              <input
+                type="radio"
+                name="payMode"
+                value="cash"
+                checked
+                onchange="switchPayMode()"
+              />
+              💵 Cash
+            </label>
+            <label class="pay-opt">
+              <input
+                type="radio"
+                name="payMode"
+                value="gcash"
+                onchange="switchPayMode()"
+              />
+              📱 GCash
+            </label>
+            <label class="pay-opt">
+              <input
+                type="radio"
+                name="payMode"
+                value="credit"
+                onchange="switchPayMode()"
+              />
+              🕐 Credit (Pay Later)
+            </label>
           </div>
-          <div class="amount-group">
+          <!-- Cash: Amount Paid -->
+          <div class="amount-group" id="cashGroup">
             <label>Amount Paid (&#8369;)</label>
             <input
               type="number"
@@ -949,12 +1491,29 @@
               value="0.00"
               min="0"
               step="0.01"
-              oninput="calcChange()"
+              oninput="
+                this.dataset.manuallySet = '1';
+                calcChange();
+              "
+            />
+          </div>
+          <!-- GCash: Reference Number -->
+          <div class="amount-group" id="gcashGroup" style="display: none">
+            <label>GCash Reference No.</label>
+            <input
+              type="text"
+              class="amount-input"
+              id="gcashRef"
+              placeholder="e.g. 1234567890"
+              maxlength="20"
             />
           </div>
           <div class="change-row">
             <span class="change-label">Change :</span>
             <span class="change-val" id="changeVal">&#8369; 0.00</span>
+          </div>
+          <div class="insufficient-warn" id="insufficientWarn">
+            ⚠️ Kulang pa ang bayad!
           </div>
           <button class="btn-place" id="btnPlace" onclick="placeOrder()">
             Place Order
@@ -970,6 +1529,16 @@
     <!-- Order Status Overlay -->
     <div class="status-overlay" id="statusOverlay">
       <div class="status-card" id="statusCard">
+        <!-- Close button (visible during preparing, hidden when ready) -->
+        <button
+          class="status-close-btn"
+          id="statusCloseBtn"
+          onclick="minimizeOrder()"
+          title="Minimize — order stays active"
+        >
+          ✕
+        </button>
+
         <div class="confetti" id="confetti"></div>
 
         <div class="status-icon-wrap preparing" id="statusIconWrap">
@@ -1007,6 +1576,16 @@
           &#10003; &nbsp; Got it! Order Claimed
         </button>
       </div>
+    </div>
+
+    <!-- Ready Notification Toast (shown when minimized and order becomes ready) -->
+    <div class="ready-notif" id="readyNotif" onclick="reopenOrderStatus()">
+      <span class="rn-icon">🔔</span>
+      <div class="rn-text">
+        <strong>Order Ready!</strong>
+        <span id="readyNotifOrderId">Your order</span> is ready for pick-up!
+      </div>
+      <span class="rn-arrow">→</span>
     </div>
 
     <div class="toast" id="toast"></div>
@@ -1117,6 +1696,190 @@
       let currentOrderId = null;
       let pollInterval = null;
 
+      // ── TOPBAR DROPDOWN ──
+      function toggleHeaderDropdown() {
+        const chip = document.getElementById("memberChip");
+        const dd = document.getElementById("headerDropdown");
+        chip.classList.toggle("open");
+        dd.classList.toggle("show");
+      }
+      document.addEventListener("click", (e) => {
+        const chip = document.getElementById("memberChip");
+        const dd = document.getElementById("headerDropdown");
+        if (chip && !chip.contains(e.target)) {
+          chip.classList.remove("open");
+          dd.classList.remove("show");
+        }
+      });
+      async function doLogout() {
+        await fetch("/membership/logout", { method: "POST" });
+        window.location.replace("/ordering");
+      }
+
+      // Set chip initial from name
+      (function () {
+        const name =
+          document.getElementById("chipName")?.textContent?.trim() || "";
+        const initial =
+          name
+            .split(" ")
+            .map((w) => w[0])
+            .join("")
+            .toUpperCase()
+            .slice(0, 2) || "M";
+        const el = document.getElementById("chipInitial");
+        if (el) el.textContent = initial;
+      })();
+
+      // ── SIDEBAR TABS ──
+      function switchSideTab(tab) {
+        ["cats", "myorder", "history"].forEach((t) => {
+          document
+            .getElementById("tab" + t.charAt(0).toUpperCase() + t.slice(1))
+            ?.classList.remove("active");
+          document
+            .getElementById("panel" + t.charAt(0).toUpperCase() + t.slice(1))
+            ?.classList.remove("active");
+        });
+        // Map tab names to IDs
+        const tabMap = {
+          cats: ["tabCats", "panelCats"],
+          myorder: ["tabMyOrder", "panelMyOrder"],
+          history: ["tabHistory", "panelHistory"],
+        };
+        const [tabId, panelId] = tabMap[tab];
+        document.getElementById(tabId)?.classList.add("active");
+        document.getElementById(panelId)?.classList.add("active");
+        if (tab === "myorder") loadMyOrders(false);
+        if (tab === "history") loadMyOrders(true);
+      }
+
+      // ── LOAD MY ORDERS ──
+      async function loadMyOrders(showAll) {
+        try {
+          const res = await fetch("/canteen/api/my-orders");
+          const data = await res.json();
+          if (!data.success) return;
+          const orders = data.orders;
+          if (showAll) {
+            renderHistory(orders);
+          } else {
+            const active = orders.filter(
+              (o) => o.status === "preparing" || o.status === "ready",
+            );
+            renderActiveOrders(active);
+          }
+        } catch (e) {}
+      }
+
+      function renderActiveOrders(orders) {
+        const el = document.getElementById("myOrderList");
+        if (!orders.length) {
+          el.innerHTML = '<div class="moc-empty">No active orders</div>';
+          return;
+        }
+        el.innerHTML = orders
+          .map((o) => {
+            const statusLabel =
+              o.status === "preparing"
+                ? "⏳ Waiting..."
+                : "✅ Ready for Pick-up!";
+            const statusClass = o.status === "preparing" ? "waiting" : "ready";
+            return `<div class="my-order-card" onclick="viewOrderDetail('${o.order_no}')">
+            <div class="moc-no">${o.order_no}</div>
+            <div class="moc-status ${statusClass}">${statusLabel}</div>
+            <div class="moc-total">₱${parseFloat(o.total).toFixed(2)}</div>
+            <div class="moc-time">${formatTime(o.placed_at)}</div>
+          </div>`;
+          })
+          .join("");
+      }
+
+      function renderHistory(orders) {
+        const el = document.getElementById("histList");
+        if (!orders.length) {
+          el.innerHTML = '<div class="moc-empty">No orders yet</div>';
+          return;
+        }
+        el.innerHTML = orders
+          .map((o) => {
+            const statusBadge =
+              o.status === "done"
+                ? "✔ Done"
+                : o.status === "ready"
+                  ? "✅ Ready"
+                  : "⏳ Waiting";
+            return `<div class="hist-card" onclick="viewOrderDetail('${o.order_no}')">
+            <div class="hist-no">${o.order_no}</div>
+            <div class="hist-row">
+              <span class="hist-total">₱${parseFloat(o.total).toFixed(2)}</span>
+              <span class="hist-pay">${o.pay_mode}</span>
+            </div>
+            <div class="hist-row">
+              <span class="hist-date">${formatTime(o.placed_at)}</span>
+              <span style="font-size:0.62rem;color:rgba(255,255,255,0.4)">${statusBadge}</span>
+            </div>
+          </div>`;
+          })
+          .join("");
+      }
+
+      async function viewOrderDetail(orderNo) {
+        const modal = document.getElementById("orderDetailModal");
+        const content = document.getElementById("odmContent");
+        content.innerHTML = "Loading...";
+        modal.classList.add("show");
+        try {
+          const res = await fetch(`/canteen/api/my-orders/${orderNo}/items`);
+          const data = await res.json();
+          if (!data.success) {
+            content.innerHTML = "Failed to load.";
+            return;
+          }
+          const o = data.order;
+          const statusLabel =
+            o.status === "preparing"
+              ? "⏳ Waiting..."
+              : o.status === "ready"
+                ? "✅ Ready for Pick-up!"
+                : "✔ Done";
+          content.innerHTML = `
+            <div class="odm-row"><span class="odm-label">Order No.</span><span>${o.order_no}</span></div>
+            <div class="odm-row"><span class="odm-label">Status</span><span>${statusLabel}</span></div>
+            <div class="odm-row"><span class="odm-label">Payment</span><span>${o.pay_mode}${o.gcash_ref ? " — " + o.gcash_ref : ""}</span></div>
+            <div class="odm-row"><span class="odm-label">Placed At</span><span>${formatTime(o.placed_at)}</span></div>
+            ${o.ready_at ? `<div class="odm-row"><span class="odm-label">Ready At</span><span>${formatTime(o.ready_at)}</span></div>` : ""}
+            <div class="odm-items-title">Items Ordered</div>
+            ${data.items.map((i) => `<div class="odm-item-row"><span>${i.item_name} x${i.qty}</span><span>₱${parseFloat(i.subtotal).toFixed(2)}</span></div>`).join("")}
+            <div class="odm-total-row"><span>Total</span><span>₱${parseFloat(o.total).toFixed(2)}</span></div>
+          `;
+        } catch (e) {
+          content.innerHTML = "Error loading details.";
+        }
+      }
+
+      function closeOrderDetail() {
+        document.getElementById("orderDetailModal").classList.remove("show");
+      }
+
+      function formatTime(dt) {
+        if (!dt) return "";
+        const d = new Date(dt);
+        return (
+          d.toLocaleDateString("en-PH", { month: "short", day: "numeric" }) +
+          " " +
+          d.toLocaleTimeString("en-PH", { hour: "2-digit", minute: "2-digit" })
+        );
+      }
+
+      // Also refresh active orders tab when status overlay shows ready
+      function notifyOrderReady() {
+        if (
+          document.getElementById("panelMyOrder")?.classList.contains("active")
+        )
+          loadMyOrders(false);
+      }
+
       // ── RENDER ITEMS ──
       function renderItems() {
         const search = document
@@ -1183,7 +1946,11 @@
       }
       function clearCart() {
         cart = {};
-        document.getElementById("amountPaid").value = "0.00";
+        const paidInput = document.getElementById("amountPaid");
+        paidInput.value = "0.00";
+        delete paidInput.dataset.manuallySet;
+        const gcashRef = document.getElementById("gcashRef");
+        if (gcashRef) gcashRef.value = "";
         renderCart();
         showToast("🗑️ Cart cleared");
       }
@@ -1196,6 +1963,11 @@
         );
         document.getElementById("cartTotal").textContent =
           "₱" + orderTotal.toFixed(2);
+        // Auto-fill amount paid with exact total if not yet manually set
+        const paidInput = document.getElementById("amountPaid");
+        if (!paidInput.dataset.manuallySet) {
+          paidInput.value = orderTotal.toFixed(2);
+        }
         calcChange();
         const cartItemsEl = document.getElementById("cartItems");
         const cartEmptyEl = document.getElementById("cartEmpty");
@@ -1225,11 +1997,70 @@
           .join("");
       }
 
+      function switchPayMode() {
+        const mode = document.querySelector(
+          'input[name="payMode"]:checked',
+        )?.value;
+        const cashGroup = document.getElementById("cashGroup");
+        const gcashGroup = document.getElementById("gcashGroup");
+        const changeRow = document.querySelector(".change-row");
+        const warnEl = document.getElementById("insufficientWarn");
+
+        if (mode === "cash") {
+          cashGroup.style.display = "";
+          gcashGroup.style.display = "none";
+          changeRow.style.display = "";
+          warnEl.classList.remove("show");
+          calcChange();
+        } else if (mode === "gcash") {
+          cashGroup.style.display = "none";
+          gcashGroup.style.display = "";
+          changeRow.style.display = "none";
+          warnEl.classList.remove("show");
+        } else {
+          // credit
+          cashGroup.style.display = "none";
+          gcashGroup.style.display = "none";
+          changeRow.style.display = "none";
+          warnEl.classList.remove("show");
+        }
+      }
+
       function calcChange() {
         const paid =
           parseFloat(document.getElementById("amountPaid").value) || 0;
-        document.getElementById("changeVal").textContent =
-          "₱" + Math.max(paid - orderTotal, 0).toFixed(2);
+        const change = paid - orderTotal;
+        const val = document.getElementById("changeVal");
+        const warn = document.getElementById("insufficientWarn");
+        const mode = document.querySelector(
+          'input[name="payMode"]:checked',
+        )?.value;
+
+        if (
+          !mode ||
+          mode === "credit" ||
+          mode === "gcash" ||
+          orderTotal === 0
+        ) {
+          val.textContent = "₱ 0.00";
+          val.className = "change-val";
+          warn.classList.remove("show");
+          return;
+        }
+
+        if (change < 0) {
+          val.textContent = "- ₱" + Math.abs(change).toFixed(2);
+          val.className = "change-val insufficient";
+          warn.classList.add("show");
+        } else if (change > 0) {
+          val.textContent = "₱" + change.toFixed(2);
+          val.className = "change-val has-change";
+          warn.classList.remove("show");
+        } else {
+          val.textContent = "₱ 0.00";
+          val.className = "change-val";
+          warn.classList.remove("show");
+        }
       }
 
       // ── PLACE ORDER ──
@@ -1238,13 +2069,25 @@
           showToast("⚠️ Cart is empty!");
           return;
         }
-        const mode = document.querySelector(
-          'input[name="payMode"]:checked',
-        ).value;
+        const modeEl = document.querySelector('input[name="payMode"]:checked');
+        if (!modeEl) {
+          showToast("⚠️ Please select a payment method!");
+          return;
+        }
+        const mode = modeEl.value;
         const paid =
           parseFloat(document.getElementById("amountPaid").value) || 0;
-        if (mode === "cash" && paid < orderTotal) {
-          showToast("⚠️ Insufficient amount paid!");
+        const gcashRef =
+          document.getElementById("gcashRef")?.value?.trim() || "";
+
+        if (mode === "cash" && orderTotal > 0 && paid < orderTotal) {
+          showToast("⚠️ Enter the amount paid first!");
+          document.getElementById("amountPaid").focus();
+          return;
+        }
+        if (mode === "gcash" && !gcashRef) {
+          showToast("⚠️ Enter GCash reference number!");
+          document.getElementById("gcashRef").focus();
           return;
         }
 
@@ -1259,8 +2102,9 @@
           })),
           total: orderTotal,
           payMode: mode,
-          amountPaid: paid,
-          change: Math.max(paid - orderTotal, 0),
+          amountPaid: mode === "cash" ? paid : orderTotal,
+          change: mode === "cash" ? Math.max(paid - orderTotal, 0) : 0,
+          gcashRef: mode === "gcash" ? gcashRef : null,
           customerType: "member",
         };
 
@@ -1288,6 +2132,33 @@
       }
 
       // ── STATUS OVERLAY ──
+      // ── NOTIFICATION SOUND (Web Audio API) ──
+      function playReadySound() {
+        try {
+          const ctx = new (window.AudioContext || window.webkitAudioContext)();
+          // Chime: 3 ascending notes
+          const notes = [523.25, 659.25, 783.99]; // C5, E5, G5
+          notes.forEach((freq, i) => {
+            const osc = ctx.createOscillator();
+            const gain = ctx.createGain();
+            osc.connect(gain);
+            gain.connect(ctx.destination);
+            osc.type = "sine";
+            osc.frequency.value = freq;
+            const t = ctx.currentTime + i * 0.18;
+            gain.gain.setValueAtTime(0, t);
+            gain.gain.linearRampToValueAtTime(0.4, t + 0.05);
+            gain.gain.exponentialRampToValueAtTime(0.001, t + 0.5);
+            osc.start(t);
+            osc.stop(t + 0.5);
+          });
+        } catch (e) {
+          /* ignore if audio blocked */
+        }
+      }
+
+      let isMinimized = false;
+
       function showOrderStatus(status) {
         const overlay = document.getElementById("statusOverlay");
         const iconWrap = document.getElementById("statusIconWrap");
@@ -1303,11 +2174,13 @@
         const line2 = document.getElementById("line2");
         const btnDone = document.getElementById("btnDone");
         const confetti = document.getElementById("confetti");
+        const closeBtn = document.getElementById("statusCloseBtn");
 
         badge.textContent = "ORDER #" + (currentOrderId || "—");
-        overlay.classList.add("active");
 
         if (status === "preparing") {
+          isMinimized = false;
+          overlay.classList.add("active");
           iconWrap.className = "status-icon-wrap preparing";
           pulseRing.style.display = "block";
           emoji.textContent = "⏳";
@@ -1324,8 +2197,19 @@
           lbl3.textContent = "Ready";
           line2.className = "step-line";
           btnDone.style.display = "none";
+          closeBtn.classList.remove("hidden");
           confetti.innerHTML = "";
         } else if (status === "ready") {
+          // Play sound + show notification
+          playReadySound();
+
+          // If minimized, show notification banner instead of reopening
+          if (isMinimized) {
+            showReadyNotif();
+          } else {
+            overlay.classList.add("active");
+          }
+
           iconWrap.className = "status-icon-wrap ready";
           pulseRing.style.display = "none";
           emoji.textContent = "🎉";
@@ -1343,8 +2227,47 @@
           lbl3.textContent = "Ready!";
           line2.className = "step-line done";
           btnDone.style.display = "block";
+          closeBtn.classList.add("hidden");
           spawnConfetti();
+
+          // Also refresh the order tab
+          loadMyOrders(false);
         }
+      }
+
+      function showReadyNotif() {
+        const notif = document.getElementById("readyNotif");
+        document.getElementById("readyNotifOrderId").textContent =
+          currentOrderId ? `#${currentOrderId}` : "Your order";
+        notif.classList.add("show");
+        // Auto-hide after 8 seconds if not clicked
+        setTimeout(() => {
+          if (
+            !document
+              .getElementById("statusOverlay")
+              .classList.contains("active")
+          ) {
+            notif.classList.remove("show");
+          }
+        }, 8000);
+      }
+
+      function minimizeOrder() {
+        // Close the overlay but keep polling
+        document.getElementById("statusOverlay").classList.remove("active");
+        isMinimized = true;
+        // Switch sidebar to Order tab so they can see it
+        switchSideTab("myorder");
+        showToast(
+          "⏳ Order still being prepared — we'll notify you when ready!",
+        );
+      }
+
+      function reopenOrderStatus() {
+        // Called when clicking the ready notification banner
+        document.getElementById("readyNotif").classList.remove("show");
+        isMinimized = false;
+        document.getElementById("statusOverlay").classList.add("active");
       }
 
       function spawnConfetti() {
@@ -1383,17 +2306,21 @@
           } catch (e) {
             /* ignore */
           }
-        }, 2500); // poll every 2.5s
+        }, 2500);
       }
 
       function dismissOrder() {
         document.getElementById("statusOverlay").classList.remove("active");
+        document.getElementById("readyNotif").classList.remove("show");
         document.getElementById("btnPlace").disabled = false;
+        isMinimized = false;
         currentOrderId = null;
         if (pollInterval) {
           clearInterval(pollInterval);
           pollInterval = null;
         }
+        // Refresh order history
+        loadMyOrders(true);
       }
 
       function printReceipt() {

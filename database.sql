@@ -24,7 +24,7 @@ CREATE TABLE IF NOT EXISTS admins (
 
 -- Default admin → username: admin / password: admin123
 INSERT IGNORE INTO admins (username, password, full_name) VALUES
-('admin', '$2b$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2uheWG/igi.', 'System Administrator');
+('admin', '$2b$10$BySK6GR0KFwytTqYwnrbn.Ugz/Bdq3LdGxrYCMr/mdaZrfsMTU9fm', 'System Administrator');
 
 -- ════════════════════════════════════════════
 --  2. MEMBERS
@@ -169,9 +169,12 @@ CREATE TABLE IF NOT EXISTS loans (
     date_released       DATE,
     due_date            DATE,
     outstanding_balance DECIMAL(12,2),
-    status              ENUM('active','paid','restructured','delinquent') DEFAULT 'active',
+    status              ENUM('pending','active','paid','restructured','delinquent','rejected') DEFAULT 'pending',
     purpose             VARCHAR(255),
     encoded_by          VARCHAR(100),
+    applied_at          DATETIME DEFAULT CURRENT_TIMESTAMP,
+    approved_at         DATETIME NULL,
+    rejected_at         DATETIME NULL,
     created_at          DATETIME DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (member_id) REFERENCES members(id) ON DELETE CASCADE
 );
@@ -244,6 +247,7 @@ CREATE TABLE IF NOT EXISTS canteen_orders (
     placed_at       DATETIME DEFAULT CURRENT_TIMESTAMP,
     ready_at        DATETIME NULL,
     done_at         DATETIME NULL,
+    credit_paid     TINYINT(1) DEFAULT 0,
     FOREIGN KEY (member_id) REFERENCES members(id) ON DELETE SET NULL
 );
 

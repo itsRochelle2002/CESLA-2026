@@ -472,6 +472,43 @@
         <a href="/membership/register" class="register-link">
           Don't have an account? &nbsp;<strong>Register as New Member</strong>
         </a>
+
+        <div
+          style="
+            margin-top: 18px;
+            padding-top: 14px;
+            border-top: 1px solid rgba(255, 255, 255, 0.07);
+            text-align: center;
+          "
+        >
+          <a
+            href="/membership/admin"
+            style="
+              display: inline-flex;
+              align-items: center;
+              gap: 7px;
+              font-size: 0.7rem;
+              color: rgba(255, 255, 255, 0.3);
+              text-decoration: none;
+              letter-spacing: 0.5px;
+              transition: color 0.2s;
+              padding: 6px 14px;
+              border-radius: 20px;
+              border: 1px solid rgba(255, 255, 255, 0.08);
+              background: rgba(255, 255, 255, 0.03);
+            "
+            onmouseover="
+              this.style.color = 'rgba(201,168,76,0.8)';
+              this.style.borderColor = 'rgba(201,168,76,0.25)';
+            "
+            onmouseout="
+              this.style.color = 'rgba(255,255,255,0.3)';
+              this.style.borderColor = 'rgba(255,255,255,0.08)';
+            "
+          >
+            &#9881;&#65039; &nbsp;Login as Administrator
+          </a>
+        </div>
       </div>
     </main>
 
@@ -483,6 +520,12 @@
     </footer>
 
     <script>
+      // Prevent back-button to login page after successful login
+      // Replace current history entry so back button skips this page
+      if (window.history.replaceState) {
+        window.history.replaceState(null, null, window.location.href);
+      }
+
       // Dynamic back button based on source
       const _p = new URLSearchParams(window.location.search);
       document.getElementById("backBtn").href =

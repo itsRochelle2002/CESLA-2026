@@ -3,94 +3,42 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Admin Login - CLIMBS Membership</title>
+    <title>Admin Login - CESLA</title>
     <link
-      href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;800&family=DM+Sans:wght@300;400;500;600&display=swap"
       rel="stylesheet"
     />
+    <link rel="stylesheet" href="/css/global.css" />
     <style>
-      * {
+      *,
+      *::before,
+      *::after {
         margin: 0;
         padding: 0;
         box-sizing: border-box;
       }
       body {
-        font-family: "Montserrat", sans-serif;
-        background: var(--cesla-navy);
-        background-image:
-          radial-gradient(
-            ellipse at 20% 50%,
-            rgba(58, 72, 160, 0.6) 0%,
-            transparent 60%
-          ),
-          radial-gradient(
-            ellipse at 80% 50%,
-            rgba(20, 28, 90, 0.8) 0%,
-            transparent 60%
-          );
+        font-family: "DM Sans", sans-serif;
         min-height: 100vh;
         display: flex;
         flex-direction: column;
+        overflow-x: hidden;
       }
 
-      /* TOP BAR */
-      .top-bar {
-        background: linear-gradient(135deg, #f7cc30 0%, #e8b800 100%);
-        margin: 16px 20px 0;
-        border-radius: 14px;
-        padding: 18px 28px;
+      header {
+        padding: 16px 40px;
         display: flex;
         align-items: center;
-        box-shadow: 0 6px 24px rgba(0, 0, 0, 0.25);
+        justify-content: space-between;
+        border-bottom: 1px solid rgba(201, 168, 76, 0.2);
+        background: rgba(13, 27, 62, 0.6);
+        backdrop-filter: blur(10px);
+        animation: slideDown 0.6s ease both;
       }
-      .back-btn {
-        font-size: 1.6em;
-        color: #1a1a2e;
-        text-decoration: none;
-        font-weight: 800;
-        transition: transform 0.2s;
-      }
-      .back-btn:hover {
-        transform: translateX(-4px);
-      }
-      .top-bar h1 {
-        font-size: 1.4em;
-        font-weight: 800;
-        color: #1a1a2e;
-        text-align: center;
-        flex: 1;
-      }
-      .spacer {
-        width: 1.6em;
-      }
-
-      /* MAIN */
-      .main-content {
-        flex: 1;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        padding: 40px 20px;
-      }
-
-      /* CARD */
-      .card {
-        background: #fff;
-        border-radius: 20px;
-        padding: 40px 36px 36px;
-        width: 100%;
-        max-width: 420px;
-        box-shadow: 0 16px 48px rgba(0, 0, 0, 0.3);
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        gap: 20px;
-        animation: cardIn 0.4s ease;
-      }
-      @keyframes cardIn {
+      @keyframes slideDown {
         from {
           opacity: 0;
-          transform: translateY(20px);
+          transform: translateY(-16px);
         }
         to {
           opacity: 1;
@@ -98,57 +46,145 @@
         }
       }
 
-      /* ICON */
-      .admin-icon {
-        width: 72px;
-        height: 72px;
-        background: var(--cesla-navy);
+      .header-back {
+        width: 38px;
+        height: 38px;
         border-radius: 50%;
+        border: 1.5px solid rgba(201, 168, 76, 0.35);
         display: flex;
         align-items: center;
         justify-content: center;
-        font-size: 2em;
-        box-shadow: 0 4px 16px rgba(42, 50, 114, 0.3);
+        color: #c9a84c;
+        font-size: 1.1rem;
+        text-decoration: none;
+        transition:
+          background 0.2s,
+          border-color 0.2s;
       }
-
-      .card h2 {
-        font-size: 1.3em;
-        font-weight: 800;
-        color: #1a1a2e;
+      .header-back:hover {
+        background: rgba(201, 168, 76, 0.12);
+        border-color: rgba(201, 168, 76, 0.6);
+      }
+      .header-center {
         text-align: center;
       }
-      .card .subtitle {
-        font-size: 0.78em;
-        color: #888;
-        font-weight: 600;
-        text-align: center;
-        margin-top: -12px;
-      }
-
-      /* WARNING BADGE */
-      .warning-badge {
-        background: #fff3cd;
-        border: 1.5px solid #ffc107;
-        border-radius: 8px;
-        padding: 8px 14px;
-        font-size: 0.75em;
+      .header-center h1 {
+        font-family: "Playfair Display", serif;
+        font-size: 1.25rem;
         font-weight: 700;
-        color: #856404;
+        color: #fff;
+        letter-spacing: 0.3px;
+      }
+      .header-center h1 span {
+        color: #c9a84c;
+      }
+      .header-center p {
+        font-size: 0.62rem;
+        font-weight: 500;
+        color: rgba(255, 255, 255, 0.35);
+        letter-spacing: 2.5px;
+        text-transform: uppercase;
+        margin-top: 1px;
+      }
+      .header-spacer {
+        width: 38px;
+      }
+
+      main {
+        flex: 1;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 40px 20px;
+        animation: fadeUp 0.6s 0.15s ease both;
+      }
+      @keyframes fadeUp {
+        from {
+          opacity: 0;
+          transform: translateY(24px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      .login-card {
+        background: rgba(255, 255, 255, 0.04);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        backdrop-filter: blur(20px);
+        border-radius: 24px;
+        padding: 48px 40px 40px;
+        width: 100%;
+        max-width: 440px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 16px;
+      }
+
+      .icon-wrap {
+        position: relative;
+        width: 80px;
+        height: 80px;
+        margin-bottom: 4px;
+      }
+      .icon-wrap svg {
+        width: 80px;
+        height: 80px;
+      }
+      .icon-ring {
+        position: absolute;
+        inset: -6px;
+        border-radius: 50%;
+        border: 1.5px dashed rgba(201, 168, 76, 0.3);
+        animation: spin 18s linear infinite;
+      }
+      @keyframes spin {
+        to {
+          transform: rotate(360deg);
+        }
+      }
+
+      .card-title {
+        font-family: "Playfair Display", serif;
+        font-size: 1.55rem;
+        font-weight: 700;
+        color: #fff;
+        text-align: center;
+      }
+      .card-sub {
+        font-size: 0.78rem;
+        color: rgba(255, 255, 255, 0.4);
+        text-align: center;
+        margin-top: -8px;
+      }
+
+      .admin-badge {
+        background: rgba(201, 168, 76, 0.08);
+        border: 1px solid rgba(201, 168, 76, 0.25);
+        border-radius: 10px;
+        padding: 10px 16px;
+        font-size: 0.72rem;
+        font-weight: 500;
+        color: rgba(201, 168, 76, 0.85);
         text-align: center;
         width: 100%;
+        letter-spacing: 0.2px;
       }
 
-      /* FIELDS */
       .field-group {
         display: flex;
         flex-direction: column;
-        gap: 6px;
+        gap: 7px;
         width: 100%;
       }
       .field-group label {
-        font-size: 0.82em;
-        font-weight: 700;
-        color: #1a1a2e;
+        font-size: 0.68rem;
+        font-weight: 600;
+        color: rgba(255, 255, 255, 0.5);
+        letter-spacing: 1.8px;
+        text-transform: uppercase;
         padding-left: 2px;
       }
       .input-wrap {
@@ -157,28 +193,29 @@
       .input-wrap input {
         width: 100%;
         padding: 14px 46px 14px 18px;
-        background: #e8e8f0;
-        border: 2px solid transparent;
-        border-radius: 10px;
-        font-family: "Montserrat", sans-serif;
-        font-size: 0.88em;
-        font-weight: 500;
-        color: #1a1a2e;
+        background: rgba(255, 255, 255, 0.06);
+        border: 1.5px solid rgba(255, 255, 255, 0.1);
+        border-radius: 12px;
+        font-family: "DM Sans", sans-serif;
+        font-size: 0.9rem;
+        font-weight: 400;
+        color: #fff;
         outline: none;
         transition:
-          border 0.2s,
+          border-color 0.2s,
           background 0.2s;
       }
       .input-wrap input::placeholder {
-        color: #888;
+        color: rgba(255, 255, 255, 0.2);
       }
       .input-wrap input:focus {
-        border-color: #2a3272;
-        background: #f0f0f8;
+        border-color: rgba(201, 168, 76, 0.5);
+        background: rgba(255, 255, 255, 0.09);
       }
       .input-wrap input.error {
-        border-color: #e74c3c;
+        border-color: rgba(231, 76, 60, 0.6);
       }
+
       .eye-btn {
         position: absolute;
         right: 14px;
@@ -187,89 +224,185 @@
         background: none;
         border: none;
         cursor: pointer;
-        color: #555;
+        color: rgba(255, 255, 255, 0.3);
         display: flex;
         align-items: center;
+        transition: color 0.2s;
+      }
+      .eye-btn:hover {
+        color: rgba(201, 168, 76, 0.7);
       }
       .eye-btn svg {
-        width: 20px;
-        height: 20px;
+        width: 18px;
+        height: 18px;
       }
 
       .error-msg {
-        font-size: 0.75em;
+        font-size: 0.75rem;
+        font-weight: 500;
         color: #e74c3c;
-        font-weight: 700;
+        background: rgba(231, 76, 60, 0.08);
+        border: 1px solid rgba(231, 76, 60, 0.2);
+        border-radius: 8px;
+        padding: 10px 14px;
         text-align: center;
+        width: 100%;
         display: none;
       }
       .error-msg.show {
         display: block;
       }
 
-      /* BTN */
       .btn-login {
         width: 100%;
-        padding: 15px;
-        background: var(--cesla-navy);
-        color: #fff;
-        font-family: "Montserrat", sans-serif;
-        font-size: 0.92em;
-        font-weight: 800;
-        letter-spacing: 1.5px;
+        padding: 16px;
+        background: linear-gradient(
+          135deg,
+          #c9a84c 0%,
+          #e8c96a 50%,
+          #c9a84c 100%
+        );
+        background-size: 200% 100%;
+        color: #1a1a2e;
+        font-family: "DM Sans", sans-serif;
+        font-size: 0.82rem;
+        font-weight: 700;
+        letter-spacing: 2.5px;
+        text-transform: uppercase;
         border: none;
-        border-radius: 10px;
+        border-radius: 12px;
         cursor: pointer;
         transition:
-          background 0.2s,
-          transform 0.2s;
-        margin-top: 4px;
+          background-position 0.4s,
+          transform 0.2s,
+          box-shadow 0.2s;
+        margin-top: 6px;
       }
       .btn-login:hover {
-        background: #1a1a5e;
+        background-position: right center;
         transform: translateY(-2px);
+        box-shadow: 0 8px 24px rgba(201, 168, 76, 0.3);
+      }
+
+      .divider {
+        width: 100%;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        margin-top: 4px;
+      }
+      .divider::before,
+      .divider::after {
+        content: "";
+        flex: 1;
+        height: 1px;
+        background: rgba(255, 255, 255, 0.07);
+      }
+      .divider span {
+        font-size: 0.65rem;
+        color: rgba(255, 255, 255, 0.2);
+        letter-spacing: 1px;
+      }
+
+      .member-link {
+        font-size: 0.72rem;
+        color: rgba(255, 255, 255, 0.3);
+        text-decoration: none;
+        text-align: center;
+        transition: color 0.2s;
+      }
+      .member-link:hover {
+        color: rgba(201, 168, 76, 0.7);
+      }
+      .member-link strong {
+        color: rgba(201, 168, 76, 0.6);
+        font-weight: 600;
+      }
+
+      footer {
+        text-align: center;
+        padding: 14px 40px 22px;
+        border-top: 1px solid rgba(255, 255, 255, 0.06);
+      }
+      footer p {
+        font-size: 0.7rem;
+        color: rgba(255, 255, 255, 0.2);
+        font-weight: 300;
       }
 
       @media (max-width: 480px) {
-        .top-bar {
-          margin: 12px 10px 0;
-          padding: 14px 16px;
+        header {
+          padding: 12px 20px;
         }
-        .top-bar h1 {
-          font-size: 1.05em;
+        .header-center h1 {
+          font-size: 1.05rem;
         }
-        .card {
-          padding: 28px 20px;
+        .login-card {
+          padding: 36px 24px 30px;
         }
       }
     </style>
-    <link rel="stylesheet" href="/css/global.css" />
   </head>
   <body>
-    <div class="top-bar">
-      <a href="#" class="back-btn" id="backBtn">&#8592;</a>
-      <h1>Admin Login</h1>
-      <div class="spacer"></div>
-    </div>
+    <header>
+      <a href="/" class="header-back">&#8592;</a>
+      <div class="header-center">
+        <h1>Admin <span>Login</span></h1>
+        <p>CESLA Multi-Purpose Cooperative</p>
+      </div>
+      <div class="header-spacer"></div>
+    </header>
 
-    <div class="main-content">
-      <div class="card">
-        <div class="admin-icon">🔐</div>
-        <h2>Administrator Access</h2>
-        <p class="subtitle">CLIMBS Membership Portal</p>
+    <main>
+      <div class="login-card">
+        <div class="icon-wrap">
+          <svg
+            viewBox="0 0 80 80"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <circle
+              cx="40"
+              cy="40"
+              r="38"
+              fill="rgba(201,168,76,0.08)"
+              stroke="rgba(201,168,76,0.2)"
+              stroke-width="1.5"
+            />
+            <path
+              d="M40 18 L56 25 L56 40 C56 50 40 62 40 62 C40 62 24 50 24 40 L24 25 Z"
+              fill="rgba(201,168,76,0.15)"
+              stroke="rgba(201,168,76,0.6)"
+              stroke-width="1.5"
+              stroke-linejoin="round"
+            />
+            <path
+              d="M33 40 L38 45 L48 34"
+              stroke="rgba(201,168,76,0.9)"
+              stroke-width="2.5"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+          </svg>
+          <div class="icon-ring"></div>
+        </div>
 
-        <div class="warning-badge">
-          ⚠️ WARNING: Restricted to authorized administrators only.
+        <div class="card-title">Administrator Access</div>
+        <div class="card-sub">Restricted to authorized personnel only</div>
+
+        <div class="admin-badge">
+          🔒 &nbsp; This portal is for system administrators only
         </div>
 
         <div class="field-group">
-          <label>Admin Username</label>
+          <label>Username</label>
           <div class="input-wrap">
             <input
               type="text"
               id="adminUsername"
               placeholder="Enter admin username"
               autocomplete="off"
+              onkeydown="if (event.key === 'Enter') handleLogin();"
             />
           </div>
         </div>
@@ -302,33 +435,49 @@
         </div>
 
         <button class="btn-login" onclick="handleLogin()">
-          LOGIN AS ADMIN
+          &#8594; &nbsp; Login as Admin
         </button>
+
+        <div class="divider"><span>OR</span></div>
+
+        <a href="/membership/login" class="member-link">
+          Are you a member? &nbsp;<strong>Member Login →</strong>
+        </a>
       </div>
-    </div>
+    </main>
+
+    <footer>
+      <p>
+        CESLA Multi-Purpose Cooperative &nbsp;&bull;&nbsp; Administrator Portal
+        &nbsp;&bull;&nbsp; 2025
+      </p>
+    </footer>
 
     <script>
-      // Dynamic back button
-      const _bp = new URLSearchParams(window.location.search);
-      document.getElementById("backBtn").href =
-        _bp.get("from") === "canteen" ? "/ordering" : "/membership";
+      // Prevent back button returning to login after auth
+      if (window.history.replaceState) {
+        window.history.replaceState(null, null, window.location.href);
+      }
+
       function togglePw() {
-        const input = document.getElementById("adminPassword");
-        input.type = input.type === "password" ? "text" : "password";
+        const i = document.getElementById("adminPassword");
+        i.type = i.type === "password" ? "text" : "password";
       }
 
       function handleLogin() {
         const username = document.getElementById("adminUsername").value.trim();
         const password = document.getElementById("adminPassword").value;
         const errorMsg = document.getElementById("errorMsg");
+        const uInput = document.getElementById("adminUsername");
+        const pInput = document.getElementById("adminPassword");
+
+        errorMsg.classList.remove("show");
+        uInput.classList.remove("error");
+        pInput.classList.remove("error");
 
         if (!username || !password) {
-          document
-            .getElementById("adminUsername")
-            .classList.toggle("error", !username);
-          document
-            .getElementById("adminPassword")
-            .classList.toggle("error", !password);
+          if (!username) uInput.classList.add("error");
+          if (!password) pInput.classList.add("error");
           errorMsg.textContent = "❌ Please fill in all fields.";
           errorMsg.classList.add("show");
           return;
@@ -339,20 +488,19 @@
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ username, password }),
         })
-          .then((res) => res.json())
+          .then((r) => r.json())
           .then((data) => {
             if (data.success) {
               const _p = new URLSearchParams(window.location.search);
-              const redirectTo =
+              window.location.href =
                 _p.get("from") === "canteen"
                   ? "/canteen/admin"
                   : "/membership/admin/dashboard";
-              window.location.href = redirectTo;
             } else {
               errorMsg.textContent = "❌ Invalid username or password.";
               errorMsg.classList.add("show");
-              document.getElementById("adminUsername").classList.add("error");
-              document.getElementById("adminPassword").classList.add("error");
+              uInput.classList.add("error");
+              pInput.classList.add("error");
             }
           })
           .catch(() => {

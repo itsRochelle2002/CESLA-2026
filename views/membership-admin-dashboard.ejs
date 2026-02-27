@@ -35,36 +35,70 @@
 
       /* TOP BAR */
       .top-bar {
-        background: linear-gradient(135deg, #0d1b3e 0%, #0d1b3e 100%);
-        margin: 16px 20px 0;
+        background: linear-gradient(135deg, #1a3478 0%, #0d1b3e 100%);
+        margin: 14px 18px 0;
         border-radius: 14px;
-        padding: 14px 24px;
+        padding: 13px 22px;
         display: flex;
         align-items: center;
         justify-content: space-between;
-        box-shadow: 0 6px 24px rgba(0, 0, 0, 0.25);
-      }
-      .top-bar-left {
-        display: flex;
-        align-items: center;
+        box-shadow: 0 6px 24px rgba(0, 0, 0, 0.3);
         gap: 12px;
       }
-      .top-bar img.logo {
-        width: 46px;
-        height: 46px;
-        object-fit: contain;
-        border-radius: 50%;
+      .btn-back-topbar {
+        width: 34px;
+        height: 34px;
+        border-radius: 8px;
+        background: rgba(255, 255, 255, 0.12);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        color: #fff;
+        font-size: 1rem;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: background 0.2s;
+        flex-shrink: 0;
       }
-      .top-bar h1 {
-        font-size: 1.1em;
+      .btn-back-topbar:hover {
+        background: rgba(255, 255, 255, 0.22);
+      }
+      .top-bar-title {
+        flex: 1;
+        text-align: center;
+        font-size: 1.05em;
         font-weight: 800;
-        color: #1a1a2e;
+        color: #fff;
+        letter-spacing: 0.3px;
       }
-      .top-bar h1 span {
-        font-size: 0.7em;
-        font-weight: 600;
-        display: block;
-        color: #555;
+      .top-bar-right {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+      .admin-chip {
+        display: flex;
+        align-items: center;
+        gap: 7px;
+        background: rgba(255, 255, 255, 0.12);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        border-radius: 50px;
+        padding: 6px 14px 6px 8px;
+      }
+      .admin-chip-icon {
+        width: 26px;
+        height: 26px;
+        border-radius: 50%;
+        background: rgba(255, 255, 255, 0.18);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 0.85rem;
+      }
+      .admin-chip-name {
+        font-size: 0.78em;
+        font-weight: 700;
+        color: #fff;
       }
       .btn-logout {
         background: #1a1a2e;
@@ -86,38 +120,41 @@
       .main {
         display: flex;
         flex: 1;
-        padding: 20px;
-        gap: 20px;
+        padding: 16px 18px 18px;
+        gap: 16px;
       }
       .sidebar {
         display: flex;
         flex-direction: column;
-        gap: 8px;
-        width: 230px;
+        gap: 6px;
+        width: 200px;
         flex-shrink: 0;
+        padding-top: 10px;
       }
       .tab-btn {
-        background: rgba(255, 255, 255, 0.1);
-        color: #fff;
+        background: rgba(255, 255, 255, 0.08);
+        color: rgba(255, 255, 255, 0.85);
         border: none;
         border-radius: 10px;
-        padding: 13px 16px;
+        padding: 12px 14px;
         font-family: "Montserrat", sans-serif;
-        font-size: 0.82em;
+        font-size: 0.78em;
         font-weight: 700;
         cursor: pointer;
-        text-align: left;
+        text-align: center;
         display: flex;
         align-items: center;
-        gap: 10px;
+        justify-content: center;
+        gap: 8px;
         transition:
           background 0.2s,
           transform 0.15s;
         width: 100%;
+        letter-spacing: 0.3px;
       }
       .tab-btn:hover {
-        background: rgba(255, 255, 255, 0.18);
-        transform: translateX(3px);
+        background: rgba(255, 255, 255, 0.15);
+        transform: translateX(2px);
       }
       .tab-btn.active {
         background: #f5c518;
@@ -167,25 +204,105 @@
       }
       .stats-row {
         display: flex;
-        gap: 12px;
+        gap: 14px;
       }
       .stat-card {
         flex: 1;
-        background: rgba(255, 255, 255, 0.1);
-        border-radius: 12px;
-        padding: 14px 18px;
+        background: #1a3478;
+        border-radius: 14px;
+        padding: 20px 18px 18px;
         text-align: center;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+      }
+      .stat-card .stat-label-top {
+        font-size: 0.73em;
+        font-weight: 700;
+        color: rgba(255, 255, 255, 0.9);
+        margin-bottom: 12px;
+        line-height: 1.4;
       }
       .stat-card .stat-num {
-        font-size: 1.8em;
+        font-size: 2.4em;
         font-weight: 800;
         color: #f5c518;
       }
+      /* Legacy stat-label kept for compat */
       .stat-card .stat-label {
         font-size: 0.72em;
         font-weight: 600;
         color: rgba(255, 255, 255, 0.8);
         margin-top: 2px;
+      }
+
+      /* Activity History */
+      .activity-history-wrap {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+      }
+      .activity-title {
+        font-size: 0.85em;
+        font-weight: 800;
+        color: #fff;
+        letter-spacing: 0.3px;
+      }
+
+      /* Mini stats row for Account Management */
+      .stats-row-mini {
+        display: flex;
+        gap: 10px;
+      }
+      .stat-card-mini {
+        flex: 1;
+        background: rgba(255, 255, 255, 0.08);
+        border-radius: 10px;
+        padding: 10px 12px;
+        text-align: center;
+      }
+      .stat-num-mini {
+        font-size: 1.4em;
+        font-weight: 800;
+        color: #f5c518;
+      }
+      .stat-label-mini {
+        font-size: 0.68em;
+        font-weight: 600;
+        color: rgba(255, 255, 255, 0.7);
+        margin-top: 2px;
+      }
+
+      /* Inner tabs (for Account Management sub-panels) */
+      .inner-tabs {
+        display: flex;
+        gap: 6px;
+        flex-wrap: wrap;
+      }
+      .inner-tab {
+        background: rgba(255, 255, 255, 0.08);
+        color: rgba(255, 255, 255, 0.75);
+        border: none;
+        border-radius: 8px;
+        padding: 8px 14px;
+        font-family: "Montserrat", sans-serif;
+        font-size: 0.74em;
+        font-weight: 700;
+        cursor: pointer;
+        transition: background 0.2s;
+      }
+      .inner-tab:hover {
+        background: rgba(255, 255, 255, 0.15);
+      }
+      .inner-tab.active {
+        background: #f5c518;
+        color: #1a1a2e;
+      }
+      .inner-panel {
+        display: none;
+        flex-direction: column;
+        gap: 10px;
+      }
+      .inner-panel.active {
+        display: flex;
       }
 
       /* PANELS */
@@ -499,6 +616,28 @@
         animation: popIn 0.25s ease;
         margin: auto;
       }
+      /* Detail rows in modals */
+      .detail-row {
+        display: flex;
+        align-items: flex-start;
+        gap: 12px;
+        padding: 10px 0;
+        border-bottom: 1px solid #f0f0f0;
+        font-size: 0.82em;
+      }
+      .detail-row:last-child {
+        border-bottom: none;
+      }
+      .detail-label {
+        font-weight: 800;
+        color: #2a3272;
+        min-width: 140px;
+        flex-shrink: 0;
+        font-size: 0.92em;
+        text-transform: uppercase;
+        letter-spacing: 0.3px;
+      }
+
       @keyframes popIn {
         from {
           opacity: 0;
@@ -798,159 +937,290 @@
   <body>
     <!-- TOP BAR -->
     <div class="top-bar">
-      <div class="top-bar-left">
-        <img class="logo" src="/images/CESLA_logo.png" alt="CESLA" />
-        <h1>Admin Dashboard <span>CLIMBS Membership Portal</span></h1>
+      <button class="btn-back-topbar" onclick="history.back()">&#8592;</button>
+      <h1 class="top-bar-title">Admin's Dashboard</h1>
+      <div class="top-bar-right">
+        <div class="admin-chip">
+          <span class="admin-chip-icon">&#128100;</span>
+          <span class="admin-chip-name">Admin <%= adminName %></span>
+        </div>
+        <button class="btn-logout" onclick="logout()">Logout</button>
       </div>
-      <button class="btn-logout" onclick="logout()">🚪 Logout</button>
     </div>
 
     <div class="main">
       <!-- SIDEBAR -->
       <div class="sidebar">
-        <button class="tab-btn active" onclick="switchTab('pending', this)">
-          ⏳ Pending <span class="badge" id="pendingBadge">0</span>
+        <button class="tab-btn active" onclick="switchTab('dashboard', this)">
+          DASHBOARD
         </button>
-        <button class="tab-btn" onclick="switchTab('approved', this)">
-          ✅ Approved
-          <span class="badge" style="background: #28a745" id="approvedBadge"
-            >0</span
-          >
+        <button class="tab-btn" onclick="switchTab('pending', this)">
+          Account Management
+          <span class="badge" id="pendingBadge">0</span>
         </button>
-        <button class="tab-btn" onclick="switchTab('rejected', this)">
-          ❌ Rejected
-          <span class="badge" style="background: #aaa" id="rejectedBadge"
-            >0</span
-          >
-        </button>
-        <button class="tab-btn" onclick="switchTab('forms', this)">
-          📝 App. Forms <span class="badge" id="formsBadge">0</span>
-        </button>
-        <button class="tab-btn" onclick="switchTab('shares', this)">
-          💰 Shares / Savings
+        <button class="tab-btn" onclick="switchTab('members', this)">
+          Members Monitoring
         </button>
         <button class="tab-btn" onclick="switchTab('loans', this)">
-          🏦 Loans
+          Loan Management
         </button>
       </div>
 
       <!-- CONTENT -->
       <div class="content">
-        <!-- SEARCH & STATS -->
-        <div class="search-bar">
-          <span>🔍</span>
-          <input
-            type="text"
-            id="searchInput"
-            placeholder="Search by name or username..."
-            oninput="renderAll()"
-          />
-        </div>
-        <div class="stats-row">
-          <div class="stat-card">
-            <div class="stat-num" id="statTotal">0</div>
-            <div class="stat-label">Total</div>
+        <!-- ── DASHBOARD PANEL (default) ── -->
+        <div class="panel active" id="panel-dashboard">
+          <div class="stats-row">
+            <div class="stat-card">
+              <div class="stat-label-top">Total Pending Account</div>
+              <div class="stat-num" id="statPending">0</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-label-top">Total Approved Members</div>
+              <div class="stat-num" id="statApproved">0</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-label-top">Total Submitted Application Form</div>
+              <div class="stat-num" id="statForms">0</div>
+            </div>
           </div>
-          <div class="stat-card">
-            <div class="stat-num" id="statPending">0</div>
-            <div class="stat-label">Pending</div>
-          </div>
-          <div class="stat-card">
-            <div class="stat-num" id="statApproved">0</div>
-            <div class="stat-label">Approved</div>
-          </div>
-          <div class="stat-card">
-            <div class="stat-num" id="statRejected">0</div>
-            <div class="stat-label">Rejected</div>
+          <div class="activity-history-wrap">
+            <div class="activity-title">Activity History</div>
+            <div class="table-wrap">
+              <table>
+                <thead>
+                  <tr>
+                    <th style="width: 160px">DATE</th>
+                    <th>ACTIVITY</th>
+                  </tr>
+                </thead>
+                <tbody id="activityTableBody">
+                  <tr class="empty-row">
+                    <td colspan="2">No recent activity.</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
           </div>
         </div>
 
-        <!-- ── PENDING PANEL ── -->
-        <div class="panel active" id="panel-pending">
-          <div class="panel-title">⏳ Pending Applications</div>
+        <!-- ── ACCOUNT MANAGEMENT PANEL ── -->
+        <div class="panel" id="panel-pending">
+          <div class="search-bar">
+            <span>🔍</span>
+            <input
+              type="text"
+              id="searchInput"
+              placeholder="Search by name or username..."
+              oninput="renderAll()"
+            />
+          </div>
+          <div class="stats-row-mini">
+            <div class="stat-card-mini">
+              <div class="stat-num-mini" id="statTotal">0</div>
+              <div class="stat-label-mini">Total</div>
+            </div>
+            <div class="stat-card-mini">
+              <div class="stat-num-mini" id="statPendingAM">0</div>
+              <div class="stat-label-mini">Pending</div>
+            </div>
+            <div class="stat-card-mini">
+              <div class="stat-num-mini" id="statApprovedAM">0</div>
+              <div class="stat-label-mini">Approved</div>
+            </div>
+            <div class="stat-card-mini">
+              <div class="stat-num-mini" id="statRejected">0</div>
+              <div class="stat-label-mini">Rejected</div>
+            </div>
+          </div>
+          <div class="inner-tabs">
+            <button
+              class="inner-tab active"
+              onclick="switchInnerTab('acc-pending', this)"
+            >
+              ⏳ Pending
+            </button>
+            <button
+              class="inner-tab"
+              onclick="switchInnerTab('acc-approved', this)"
+            >
+              ✅ Approved
+            </button>
+            <button
+              class="inner-tab"
+              onclick="switchInnerTab('acc-rejected', this)"
+            >
+              ❌ Rejected
+            </button>
+            <button
+              class="inner-tab"
+              onclick="switchInnerTab('acc-forms', this)"
+            >
+              📝 App. Forms
+              <span
+                id="formsBadge"
+                style="
+                  background: #e74c3c;
+                  color: #fff;
+                  border-radius: 20px;
+                  padding: 2px 7px;
+                  font-size: 0.75em;
+                  margin-left: 4px;
+                "
+                >0</span
+              >
+            </button>
+          </div>
+
+          <!-- inner sub-panels -->
+          <div class="inner-panel active" id="inner-acc-pending">
+            <div class="panel-title" style="font-size: 0.82em">
+              ⏳ Pending Applications
+            </div>
+            <div class="table-wrap">
+              <table>
+                <thead>
+                  <tr>
+                    <th>User ID</th>
+                    <th>Full Name</th>
+                    <th>Date &amp; Time Applied</th>
+                    <th>Status</th>
+                    <th>Actions</th>
+                  </tr>
+                </thead>
+                <tbody id="pendingTableBody">
+                  <tr class="empty-row">
+                    <td colspan="5">No pending applications.</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+          <div class="inner-panel" id="inner-acc-approved">
+            <div class="panel-title" style="font-size: 0.82em">
+              ✅ Approved Accounts
+            </div>
+            <div class="table-wrap">
+              <table>
+                <thead>
+                  <tr>
+                    <th>User ID</th>
+                    <th>Full Name</th>
+                    <th>Date &amp; Time Approved</th>
+                    <th>Actions</th>
+                  </tr>
+                </thead>
+                <tbody id="approvedTableBody">
+                  <tr class="empty-row">
+                    <td colspan="4">No approved members.</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+          <div class="inner-panel" id="inner-acc-rejected">
+            <div class="panel-title" style="font-size: 0.82em">
+              ❌ Rejected Accounts
+            </div>
+            <div class="table-wrap">
+              <table>
+                <thead>
+                  <tr>
+                    <th>User ID</th>
+                    <th>Full Name</th>
+                    <th>Date &amp; Time Rejected</th>
+                    <th>Actions</th>
+                  </tr>
+                </thead>
+                <tbody id="rejectedTableBody">
+                  <tr class="empty-row">
+                    <td colspan="4">No rejected accounts.</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+          <div class="inner-panel" id="inner-acc-forms">
+            <div class="panel-title" style="font-size: 0.82em">
+              📝 Application Forms
+            </div>
+            <div class="search-bar" style="margin-bottom: 6px">
+              <span>🔍</span>
+              <input
+                type="text"
+                id="searchFormInput"
+                placeholder="Search by name or User ID..."
+                oninput="filterFormsTable()"
+              />
+            </div>
+            <div class="table-wrap">
+              <table>
+                <thead>
+                  <tr>
+                    <th>User ID</th>
+                    <th>Full Name</th>
+                    <th>Date &amp; Time Submitted</th>
+                    <th>Status</th>
+                    <th>Actions</th>
+                  </tr>
+                </thead>
+                <tbody id="formsTableBody">
+                  <tr class="empty-row">
+                    <td colspan="5">No application forms.</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <!-- ── MEMBERS MONITORING PANEL ── -->
+        <div class="panel" id="panel-members">
+          <div class="panel-title">
+            👥 Members Monitoring
+            <span
+              style="
+                font-size: 0.75em;
+                font-weight: 600;
+                color: rgba(245, 197, 24, 0.7);
+              "
+            >
+              — Verified Co-op Members Only</span
+            >
+          </div>
+          <div class="search-bar" style="margin-bottom: 4px">
+            <span>🔍</span>
+            <input
+              type="text"
+              id="searchInputMonitor"
+              placeholder="Search by name or User ID..."
+              oninput="filterVerifiedMembers()"
+            />
+          </div>
           <div class="table-wrap">
             <table>
               <thead>
                 <tr>
-                  <th>App No.</th>
                   <th>Full Name</th>
-                  <th>Username</th>
-                  <th>Submitted</th>
-                  <th>Status</th>
-                  <th>Actions</th>
-                </tr>
-              </thead>
-              <tbody id="pendingTableBody"></tbody>
-            </table>
-          </div>
-        </div>
-
-        <!-- ── APPROVED PANEL ── -->
-        <div class="panel" id="panel-approved">
-          <div class="panel-title">✅ Approved Members</div>
-          <div class="table-wrap">
-            <table>
-              <thead>
-                <tr>
-                  <th>App No.</th>
-                  <th>Full Name</th>
-                  <th>Username</th>
-                  <th>Approved On</th>
-                  <th>Status</th>
-                  <th>Actions</th>
-                </tr>
-              </thead>
-              <tbody id="approvedTableBody"></tbody>
-            </table>
-          </div>
-        </div>
-
-        <!-- ── REJECTED PANEL ── -->
-        <div class="panel" id="panel-rejected">
-          <div class="panel-title">❌ Rejected Applications</div>
-          <div class="table-wrap">
-            <table>
-              <thead>
-                <tr>
-                  <th>App No.</th>
-                  <th>Full Name</th>
-                  <th>Username</th>
-                  <th>Rejected On</th>
-                  <th>Status</th>
-                  <th>Actions</th>
-                </tr>
-              </thead>
-              <tbody id="rejectedTableBody"></tbody>
-            </table>
-          </div>
-        </div>
-
-        <!-- ── APPLICATION FORMS PANEL ── -->
-        <div class="panel" id="panel-forms">
-          <div class="panel-title">📝 Member Application Forms</div>
-
-          <!-- Forms awaiting approval -->
-          <div class="table-wrap">
-            <table>
-              <thead>
-                <tr>
                   <th>User ID</th>
-                  <th>Full Name</th>
-                  <th>Submitted</th>
-                  <th>Form Status</th>
+                  <th>Verified On</th>
+                  <th>Shares</th>
+                  <th>Savings</th>
+                  <th>Active Loans</th>
                   <th>Actions</th>
                 </tr>
               </thead>
-              <tbody id="formsTableBody"></tbody>
+              <tbody id="verifiedTableBody">
+                <tr class="empty-row">
+                  <td colspan="7">Loading verified members...</td>
+                </tr>
+              </tbody>
             </table>
           </div>
         </div>
 
-        <!-- ── SHARES / SAVINGS PANEL ── -->
-        <div class="panel" id="panel-shares">
-          <div class="panel-title">💰 Shares & Savings Transactions</div>
-
-          <!-- ADD TRANSACTION FORM -->
+        <!-- ── SHARES / SAVINGS PANEL (now inside Loan Management) ── -->
+        <div class="panel" id="panel-shares" style="display: none">
           <div class="white-card">
             <div class="card-title">➕ Add Transaction</div>
             <div class="form-grid">
@@ -1100,19 +1370,74 @@
 
         <!-- ── LOANS PANEL ── -->
         <div class="panel" id="panel-loans">
-          <div class="panel-title">🏦 Loan Management</div>
+          <div class="panel-title">
+            🏦 Loan Management
+            <span
+              style="
+                font-size: 0.75em;
+                font-weight: 600;
+                color: rgba(245, 197, 24, 0.7);
+              "
+            >
+              — Verified Co-op Members</span
+            >
+          </div>
 
-          <!-- ADD LOAN FORM -->
-          <div class="white-card">
-            <div class="card-title">➕ Release New Loan</div>
+          <!-- Loan Status Filter Tabs -->
+          <div class="inner-tabs">
+            <button
+              class="inner-tab active"
+              onclick="switchLoanTab('all', this)"
+            >
+              All Loans
+            </button>
+            <button class="inner-tab" onclick="switchLoanTab('pending', this)">
+              ⏳ Pending
+            </button>
+            <button class="inner-tab" onclick="switchLoanTab('active', this)">
+              ✅ Approved
+            </button>
+            <button class="inner-tab" onclick="switchLoanTab('rejected', this)">
+              ❌ Rejected
+            </button>
+            <button class="inner-tab" onclick="switchLoanTab('paid', this)">
+              💰 Paid
+            </button>
+          </div>
+
+          <!-- Loan Records Table -->
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>Member Name</th>
+                  <th>Loan No.</th>
+                  <th>Type</th>
+                  <th>Amount</th>
+                  <th>Applied</th>
+                  <th>Status</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody id="loanApplicationsBody">
+                <tr class="empty-row">
+                  <td colspan="7">Loading loan records...</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <!-- Add New Loan Application -->
+          <div class="white-card" style="margin-top: 4px">
+            <div class="card-title">➕ Add Loan Application</div>
             <div class="form-grid">
               <div class="form-item span2">
-                <label>Select Member *</label>
+                <label>Select Verified Member *</label>
                 <div class="member-search-wrap">
                   <input
                     type="text"
                     id="loanMemberSearch"
-                    placeholder="Type member name or username..."
+                    placeholder="Type member name or User ID..."
                     autocomplete="off"
                     oninput="
                       searchMembers(
@@ -1151,7 +1476,7 @@
                 />
               </div>
               <div class="form-item">
-                <label>Interest Rate (%) *</label>
+                <label>Interest Rate (%)</label>
                 <input
                   type="number"
                   id="loanInterest"
@@ -1172,11 +1497,11 @@
                 />
               </div>
               <div class="form-item">
-                <label>Date Released *</label>
+                <label>Date Released</label>
                 <input type="date" id="loanDateReleased" />
               </div>
               <div class="form-item">
-                <label>Monthly Payment (auto-computed)</label>
+                <label>Monthly Payment (auto)</label>
                 <input
                   type="text"
                   id="loanMonthly"
@@ -1189,57 +1514,17 @@
                 <label>Purpose</label>
                 <textarea
                   id="loanPurpose"
-                  placeholder="Describe the purpose of the loan..."
+                  placeholder="Describe the purpose..."
                 ></textarea>
               </div>
             </div>
             <div style="display: flex; gap: 10px; margin-top: 16px">
               <button class="btn-form-submit" onclick="submitLoan()">
-                💾 Release Loan
+                💾 Submit Loan Application
               </button>
               <button class="btn-form-cancel" onclick="clearLoanForm()">
                 ✕ Clear
               </button>
-            </div>
-          </div>
-
-          <!-- LOAN RECORDS TABLE -->
-          <div class="white-card">
-            <div class="card-title">
-              <span>📋 Active Loan Records</span>
-              <select
-                id="loanMemberFilter"
-                style="
-                  padding: 6px 10px;
-                  border: 2px solid #e8e8f0;
-                  border-radius: 6px;
-                  font-family: &quot;Montserrat&quot;, sans-serif;
-                  font-size: 0.78em;
-                  font-weight: 700;
-                  outline: none;
-                "
-                onchange="loadLoanRecords()"
-              >
-                <option value="all">All Members</option>
-              </select>
-            </div>
-            <div style="overflow-x: auto">
-              <table class="txn-table">
-                <thead>
-                  <tr>
-                    <th>Loan No.</th>
-                    <th>Member</th>
-                    <th>Type</th>
-                    <th>Amount</th>
-                    <th>Monthly</th>
-                    <th>Balance</th>
-                    <th>Due Date</th>
-                    <th>Status</th>
-                    <th>Actions</th>
-                  </tr>
-                </thead>
-                <tbody id="loanRecordsBody"></tbody>
-              </table>
             </div>
           </div>
         </div>
@@ -1247,6 +1532,54 @@
       <!-- end content -->
     </div>
     <!-- end main -->
+
+    <!-- ── LOAN TIMELINE MODAL ── -->
+    <div class="modal-overlay" id="loanTimelineModal">
+      <div class="modal-box" style="max-width: 600px">
+        <div class="modal-top">
+          <h2>📋 Loan Timeline</h2>
+          <button
+            class="btn-close-modal"
+            onclick="closeModal('loanTimelineModal')"
+          >
+            ✕ Close
+          </button>
+        </div>
+        <div id="loanTimelineContent">Loading...</div>
+      </div>
+    </div>
+
+    <!-- ── MEMBER DETAIL MODAL (for account management) ── -->
+    <div class="modal-overlay" id="memberDetailModal">
+      <div class="modal-box" style="max-width: 500px">
+        <div class="modal-top">
+          <h2 id="memberDetailTitle">👤 Account Details</h2>
+          <button
+            class="btn-close-modal"
+            onclick="closeModal('memberDetailModal')"
+          >
+            ✕ Close
+          </button>
+        </div>
+        <div id="memberDetailContent">Loading...</div>
+      </div>
+    </div>
+
+    <!-- ── VERIFIED MEMBER DETAIL MODAL ── -->
+    <div class="modal-overlay" id="verifiedDetailModal">
+      <div class="modal-box" style="max-width: 560px">
+        <div class="modal-top">
+          <h2 id="verifiedDetailTitle">👤 Member Details</h2>
+          <button
+            class="btn-close-modal"
+            onclick="closeModal('verifiedDetailModal')"
+          >
+            ✕ Close
+          </button>
+        </div>
+        <div id="verifiedDetailContent">Loading...</div>
+      </div>
+    </div>
 
     <!-- ── APPLICATION FORM MODAL ── -->
     <div class="modal-overlay" id="appModal">
@@ -1385,15 +1718,56 @@
                 `<option value="${m.id}">${m.full_name || m.username}</option>`,
             )
             .join("");
-        document.getElementById("txnHistoryFilter").innerHTML = opts;
-        document.getElementById("loanMemberFilter").innerHTML = opts;
+        const txnFilter = document.getElementById("txnHistoryFilter");
+        if (txnFilter) txnFilter.innerHTML = opts;
         loadTxnHistory();
-        loadLoanRecords();
+      }
+
+      // ── FORMS TABLE SEARCH FILTER ──
+      let allFormsData = [];
+      function filterFormsTable() {
+        const q = (
+          document.getElementById("searchFormInput")?.value || ""
+        ).toLowerCase();
+        const filtered = allFormsData.filter(
+          (a) =>
+            (a.full_name || "").toLowerCase().includes(q) ||
+            (a.user_id || "").toLowerCase().includes(q),
+        );
+        renderFormsTableFiltered(filtered);
+      }
+      function renderFormsTableFiltered(data) {
+        const tbody = document.getElementById("formsTableBody");
+        if (!data.length) {
+          tbody.innerHTML =
+            '<tr class="empty-row"><td colspan="5">No application forms found.</td></tr>';
+          return;
+        }
+        tbody.innerHTML = data
+          .map((a) => {
+            const ri = applications.indexOf(a);
+            const fs = a.form_status || "incomplete";
+            const fsBadge = `<span class="status-badge ${fs === "submitted" ? "pending" : fs === "approved" ? "approved" : "rejected"}">${fs.toUpperCase()}</span>`;
+            return `<tr>
+            <td><strong>${a.user_id || "—"}</strong></td>
+            <td>${(a.full_name || "").trim() || "—"}</td>
+            <td style="white-space:nowrap;font-size:0.75em">${fmtDT(a.form_submitted_at)}</td>
+            <td>${fsBadge}</td>
+            <td><div class="action-btns">
+              <button class="btn-view" onclick="viewFormModal(${ri})">👁️ View Form</button>
+              <button class="btn-approve" onclick="approveForm(${a.id},'approve',${ri})">✅ Approve</button>
+              <button class="btn-reject" onclick="approveForm(${a.id},'reject',${ri})">❌ Return</button>
+            </div></td>
+          </tr>`;
+          })
+          .join("");
       }
 
       // ── RENDER MEMBER TABLES ──
       function renderAll() {
-        const q = document.getElementById("searchInput").value.toLowerCase();
+        const q = (
+          document.getElementById("searchInput")?.value || ""
+        ).toLowerCase();
         const filtered = applications.filter((a) => {
           const name = (a.full_name || "").toLowerCase();
           return (
@@ -1406,76 +1780,60 @@
         const approved = filtered.filter((a) => a.status === "approved");
         const rejected = filtered.filter((a) => a.status === "rejected");
 
-        // Submitted forms = approved accounts with submitted/incomplete forms (excluding approved forms)
+        // Submitted forms = approved accounts with submitted forms
         const formsSubmitted = applications.filter(
           (a) => a.status === "approved" && a.form_status === "submitted",
         );
 
-        document.getElementById("statTotal").textContent = applications.length;
-        document.getElementById("statPending").textContent =
-          applications.filter((a) => a.status === "pending").length;
-        document.getElementById("statApproved").textContent =
-          applications.filter((a) => a.status === "approved").length;
-        document.getElementById("statRejected").textContent =
-          applications.filter((a) => a.status === "rejected").length;
-        document.getElementById("pendingBadge").textContent =
-          applications.filter((a) => a.status === "pending").length;
-        document.getElementById("approvedBadge").textContent =
-          applications.filter((a) => a.status === "approved").length;
-        document.getElementById("rejectedBadge").textContent =
-          applications.filter((a) => a.status === "rejected").length;
-        document.getElementById("formsBadge").textContent =
-          formsSubmitted.length;
+        const nPending = applications.filter(
+          (a) => a.status === "pending",
+        ).length;
+        const nApproved = applications.filter(
+          (a) => a.status === "approved",
+        ).length;
+        const nRejected = applications.filter(
+          (a) => a.status === "rejected",
+        ).length;
 
-        renderMemberTable("pendingTableBody", pending, [
-          "approve",
-          "reject",
-          "view",
-        ]);
-        renderMemberTable("approvedTableBody", approved, [
-          "reject",
-          "view",
-          "txn",
-        ]);
-        renderMemberTable("rejectedTableBody", rejected, ["approve", "view"]);
-        renderFormsTable(formsSubmitted);
+        // Dashboard panel stats
+        const elPending = document.getElementById("statPending");
+        const elApproved = document.getElementById("statApproved");
+        const elForms = document.getElementById("statForms");
+        if (elPending) elPending.textContent = nPending;
+        if (elApproved) elApproved.textContent = nApproved;
+        if (elForms) elForms.textContent = formsSubmitted.length;
+
+        // Account Management mini stats
+        const elTotal = document.getElementById("statTotal");
+        const elPendingAM = document.getElementById("statPendingAM");
+        const elApprovedAM = document.getElementById("statApprovedAM");
+        const elRejected = document.getElementById("statRejected");
+        if (elTotal) elTotal.textContent = applications.length;
+        if (elPendingAM) elPendingAM.textContent = nPending;
+        if (elApprovedAM) elApprovedAM.textContent = nApproved;
+        if (elRejected) elRejected.textContent = nRejected;
+
+        // Badges
+        const elPendingBadge = document.getElementById("pendingBadge");
+        const elFormsBadge = document.getElementById("formsBadge");
+        if (elPendingBadge) elPendingBadge.textContent = nPending;
+        if (elFormsBadge) elFormsBadge.textContent = formsSubmitted.length;
+
+        // Activity History — show recent members (approved/rejected)
+        renderActivityHistory();
+
+        // Account Management sub-tables (use dedicated render functions)
+        renderPendingTable(pending);
+        renderApprovedTable(approved);
+        renderRejectedTable(rejected);
+        renderFormsTable(
+          applications.filter(
+            (a) => a.status === "approved" && a.form_status === "submitted",
+          ),
+        );
       }
 
-      function renderFormsTable(data) {
-        const tbody = document.getElementById("formsTableBody");
-        if (!data.length) {
-          tbody.innerHTML =
-            '<tr class="empty-row"><td colspan="5">No application forms pending review.</td></tr>';
-          return;
-        }
-        tbody.innerHTML = data
-          .map((a) => {
-            const ri = applications.indexOf(a);
-            const name = a.full_name || "—";
-            const uid = a.user_id || a.username || "—";
-            const sub = a.form_submitted_at
-              ? new Date(a.form_submitted_at).toLocaleDateString("en-PH", {
-                  year: "numeric",
-                  month: "short",
-                  day: "numeric",
-                })
-              : "—";
-            const fs = a.form_status || "incomplete";
-            const fsBadge = `<span class="status-badge ${fs === "submitted" ? "pending" : fs === "approved" ? "approved" : "rejected"}">${fs.toUpperCase()}</span>`;
-            return `<tr>
-            <td><strong>${uid}</strong></td>
-            <td>${name}</td>
-            <td>${sub}</td>
-            <td>${fsBadge}</td>
-            <td><div class="action-btns">
-                <button class="btn-view" onclick="viewFormModal(${ri})">👁️ View Form</button>
-                <button class="btn-approve" onclick="approveForm(${a.id},'approve',${ri})">✅ Approve</button>
-                <button class="btn-reject"  onclick="approveForm(${a.id},'reject',${ri})">❌ Return</button>
-            </div></td>
-        </tr>`;
-          })
-          .join("");
-      }
+      // renderFormsTable defined below
 
       async function approveForm(memberId, action, ri) {
         const label = action === "approve" ? "Approve" : "Return for Revision";
@@ -1514,8 +1872,144 @@
         document.getElementById("appModal").classList.add("active");
       }
 
+      function fmtDT(dt) {
+        if (!dt) return "—";
+        const d = new Date(dt);
+        return (
+          d.toLocaleDateString("en-PH", {
+            year: "numeric",
+            month: "short",
+            day: "numeric",
+          }) +
+          " " +
+          d.toLocaleTimeString("en-PH", { hour: "2-digit", minute: "2-digit" })
+        );
+      }
+      function fmtD(dt) {
+        if (!dt) return "—";
+        return new Date(dt).toLocaleDateString("en-PH", {
+          year: "numeric",
+          month: "short",
+          day: "numeric",
+        });
+      }
+      function fmtP(n) {
+        return (
+          "₱" +
+          parseFloat(n || 0).toLocaleString("en-PH", {
+            minimumFractionDigits: 2,
+          })
+        );
+      }
+
+      // Render pending accounts table
+      function renderPendingTable(data) {
+        const tbody = document.getElementById("pendingTableBody");
+        if (!data.length) {
+          tbody.innerHTML =
+            '<tr class="empty-row"><td colspan="5">No pending applications.</td></tr>';
+          return;
+        }
+        tbody.innerHTML = data
+          .map((a) => {
+            const ri = applications.indexOf(a);
+            return `<tr>
+            <td><strong>${a.user_id || "—"}</strong></td>
+            <td>${(a.full_name || "").trim() || "—"}</td>
+            <td style="white-space:nowrap;font-size:0.75em">${fmtDT(a.submitted_at)}</td>
+            <td><span class="status-badge pending">PENDING</span></td>
+            <td><div class="action-btns">
+              <button class="btn-view" onclick="viewAccountDetail(${ri},'pending')">👁️ View Details</button>
+              <button class="btn-approve" onclick="confirmAction('approve',${ri})">✅ Approve</button>
+              <button class="btn-reject" onclick="confirmAction('reject',${ri})">❌ Reject</button>
+            </div></td>
+          </tr>`;
+          })
+          .join("");
+      }
+
+      // Render approved accounts table
+      function renderApprovedTable(data) {
+        const tbody = document.getElementById("approvedTableBody");
+        if (!data.length) {
+          tbody.innerHTML =
+            '<tr class="empty-row"><td colspan="4">No approved members.</td></tr>';
+          return;
+        }
+        tbody.innerHTML = data
+          .map((a) => {
+            const ri = applications.indexOf(a);
+            return `<tr>
+            <td><strong>${a.user_id || "—"}</strong></td>
+            <td>${(a.full_name || "").trim() || "—"}</td>
+            <td style="white-space:nowrap;font-size:0.75em">${fmtDT(a.approved_at)}</td>
+            <td><div class="action-btns">
+              <button class="btn-view" onclick="viewAccountDetail(${ri},'approved')">👁️ View Details</button>
+              <button class="btn-reject" onclick="confirmAction('reject',${ri})">❌ Reject</button>
+            </div></td>
+          </tr>`;
+          })
+          .join("");
+      }
+
+      // Render rejected accounts table
+      function renderRejectedTable(data) {
+        const tbody = document.getElementById("rejectedTableBody");
+        if (!data.length) {
+          tbody.innerHTML =
+            '<tr class="empty-row"><td colspan="4">No rejected accounts.</td></tr>';
+          return;
+        }
+        tbody.innerHTML = data
+          .map((a) => {
+            const ri = applications.indexOf(a);
+            return `<tr>
+            <td><strong>${a.user_id || "—"}</strong></td>
+            <td>${(a.full_name || "").trim() || "—"}</td>
+            <td style="white-space:nowrap;font-size:0.75em">${fmtDT(a.rejected_at)}</td>
+            <td><div class="action-btns">
+              <button class="btn-view" onclick="viewAccountDetail(${ri},'rejected')">👁️ View Details</button>
+              <button class="btn-approve" onclick="confirmAction('approve',${ri})">✅ Approve</button>
+            </div></td>
+          </tr>`;
+          })
+          .join("");
+      }
+
+      // Render app forms table (verified = approved form status)
+      function renderFormsTable(data) {
+        allFormsData = data; // save for search filter
+        const tbody = document.getElementById("formsTableBody");
+        if (!data.length) {
+          tbody.innerHTML =
+            '<tr class="empty-row"><td colspan="5">No application forms.</td></tr>';
+          return;
+        }
+        tbody.innerHTML = data
+          .map((a) => {
+            const ri = applications.indexOf(a);
+            const fs = a.form_status || "incomplete";
+            const fsBadge = `<span class="status-badge ${fs === "submitted" ? "pending" : fs === "approved" ? "approved" : "rejected"}">${fs.toUpperCase()}</span>`;
+            return `<tr>
+            <td><strong>${a.user_id || "—"}</strong></td>
+            <td>${(a.full_name || "").trim() || "—"}</td>
+            <td style="white-space:nowrap;font-size:0.75em">${fmtDT(a.form_submitted_at)}</td>
+            <td>${fsBadge}</td>
+            <td><div class="action-btns">
+              <button class="btn-view" onclick="viewFormModal(${ri})">👁️ View Form</button>
+              <button class="btn-approve" onclick="approveForm(${a.id},'approve',${ri})">✅ Approve</button>
+              <button class="btn-reject" onclick="approveForm(${a.id},'reject',${ri})">❌ Return</button>
+            </div></td>
+          </tr>`;
+          })
+          .join("");
+      }
+
+      // Keep for compat (monitor table uses this)
       function renderMemberTable(tbodyId, data, actions) {
+        // No longer used for account management; kept for monitor
         const tbody = document.getElementById(tbodyId);
+        if (!tbody) return;
         if (!data.length) {
           tbody.innerHTML =
             '<tr class="empty-row"><td colspan="6">No records found.</td></tr>';
@@ -1524,32 +2018,372 @@
         tbody.innerHTML = data
           .map((a) => {
             const ri = applications.indexOf(a);
-            const name = a.full_name || "—";
+            const name = (a.full_name || "").trim() || "—";
             const date =
               a.approved_at || a.rejected_at || a.submitted_at || "—";
-            const df =
-              date !== "—"
-                ? new Date(date).toLocaleDateString("en-PH", {
-                    year: "numeric",
-                    month: "short",
-                    day: "numeric",
-                  })
-                : "—";
+            const df = date !== "—" ? fmtDT(date) : "—";
             const btns = actions
               .map((act) => {
-                if (act === "approve")
-                  return `<button class="btn-approve" onclick="confirmAction('approve',${ri})">✅ Approve</button>`;
-                if (act === "reject")
-                  return `<button class="btn-reject"  onclick="confirmAction('reject',${ri})">❌ Reject</button>`;
                 if (act === "view")
-                  return `<button class="btn-view"     onclick="viewApplication(${ri})">👁️ View Form</button>`;
+                  return `<button class="btn-view" onclick="viewFormModal(${ri})">👁️ View Form</button>`;
                 if (act === "txn")
-                  return `<button class="btn-txn"      onclick="quickTxn(${ri})">💰 Add Txn</button>`;
+                  return `<button class="btn-txn" onclick="quickTxn(${ri})">💰 Add Txn</button>`;
               })
               .join("");
-            return `<tr><td>${a.application_no || "—"}</td><td>${name}</td><td><strong>${a.username || "—"}</strong></td><td>${df}</td><td><span class="status-badge ${a.status}">${a.status.toUpperCase()}</span></td><td><div class="action-btns">${btns}</div></td></tr>`;
+            return `<tr><td>${a.application_no || "—"}</td><td>${name}</td><td><strong>${a.user_id || "—"}</strong></td><td style="font-size:0.75em">${df}</td><td><span class="status-badge ${a.status}">${a.status.toUpperCase()}</span></td><td><div class="action-btns">${btns}</div></td></tr>`;
           })
           .join("");
+      }
+
+      // ── VIEW ACCOUNT DETAIL MODAL ──
+      async function viewAccountDetail(ri, type) {
+        const a = applications[ri];
+        const modal = document.getElementById("memberDetailModal");
+        const content = document.getElementById("memberDetailContent");
+        const title = document.getElementById("memberDetailTitle");
+        content.innerHTML =
+          '<div style="text-align:center;padding:30px;color:#888">Loading...</div>';
+        modal.classList.add("active");
+
+        if (type === "approved") {
+          title.textContent = "✅ Approved Account Details";
+          try {
+            const res = await fetch(`/membership/admin/member-creds/${a.id}`);
+            const data = await res.json();
+            if (!data.success) {
+              content.innerHTML = "Failed to load.";
+              return;
+            }
+            const m = data.member;
+            content.innerHTML = `
+              <div class="detail-row"><span class="detail-label">Full Name</span><span>${(a.full_name || "").trim() || "—"}</span></div>
+              <div class="detail-row"><span class="detail-label">User ID</span><span style="font-weight:800;color:#2a3272">${m.user_id || "—"}</span></div>
+              <div class="detail-row"><span class="detail-label">Password (Hashed)</span><span style="font-size:0.7em;word-break:break-all;color:#666">${m.password || "—"}</span></div>
+              <div class="detail-row"><span class="detail-label">Applied At</span><span>${fmtDT(m.submitted_at)}</span></div>
+              <div class="detail-row"><span class="detail-label">Approved At</span><span style="color:#155724;font-weight:700">${fmtDT(m.approved_at)}</span></div>`;
+          } catch (e) {
+            content.innerHTML = "Error loading details.";
+          }
+        } else if (type === "pending") {
+          title.textContent = "⏳ Pending Account Details";
+          content.innerHTML = `
+            <div class="detail-row"><span class="detail-label">Full Name</span><span>${(a.full_name || "").trim() || "—"}</span></div>
+            <div class="detail-row"><span class="detail-label">User ID</span><span style="font-weight:800;color:#2a3272">${a.user_id || "—"}</span></div>
+            <div class="detail-row"><span class="detail-label">Applied At</span><span style="font-weight:700">${fmtDT(a.submitted_at)}</span></div>
+            <div class="detail-row"><span class="detail-label">Status</span><span><span class="status-badge pending">PENDING</span></span></div>
+            <div class="modal-actions" style="margin-top:16px">
+              <button class="btn-approve" onclick="confirmAction('approve',${ri});closeModal('memberDetailModal')">✅ Approve Account</button>
+              <button class="btn-reject" onclick="confirmAction('reject',${ri});closeModal('memberDetailModal')">❌ Reject Account</button>
+            </div>`;
+        } else {
+          title.textContent = "❌ Rejected Account Details";
+          content.innerHTML = `
+            <div class="detail-row"><span class="detail-label">Full Name</span><span>${(a.full_name || "").trim() || "—"}</span></div>
+            <div class="detail-row"><span class="detail-label">User ID</span><span style="font-weight:800;color:#2a3272">${a.user_id || "—"}</span></div>
+            <div class="detail-row"><span class="detail-label">Applied At</span><span>${fmtDT(a.submitted_at)}</span></div>
+            <div class="detail-row"><span class="detail-label">Rejected At</span><span style="color:#721c24;font-weight:700">${fmtDT(a.rejected_at)}</span></div>`;
+        }
+      }
+
+      // ── VERIFIED MEMBERS ──
+      let verifiedMembers = [];
+      async function loadVerifiedMembers() {
+        try {
+          const res = await fetch("/membership/admin/verified-members");
+          verifiedMembers = await res.json();
+        } catch (e) {
+          verifiedMembers = [];
+        }
+        renderVerifiedTable(verifiedMembers);
+      }
+
+      function filterVerifiedMembers() {
+        const q = (
+          document.getElementById("searchInputMonitor")?.value || ""
+        ).toLowerCase();
+        const filtered = verifiedMembers.filter(
+          (m) =>
+            (m.full_name || "").toLowerCase().includes(q) ||
+            (m.user_id || "").toLowerCase().includes(q),
+        );
+        renderVerifiedTable(filtered);
+      }
+
+      function renderVerifiedTable(data) {
+        const tbody = document.getElementById("verifiedTableBody");
+        if (!data.length) {
+          tbody.innerHTML =
+            '<tr class="empty-row"><td colspan="7">No verified members found.</td></tr>';
+          return;
+        }
+        tbody.innerHTML = data
+          .map((m, i) => {
+            const hasShares = parseFloat(m.total_shares || 0) > 0;
+            const hasSavings = parseFloat(m.total_savings || 0) > 0;
+            const hasLoans = parseInt(m.loan_count || 0) > 0;
+            return `<tr>
+            <td><strong>${(m.full_name || "").trim() || "—"}</strong></td>
+            <td style="font-weight:700;color:#2a3272">${m.user_id || "—"}</td>
+            <td style="font-size:0.75em;white-space:nowrap">${fmtDT(m.form_approved_at)}</td>
+            <td><span style="color:${hasShares ? "#155724" : "#999"};font-weight:700">${fmtP(m.total_shares)}</span></td>
+            <td><span style="color:${hasSavings ? "#0c5460" : "#999"};font-weight:700">${fmtP(m.total_savings)}</span></td>
+            <td><span style="color:${hasLoans ? "#721c24" : "#999"};font-weight:700">${fmtP(m.total_loan_balance)}${hasLoans ? " (" + m.loan_count + " loan" + (m.loan_count > 1 ? "s" : "") + ")" : ""}</span></td>
+            <td><div class="action-btns">
+              <button class="btn-view" onclick="viewVerifiedMember(${i})">👁️ View</button>
+              <button class="btn-txn" onclick="quickTxnById(${m.id},'${(m.full_name || "").trim()}')">💰 Add Txn</button>
+            </div></td>
+          </tr>`;
+          })
+          .join("");
+      }
+
+      async function viewVerifiedMember(idx) {
+        const m = verifiedMembers[idx];
+        const modal = document.getElementById("verifiedDetailModal");
+        const title = document.getElementById("verifiedDetailTitle");
+        const content = document.getElementById("verifiedDetailContent");
+        title.textContent = `👤 ${(m.full_name || "").trim()}`;
+        content.innerHTML =
+          '<div style="text-align:center;padding:20px;color:#888">Loading...</div>';
+        modal.classList.add("active");
+
+        // Load shares, savings, loans for this member
+        try {
+          const [sharesRes, savingsRes, loansRes] = await Promise.all([
+            fetch(`/membership/dashboard/shares`).catch(() => null),
+            fetch(`/membership/dashboard/savings`).catch(() => null),
+            fetch(`/membership/admin/member-loan-timeline/${m.id}`),
+          ]);
+          const timeline = await loansRes.json();
+
+          content.innerHTML = `
+            <div class="detail-row"><span class="detail-label">User ID</span><span style="font-weight:800">${m.user_id}</span></div>
+            <div class="detail-row"><span class="detail-label">Verified On</span><span>${fmtDT(m.form_approved_at)}</span></div>
+            <div class="detail-row"><span class="detail-label">Total Shares</span><span style="color:#155724;font-weight:700">${fmtP(m.total_shares)}</span></div>
+            <div class="detail-row"><span class="detail-label">Total Savings</span><span style="color:#0c5460;font-weight:700">${fmtP(m.total_savings)}</span></div>
+            <div class="detail-row"><span class="detail-label">Active Loan Balance</span><span style="color:#721c24;font-weight:700">${fmtP(m.total_loan_balance)}</span></div>
+            ${
+              timeline.loans && timeline.loans.length
+                ? `
+            <div style="margin-top:12px;font-weight:800;font-size:0.82em;color:#2a3272;padding-bottom:6px;border-bottom:2px solid #f0f0f0;margin-bottom:8px">LOAN RECORDS</div>
+            ${timeline.loans
+              .map(
+                (l) => `
+              <div style="background:#f8f9ff;border-radius:8px;padding:10px 12px;margin-bottom:6px;font-size:0.78em">
+                <div style="display:flex;justify-content:space-between;align-items:center">
+                  <strong>${l.loan_no}</strong>
+                  <span class="status-badge ${l.status === "active" ? "approved" : l.status === "rejected" ? "rejected" : l.status === "paid" ? "approved" : "pending"}">${l.status.toUpperCase()}</span>
+                </div>
+                <div style="color:#666;margin-top:4px">${(l.loan_type || "").toUpperCase()} — ${fmtP(l.amount)}</div>
+                <div style="color:#999;margin-top:2px">Applied: ${fmtDT(l.applied_at || l.created_at)}</div>
+                ${l.approved_at ? `<div style="color:#155724;margin-top:2px">Approved: ${fmtDT(l.approved_at)}</div>` : ""}
+                ${l.rejected_at ? `<div style="color:#721c24;margin-top:2px">Rejected: ${fmtDT(l.rejected_at)}</div>` : ""}
+              </div>`,
+              )
+              .join("")}`
+                : '<div style="color:#999;font-size:0.82em;margin-top:10px">No loan records.</div>'
+            }`;
+        } catch (e) {
+          content.innerHTML = `<div class="detail-row"><span class="detail-label">User ID</span><span style="font-weight:800">${m.user_id}</span></div><div style="color:#999;margin-top:10px;font-size:0.82em">Could not load full details.</div>`;
+        }
+      }
+
+      function quickTxnById(memberId, memberName) {
+        // Find in approved members and use existing quickTxn
+        const idx = applications.findIndex((a) => a.id === memberId);
+        if (idx !== -1) quickTxn(idx);
+        else showToast("Member not found in applications list.");
+      }
+
+      // ── LOAN APPLICATIONS ──
+      let allLoanApplications = [];
+      let loanTabFilter = "all";
+
+      async function loadLoanApplications() {
+        try {
+          const res = await fetch("/membership/admin/loan-applications");
+          allLoanApplications = await res.json();
+        } catch (e) {
+          allLoanApplications = [];
+        }
+        renderLoanApplications();
+      }
+
+      function switchLoanTab(filter, btn) {
+        loanTabFilter = filter;
+        document
+          .querySelectorAll("#panel-loans .inner-tab")
+          .forEach((b) => b.classList.remove("active"));
+        btn.classList.add("active");
+        renderLoanApplications();
+      }
+
+      function renderLoanApplications() {
+        const tbody = document.getElementById("loanApplicationsBody");
+        if (!tbody) return;
+        let data = allLoanApplications;
+        if (loanTabFilter !== "all")
+          data = data.filter((l) => l.status === loanTabFilter);
+        if (!data.length) {
+          tbody.innerHTML = `<tr class="empty-row"><td colspan="7">No ${loanTabFilter === "all" ? "" : loanTabFilter} loans found.</td></tr>`;
+          return;
+        }
+        tbody.innerHTML = data
+          .map((l, i) => {
+            const statusClass =
+              l.status === "active"
+                ? "approved"
+                : l.status === "rejected"
+                  ? "rejected"
+                  : l.status === "paid"
+                    ? "approved"
+                    : "pending";
+            const name = (l.full_name || "").trim() || "—";
+            const appliedAt = l.applied_at || l.created_at;
+            const actions = [];
+            if (l.status === "pending") {
+              actions.push(
+                `<button class="btn-approve" onclick="approveLoan(${l.id},'active')">✅ Approve</button>`,
+              );
+              actions.push(
+                `<button class="btn-reject" onclick="approveLoan(${l.id},'rejected')">❌ Reject</button>`,
+              );
+            }
+            actions.push(
+              `<button class="btn-view" onclick="viewLoanTimeline(${l.member_id},'${name}')">📋 Timeline</button>`,
+            );
+            if (l.status === "active")
+              actions.push(
+                `<button class="btn-txn" onclick="openPaymentModal(${l.id},${l.member_id},'${l.loan_no}',${l.outstanding_balance})">💳 Payment</button>`,
+              );
+            return `<tr>
+            <td style="cursor:pointer;font-weight:600" onclick="viewLoanTimeline(${l.member_id},'${name}')">${name}</td>
+            <td style="font-size:0.75em">${l.loan_no}</td>
+            <td>${(l.loan_type || "").toUpperCase()}</td>
+            <td>${fmtP(l.amount)}</td>
+            <td style="font-size:0.72em;white-space:nowrap">${fmtDT(appliedAt)}</td>
+            <td><span class="status-badge ${statusClass}">${(l.status || "").toUpperCase()}</span></td>
+            <td><div class="action-btns">${actions.join("")}</div></td>
+          </tr>`;
+          })
+          .join("");
+      }
+
+      async function approveLoan(loanId, newStatus) {
+        const label = newStatus === "active" ? "Approve" : "Reject";
+        if (!confirm(`${label} this loan application?`)) return;
+        try {
+          const dateReleased =
+            newStatus === "active"
+              ? new Date().toISOString().split("T")[0]
+              : null;
+          const res = await fetch("/membership/admin/loan-status", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              loan_id: loanId,
+              status: newStatus,
+              date_released: dateReleased,
+            }),
+          });
+          const data = await res.json();
+          if (data.success) {
+            showToast(
+              newStatus === "active"
+                ? "✅ Loan approved!"
+                : "❌ Loan rejected.",
+            );
+            loadLoanApplications();
+          }
+        } catch (e) {
+          showToast("❌ Server error.");
+        }
+      }
+
+      async function viewLoanTimeline(memberId, memberName) {
+        const modal = document.getElementById("loanTimelineModal");
+        const content = document.getElementById("loanTimelineContent");
+        document.querySelector("#loanTimelineModal h2").textContent =
+          `📋 Loan Timeline — ${memberName}`;
+        content.innerHTML =
+          '<div style="text-align:center;padding:30px;color:#888">Loading...</div>';
+        modal.classList.add("active");
+        try {
+          const res = await fetch(
+            `/membership/admin/member-loan-timeline/${memberId}`,
+          );
+          const data = await res.json();
+          if (!data.success || !data.loans.length) {
+            content.innerHTML =
+              '<div style="text-align:center;color:#999;padding:30px">No loan records found.</div>';
+            return;
+          }
+          content.innerHTML =
+            data.loans
+              .map((l) => {
+                const events = [];
+                const appliedAt = l.applied_at || l.created_at;
+                events.push({
+                  icon: "📋",
+                  label: "Loan Applied",
+                  dt: appliedAt,
+                  color: "#2a3272",
+                  note: `${(l.loan_type || "").toUpperCase()} — ${fmtP(l.amount)}`,
+                });
+                if (l.approved_at)
+                  events.push({
+                    icon: "✅",
+                    label: "Loan Approved",
+                    dt: l.approved_at,
+                    color: "#155724",
+                    note: `Released: ${fmtP(l.amount)}`,
+                  });
+                if (l.rejected_at)
+                  events.push({
+                    icon: "❌",
+                    label: "Loan Rejected",
+                    dt: l.rejected_at,
+                    color: "#721c24",
+                    note: "",
+                  });
+                (l.payments || []).forEach((p) => {
+                  events.push({
+                    icon: "💳",
+                    label: "Payment",
+                    dt: p.payment_date,
+                    color: "#0c5460",
+                    note: `Paid: ${fmtP(p.amount_paid)} | Balance: ${fmtP(p.remaining_balance)}`,
+                  });
+                });
+                events.sort((a, b) => new Date(a.dt) - new Date(b.dt));
+                return `<div style="background:#f8f9ff;border-radius:12px;padding:14px 16px;margin-bottom:12px">
+              <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
+                <strong style="color:#2a3272">${l.loan_no} — ${(l.loan_type || "").toUpperCase()}</strong>
+                <span class="status-badge ${l.status === "active" ? "approved" : l.status === "rejected" ? "rejected" : l.status === "paid" ? "approved" : "pending"}">${l.status.toUpperCase()}</span>
+              </div>
+              <div style="position:relative;padding-left:20px">
+                ${events
+                  .map(
+                    (ev, idx) => `
+                  <div style="display:flex;align-items:flex-start;gap:10px;margin-bottom:${idx < events.length - 1 ? "12px" : "0"};position:relative">
+                    ${idx < events.length - 1 ? '<div style="position:absolute;left:7px;top:22px;width:2px;height:calc(100% + 4px);background:#e0e0e0"></div>' : ""}
+                    <div style="width:18px;height:18px;border-radius:50%;background:${ev.color};color:#fff;display:flex;align-items:center;justify-content:center;font-size:0.6rem;flex-shrink:0;margin-top:2px">${ev.icon}</div>
+                    <div>
+                      <div style="font-weight:700;font-size:0.8em;color:${ev.color}">${ev.label}</div>
+                      <div style="font-size:0.72em;color:#666;margin-top:1px">${fmtDT(ev.dt)}</div>
+                      ${ev.note ? `<div style="font-size:0.72em;color:#888;margin-top:1px">${ev.note}</div>` : ""}
+                    </div>
+                  </div>`,
+                  )
+                  .join("")}
+              </div>
+            </div>`;
+              })
+              .join("") ||
+            '<div style="color:#999;text-align:center;padding:20px">No loans found.</div>';
+        } catch (e) {
+          content.innerHTML = "Error loading timeline.";
+        }
       }
 
       // ── TAB SWITCH ──
@@ -1560,10 +2394,81 @@
         document
           .querySelectorAll(".tab-btn")
           .forEach((b) => b.classList.remove("active"));
-        document.getElementById("panel-" + tab).classList.add("active");
+        const el = document.getElementById("panel-" + tab);
+        if (el) el.classList.add("active");
         btn.classList.add("active");
-        if (tab === "shares") loadTxnHistory();
-        if (tab === "loans") loadLoanRecords();
+        if (tab === "loans") loadLoanApplications();
+        if (tab === "members") loadVerifiedMembers();
+      }
+
+      function switchInnerTab(tab, btn) {
+        document
+          .querySelectorAll(".inner-panel")
+          .forEach((p) => p.classList.remove("active"));
+        document
+          .querySelectorAll(".inner-tab")
+          .forEach((b) => b.classList.remove("active"));
+        const el = document.getElementById("inner-" + tab);
+        if (el) el.classList.add("active");
+        btn.classList.add("active");
+      }
+
+      function renderActivityHistory() {
+        const tbody = document.getElementById("activityTableBody");
+        if (!tbody) return;
+        // Build activity from applications: approvals, rejections, new registrations
+        const events = [];
+        for (const a of applications) {
+          if (a.approved_at)
+            events.push({
+              date: a.approved_at,
+              text: `✅ ${a.full_name || a.user_id || "Member"} account approved`,
+            });
+          if (a.rejected_at)
+            events.push({
+              date: a.rejected_at,
+              text: `❌ ${a.full_name || a.user_id || "Member"} account rejected`,
+            });
+          if (a.submitted_at && a.status === "pending")
+            events.push({
+              date: a.submitted_at,
+              text: `📋 New registration: ${a.full_name || a.user_id || "Member"}`,
+            });
+          if (a.form_submitted_at)
+            events.push({
+              date: a.form_submitted_at,
+              text: `📝 ${a.full_name || a.user_id || "Member"} submitted application form`,
+            });
+          if (a.form_approved_at)
+            events.push({
+              date: a.form_approved_at,
+              text: `✅ ${a.full_name || a.user_id || "Member"} application form approved`,
+            });
+        }
+        events.sort((a, b) => new Date(b.date) - new Date(a.date));
+        const recent = events.slice(0, 30);
+        if (!recent.length) {
+          tbody.innerHTML =
+            '<tr class="empty-row"><td colspan="2">No recent activity.</td></tr>';
+          return;
+        }
+        tbody.innerHTML = recent
+          .map((ev) => {
+            const d = new Date(ev.date);
+            const df =
+              d.toLocaleDateString("en-PH", {
+                year: "numeric",
+                month: "short",
+                day: "numeric",
+              }) +
+              " " +
+              d.toLocaleTimeString("en-PH", {
+                hour: "2-digit",
+                minute: "2-digit",
+              });
+            return `<tr><td style="white-space:nowrap;font-size:0.75em;color:rgba(26,26,46,0.7)">${df}</td><td style="font-size:0.78em">${ev.text}</td></tr>`;
+          })
+          .join("");
       }
 
       // ── VIEW APPLICATION FORM ──
@@ -1718,14 +2623,19 @@
           return;
         }
         const q = query.toLowerCase();
-        const matches = approvedMembers.filter(
+        // For loan management: use verifiedMembers (form_approved), fallback to approvedMembers
+        const searchPool = verifiedMembers.length
+          ? verifiedMembers
+          : approvedMembers;
+        const matches = searchPool.filter(
           (m) =>
             (m.full_name || "").toLowerCase().includes(q) ||
+            (m.user_id || "").toLowerCase().includes(q) ||
             (m.username || "").toLowerCase().includes(q),
         );
         if (!matches.length) {
           dropdown.innerHTML =
-            '<div class="member-option" style="color:#aaa">No approved members found</div>';
+            '<div class="member-option" style="color:#aaa">No verified members found</div>';
           dropdown.classList.add("show");
           return;
         }
@@ -1959,54 +2869,8 @@
 
       // ── LOAD LOAN RECORDS ──
       async function loadLoanRecords() {
-        const memberFilter = document.getElementById("loanMemberFilter").value;
-        try {
-          const res = await fetch("/membership/admin/all-loans");
-          let loans = await res.json();
-          if (memberFilter !== "all")
-            loans = loans.filter((l) => String(l.member_id) === memberFilter);
-
-          // Update total loans summary
-          const totalLoans = loans
-            .filter((l) => l.status === "active")
-            .reduce((s, l) => s + parseFloat(l.outstanding_balance || 0), 0);
-          document.getElementById("summaryLoans").textContent =
-            "₱ " +
-            totalLoans.toLocaleString("en-PH", { minimumFractionDigits: 2 });
-
-          const tbody = document.getElementById("loanRecordsBody");
-          if (!loans.length) {
-            tbody.innerHTML =
-              '<tr><td colspan="9" style="text-align:center;color:#aaa;padding:20px;font-weight:600">No loan records found.</td></tr>';
-            return;
-          }
-          tbody.innerHTML = loans
-            .map((l) => {
-              const member = approvedMembers.find((m) => m.id === l.member_id);
-              const mName = member ? member.full_name || member.username : "—";
-              const statusColor =
-                {
-                  active: "#2a3272",
-                  paid: "#28a745",
-                  delinquent: "#e74c3c",
-                  restructured: "#856404",
-                }[l.status] || "#333";
-              return `<tr>
-                <td><strong>${l.loan_no}</strong></td>
-                <td>${mName}</td>
-                <td>${l.loan_type?.toUpperCase() || "—"}</td>
-                <td>₱${parseFloat(l.amount).toLocaleString("en-PH", { minimumFractionDigits: 2 })}</td>
-                <td>₱${parseFloat(l.monthly_payment || 0).toLocaleString("en-PH", { minimumFractionDigits: 2 })}</td>
-                <td style="font-weight:800;color:#e74c3c">₱${parseFloat(l.outstanding_balance || 0).toLocaleString("en-PH", { minimumFractionDigits: 2 })}</td>
-                <td>${l.due_date ? new Date(l.due_date).toLocaleDateString("en-PH") : "—"}</td>
-                <td><span style="color:${statusColor};font-weight:800;font-size:0.82em">${(l.status || "").toUpperCase()}</span></td>
-                <td><button class="btn-approve" style="font-size:0.72em" onclick="openPaymentModal(${l.id},${l.member_id},'${l.loan_no}',${l.outstanding_balance},${l.monthly_payment})">💳 Payment</button></td>
-            </tr>`;
-            })
-            .join("");
-        } catch (e) {
-          console.error(e);
-        }
+        // Redirected to new loadLoanApplications
+        await loadLoanApplications();
       }
 
       // ── LOAN PAYMENT MODAL ──
@@ -2117,8 +2981,8 @@
       }
 
       function logout() {
-        fetch("/membership/admin/logout", { method: "POST" }).then(
-          () => (window.location.href = "/membership/admin"),
+        fetch("/membership/admin/logout", { method: "POST" }).then(() =>
+          window.location.replace("/membership/admin"),
         );
       }
 
@@ -2130,11 +2994,25 @@
       }
 
       // Close modals on backdrop click
-      ["appModal", "paymentModal"].forEach((id) => {
-        document.getElementById(id).addEventListener("click", function (e) {
-          if (e.target === this) closeModal(id);
-        });
+      [
+        "appModal",
+        "paymentModal",
+        "loanTimelineModal",
+        "memberDetailModal",
+        "verifiedDetailModal",
+      ].forEach((id) => {
+        const el = document.getElementById(id);
+        if (el)
+          el.addEventListener("click", function (e) {
+            if (e.target === this) closeModal(id);
+          });
       });
+
+      // ── REAL-TIME AUTO REFRESH ──
+      // Refresh applications every 30 seconds for real-time timestamps
+      setInterval(() => {
+        loadApplications();
+      }, 30000);
 
       loadApplications();
     </script>

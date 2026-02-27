@@ -1034,6 +1034,14 @@
       .credits-table tr:last-child td {
         border-bottom: none;
       }
+      .credits-table tbody tr {
+        cursor: pointer;
+        transition: background 0.15s;
+      }
+      .credits-table tbody tr:hover td {
+        background: rgba(201, 168, 76, 0.08);
+        color: #fff;
+      }
       .amt-credit {
         color: var(--red);
         font-weight: 700;
@@ -1041,6 +1049,179 @@
       .amt-paid {
         color: var(--green);
         font-weight: 700;
+      }
+      .credit-badge {
+        display: inline-block;
+        padding: 3px 10px;
+        border-radius: 20px;
+        font-size: 0.65rem;
+        font-weight: 700;
+        letter-spacing: 0.5px;
+        text-transform: uppercase;
+      }
+      .credit-badge.unpaid {
+        background: rgba(231, 76, 60, 0.15);
+        color: #e74c3c;
+        border: 1px solid rgba(231, 76, 60, 0.3);
+      }
+      .credit-badge.paid {
+        background: rgba(39, 174, 96, 0.15);
+        color: #27ae60;
+        border: 1px solid rgba(39, 174, 96, 0.3);
+      }
+      .btn-mark-paid {
+        padding: 5px 12px;
+        border-radius: 8px;
+        font-size: 0.68rem;
+        font-weight: 700;
+        cursor: pointer;
+        border: none;
+        background: rgba(201, 168, 76, 0.15);
+        color: #c9a84c;
+        border: 1px solid rgba(201, 168, 76, 0.3);
+        transition: background 0.2s;
+        white-space: nowrap;
+      }
+      .btn-mark-paid:hover {
+        background: rgba(201, 168, 76, 0.3);
+      }
+
+      /* ── ORDER DETAIL MODAL ── */
+      .od-overlay {
+        display: none;
+        position: fixed;
+        inset: 0;
+        background: rgba(0, 0, 0, 0.65);
+        backdrop-filter: blur(4px);
+        z-index: 900;
+        align-items: center;
+        justify-content: center;
+      }
+      .od-overlay.show {
+        display: flex;
+      }
+      .od-card {
+        background: #0d1b3e;
+        border: 1px solid rgba(201, 168, 76, 0.25);
+        border-radius: 20px;
+        padding: 28px;
+        width: 420px;
+        max-width: 94vw;
+        max-height: 85vh;
+        overflow-y: auto;
+        animation: popIn 0.2s ease;
+        position: relative;
+      }
+      @keyframes popIn {
+        from {
+          opacity: 0;
+          transform: scale(0.95);
+        }
+        to {
+          opacity: 1;
+          transform: scale(1);
+        }
+      }
+      .od-close {
+        position: absolute;
+        top: 14px;
+        right: 16px;
+        background: none;
+        border: none;
+        color: rgba(255, 255, 255, 0.4);
+        font-size: 1.1rem;
+        cursor: pointer;
+        transition: color 0.2s;
+      }
+      .od-close:hover {
+        color: #fff;
+      }
+      .od-header {
+        margin-bottom: 18px;
+      }
+      .od-order-no {
+        font-size: 0.7rem;
+        font-weight: 700;
+        letter-spacing: 2px;
+        color: #c9a84c;
+        text-transform: uppercase;
+        margin-bottom: 4px;
+      }
+      .od-member-name {
+        font-size: 1.1rem;
+        font-weight: 700;
+        color: #fff;
+      }
+      .od-member-id {
+        font-size: 0.72rem;
+        color: rgba(255, 255, 255, 0.4);
+        margin-top: 2px;
+      }
+      .od-meta {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 10px;
+        margin: 16px 0;
+      }
+      .od-meta-item {
+        background: rgba(255, 255, 255, 0.05);
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        border-radius: 10px;
+        padding: 10px 12px;
+      }
+      .od-meta-label {
+        font-size: 0.6rem;
+        color: rgba(255, 255, 255, 0.35);
+        letter-spacing: 1px;
+        text-transform: uppercase;
+        margin-bottom: 3px;
+      }
+      .od-meta-val {
+        font-size: 0.82rem;
+        font-weight: 600;
+        color: #fff;
+      }
+      .od-items-title {
+        font-size: 0.62rem;
+        font-weight: 700;
+        letter-spacing: 2px;
+        color: rgba(255, 255, 255, 0.35);
+        text-transform: uppercase;
+        margin: 16px 0 8px;
+      }
+      .od-item-row {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 9px 0;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        font-size: 0.8rem;
+        color: rgba(255, 255, 255, 0.8);
+      }
+      .od-item-row:last-child {
+        border: none;
+      }
+      .od-item-name {
+        flex: 1;
+      }
+      .od-item-qty {
+        color: rgba(255, 255, 255, 0.4);
+        font-size: 0.72rem;
+        margin: 0 12px;
+      }
+      .od-item-sub {
+        font-weight: 600;
+        color: #fff;
+      }
+      .od-total-row {
+        display: flex;
+        justify-content: space-between;
+        padding: 12px 0 0;
+        margin-top: 8px;
+        border-top: 1px solid rgba(201, 168, 76, 0.2);
+        font-weight: 700;
+        font-size: 0.9rem;
+        color: #c9a84c;
       }
 
       /* ═══════════════════════════════
@@ -1322,7 +1503,7 @@
     <!-- TOPBAR -->
     <div class="topbar">
       <div class="topbar-left">
-        <a href="/membership/admin/dashboard" class="back-btn">&#8592;</a>
+        <a href="/ordering" class="back-btn">&#8592;</a>
         <div>
           <div class="topbar-title"><span>Canteen</span> Admin Dashboard</div>
         </div>
@@ -1548,7 +1729,8 @@
                     <th>Member</th>
                     <th>Amount</th>
                     <th>Date</th>
-                    <th>Status</th>
+                    <th>Payment Status</th>
+                    <th></th>
                   </tr>
                 </thead>
                 <tbody id="creditsBody">
@@ -1769,7 +1951,8 @@
       // ── LOGOUT ────────────────────────────────
       async function doLogout() {
         await fetch("/membership/admin/logout", { method: "POST" });
-        window.location.href = "/membership/admin";
+        window.history.replaceState(null, null, "/ordering");
+        window.location.replace("/ordering");
       }
 
       // ── ORDER MONITORING ──────────────────────
@@ -2127,21 +2310,50 @@
           const tbody = document.getElementById("creditsBody");
           if (!orders.length) {
             tbody.innerHTML =
-              '<tr><td colspan="5" style="text-align:center;padding:30px;color:var(--muted);">No credit orders.</td></tr>';
+              '<tr><td colspan="6" style="text-align:center;padding:30px;color:var(--muted);">No credit orders.</td></tr>';
             return;
           }
           tbody.innerHTML = orders
-            .map(
-              (o) => `<tr>
-          <td style="font-family:'Syne',sans-serif;font-weight:600;">${o.order_no}</td>
-          <td>${o.customer_name || "—"}</td>
-          <td class="amt-credit">₱${parseFloat(o.total).toFixed(2)}</td>
-          <td>${new Date(o.placed_at).toLocaleDateString("en-PH", { month: "short", day: "numeric", year: "numeric" })}</td>
-          <td><span class="h-status ${o.status}">${o.status}</span></td>
-        </tr>`,
-            )
+            .map((o) => {
+              const isPaid = o.credit_paid == 1 || o.credit_status === "paid";
+              const badge = isPaid
+                ? `<span class="credit-badge paid">✔ Paid</span>`
+                : `<span class="credit-badge unpaid">✗ Unpaid</span>`;
+              const markBtn = !isPaid
+                ? `<button class="btn-mark-paid" onclick="event.stopPropagation(); markCreditPaid('${o.order_no}', this)">💰 Mark Paid</button>`
+                : `<span style="font-size:0.7rem;color:rgba(255,255,255,0.2);">—</span>`;
+              return `<tr onclick="openOrderDetail('${o.order_no}')" title="Click to view details">
+              <td style="font-family:'Syne',sans-serif;font-weight:600;">${o.order_no}</td>
+              <td>${o.customer_name || "—"}</td>
+              <td class="amt-credit">₱${parseFloat(o.total).toFixed(2)}</td>
+              <td>${new Date(o.placed_at).toLocaleDateString("en-PH", { month: "short", day: "numeric", year: "numeric" })}</td>
+              <td>${badge}</td>
+              <td>${markBtn}</td>
+            </tr>`;
+            })
             .join("");
         } catch (e) {}
+      }
+
+      async function markCreditPaid(orderNo, btn) {
+        btn.disabled = true;
+        btn.textContent = "Saving...";
+        try {
+          const res = await fetch(`/canteen/api/order/${orderNo}/mark-paid`, {
+            method: "POST",
+          });
+          const data = await res.json();
+          if (data.success) {
+            loadCredits(); // refresh
+          } else {
+            btn.disabled = false;
+            btn.textContent = "💰 Mark Paid";
+            alert("Failed to update. Try again.");
+          }
+        } catch (e) {
+          btn.disabled = false;
+          btn.textContent = "💰 Mark Paid";
+        }
       }
 
       // ── REPORTS ───────────────────────────────
@@ -2223,6 +2435,116 @@
       // ── INIT ──────────────────────────────────
       fetchOrders();
       setInterval(fetchOrders, 2500);
+    </script>
+
+    <!-- ORDER DETAIL MODAL -->
+    <div class="od-overlay" id="odOverlay">
+      <div class="od-card">
+        <button class="od-close" onclick="closeOrderDetail()">✕</button>
+        <div class="od-header">
+          <div class="od-order-no" id="odOrderNo">ORDER #—</div>
+          <div class="od-member-name" id="odMemberName">—</div>
+          <div class="od-member-id" id="odMemberId"></div>
+        </div>
+        <div class="od-meta">
+          <div class="od-meta-item">
+            <div class="od-meta-label">Date & Time</div>
+            <div class="od-meta-val" id="odDate">—</div>
+          </div>
+          <div class="od-meta-item">
+            <div class="od-meta-label">Payment</div>
+            <div class="od-meta-val" id="odPayMode">—</div>
+          </div>
+          <div class="od-meta-item">
+            <div class="od-meta-label">Status</div>
+            <div class="od-meta-val" id="odStatus">—</div>
+          </div>
+          <div class="od-meta-item">
+            <div class="od-meta-label">Customer Type</div>
+            <div class="od-meta-val" id="odCustType">—</div>
+          </div>
+        </div>
+        <div class="od-items-title">Items Ordered</div>
+        <div id="odItemsList">—</div>
+        <div class="od-total-row">
+          <span>Total</span>
+          <span id="odTotal">—</span>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      async function openOrderDetail(orderNo) {
+        document.getElementById("odOverlay").classList.add("show");
+        document.getElementById("odOrderNo").textContent = "ORDER #" + orderNo;
+        document.getElementById("odMemberName").textContent = "Loading...";
+        document.getElementById("odItemsList").innerHTML = "";
+
+        try {
+          const res = await fetch(`/canteen/api/order-detail/${orderNo}`);
+          const data = await res.json();
+          if (!data.success) {
+            document.getElementById("odMemberName").textContent =
+              "Failed to load.";
+            return;
+          }
+          const o = data.order;
+
+          document.getElementById("odMemberName").textContent =
+            o.fullName || "—";
+          document.getElementById("odMemberId").textContent = o.member_user_id
+            ? `User ID: ${o.member_user_id}`
+            : o.customer_type === "visitor"
+              ? "Visitor / Walk-in"
+              : "";
+          document.getElementById("odDate").textContent = new Date(
+            o.placed_at,
+          ).toLocaleString("en-PH", {
+            month: "short",
+            day: "numeric",
+            year: "numeric",
+            hour: "2-digit",
+            minute: "2-digit",
+          });
+          document.getElementById("odPayMode").textContent = o.pay_mode
+            ? o.pay_mode.charAt(0).toUpperCase() + o.pay_mode.slice(1)
+            : "—";
+          document.getElementById("odStatus").textContent = o.status
+            ? o.status.charAt(0).toUpperCase() + o.status.slice(1)
+            : "—";
+          document.getElementById("odCustType").textContent =
+            o.customer_type === "member" ? "👤 Member" : "🚶 Visitor";
+          document.getElementById("odTotal").textContent =
+            "₱" + parseFloat(o.total).toFixed(2);
+
+          document.getElementById("odItemsList").innerHTML = data.items.length
+            ? data.items
+                .map(
+                  (i) => `
+                <div class="od-item-row">
+                  <span class="od-item-name">${i.item_name}</span>
+                  <span class="od-item-qty">x${i.qty}</span>
+                  <span class="od-item-sub">₱${parseFloat(i.subtotal).toFixed(2)}</span>
+                </div>`,
+                )
+                .join("")
+            : '<div style="color:rgba(255,255,255,0.3);font-size:0.78rem;padding:8px 0;">No items found.</div>';
+        } catch (e) {
+          document.getElementById("odMemberName").textContent =
+            "Error loading details.";
+        }
+      }
+
+      function closeOrderDetail() {
+        document.getElementById("odOverlay").classList.remove("show");
+      }
+
+      // Close on backdrop click
+      document
+        .getElementById("odOverlay")
+        .addEventListener("click", function (e) {
+          if (e.target === this) closeOrderDetail();
+        });
     </script>
   </body>
 </html>

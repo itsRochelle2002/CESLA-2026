@@ -39,7 +39,9 @@ function requireAdmin(req, res, next) {
 }
 function requireAdminPage(req, res, next) {
   if (req.session?.isAdmin) return next();
-  return res.redirect("/membership/admin");
+  // If trying to access canteen admin, redirect to admin login with from=canteen
+  const from = req.path.startsWith("/canteen") ? "?from=canteen" : "";
+  return res.redirect("/membership/admin" + from);
 }
 function requireMember(req, res, next) {
   if (req.session?.memberId) return next();
@@ -59,9 +61,28 @@ app.get("/", (req, res) => res.render("index"));
 app.get("/ordering", (req, res) => res.render("ordering"));
 
 // Canteen order page — requires member login, redirected from /membership/login?from=canteen
-app.get("/canteen/order", requireMemberPage, (req, res) =>
-  res.render("canteen-order"),
-);
+app.get("/canteen/order", requireMemberPage, async (req, res) => {
+  try {
+    const memberId = req.session.memberId;
+    const [rows] = await db.query(
+      "SELECT first_name, last_name, user_id FROM members WHERE id = ?",
+      [memberId],
+    );
+    if (!rows.length)
+      return res.render("canteen-order", {
+        memberName: "Member",
+        memberUserId: "",
+      });
+    const m = rows[0];
+    res.render("canteen-order", {
+      memberName: ((m.first_name || "") + " " + (m.last_name || "")).trim(),
+      memberUserId: m.user_id || "",
+    });
+  } catch (err) {
+    console.error("Canteen order page error:", err);
+    res.render("canteen-order", { memberName: "Member", memberUserId: "" });
+  }
+});
 
 // Canteen order page — guest/visitor, no login required
 app.get("/canteen/order/guest", (req, res) =>
@@ -71,7 +92,7 @@ app.get("/canteen/order/guest", (req, res) =>
 // ════════════════════════════════════════════
 //  MEMBERSHIP PAGES
 // ════════════════════════════════════════════
-app.get("/membership", (req, res) => res.render("membership"));
+app.get("/membership", (req, res) => res.redirect("/membership/login"));
 app.get("/membership/register", (req, res) => res.render("register"));
 app.get("/membership/register/form", (req, res) =>
   res.render("member-application-form"),
@@ -80,9 +101,14 @@ app.get("/membership/register/form", (req, res) =>
 // ── REGISTER (Step 1 — User ID + Password only) ──
 app.post("/membership/register/submit", async (req, res) => {
   try {
-    const { userId, password } = req.body;
-    if (!userId || !password)
+    const { fullName, userId, password } = req.body;
+    if (!userId || !password || !fullName)
       return res.json({ success: false, message: "Missing required fields." });
+
+    // Parse full name into first / last
+    const nameParts = fullName.trim().split(" ").filter(Boolean);
+    const firstName = nameParts[0] || "";
+    const lastName = nameParts.length > 1 ? nameParts.slice(1).join(" ") : "";
 
     // Check duplicate user_id
     const [existUid] = await db.query(
@@ -100,12 +126,14 @@ app.post("/membership/register/submit", async (req, res) => {
     const appNo = "APP-" + Date.now().toString().slice(-6);
 
     await db.query(
-      `INSERT INTO members (application_no, user_id, password, status, form_status)
-       VALUES (?, ?, ?, 'pending', 'incomplete')`,
-      [appNo, userId, hashedPassword],
+      `INSERT INTO members (application_no, user_id, first_name, last_name, password, status, form_status)
+       VALUES (?, ?, ?, ?, ?, 'pending', 'incomplete')`,
+      [appNo, userId, firstName, lastName, hashedPassword],
     );
 
-    console.log(`✅ New registration: ${userId} (PENDING ADMIN APPROVAL)`);
+    console.log(
+      `✅ New registration: ${userId} | ${fullName} (PENDING ADMIN APPROVAL)`,
+    );
     res.json({ success: true });
   } catch (err) {
     console.error("Register error:", err);
@@ -242,16 +270,40 @@ app.get("/membership/generate-userid", async (req, res) => {
 //  MEMBER LOGIN & SESSION
 // ════════════════════════════════════════════
 app.get("/membership/login", (req, res) => {
-  if (req.session?.memberId) return res.redirect("/membership/dashboard");
+  // Already logged in as member
+  if (req.session?.memberId) {
+    const from = req.query.from;
+    return res.redirect(
+      from === "canteen" ? "/canteen/order" : "/membership/dashboard",
+    );
+  }
+  // Already logged in as admin trying to hit member login
+  if (req.session?.isAdmin) {
+    const from = req.query.from;
+    return res.redirect(
+      from === "canteen" ? "/canteen/admin" : "/membership/admin/dashboard",
+    );
+  }
   res.render("membership-login");
 });
 
 app.post("/membership/login", async (req, res) => {
   try {
     const { userId, password } = req.body;
+
+    if (!userId || !password)
+      return res.json({
+        success: false,
+        message: "Please fill in all fields.",
+      });
+
+    // Normalize: uppercase + trim (User IDs are always uppercase)
+    const normalizedId = userId.trim().toUpperCase();
     const [rows] = await db.query("SELECT * FROM members WHERE user_id = ?", [
-      userId,
+      normalizedId,
     ]);
+    console.log(`🔐 Login attempt: ${normalizedId} → found: ${rows.length}`);
+
     if (!rows.length)
       return res.json({
         success: false,
@@ -259,14 +311,22 @@ app.post("/membership/login", async (req, res) => {
       });
 
     const member = rows[0];
+    console.log(
+      `   Status: ${member.status} | has password: ${!!member.password}`,
+    );
+
     const match = await bcrypt.compare(password, member.password);
+    console.log(`   Password match: ${match}`);
+
     if (!match)
       return res.json({
         success: false,
         message: "Invalid User ID or password.",
       });
+
     if (member.status === "pending")
       return res.json({ success: false, pending: true });
+
     if (member.status === "rejected")
       return res.json({
         success: false,
@@ -275,16 +335,18 @@ app.post("/membership/login", async (req, res) => {
 
     req.session.memberId = member.id;
     req.session.memberUserId = member.user_id;
+    console.log(`   ✅ Login success: ${normalizedId} (id=${member.id})`);
     res.json({ success: true });
   } catch (err) {
-    console.error(err);
-    res.json({ success: false, message: "Server error." });
+    console.error("Login error:", err);
+    res.json({ success: false, message: "Server error. Please try again." });
   }
 });
 
 app.post("/membership/logout", (req, res) => {
-  req.session.destroy();
-  res.json({ success: true });
+  req.session.destroy(() => {
+    res.json({ success: true });
+  });
 });
 
 // ════════════════════════════════════════════
@@ -509,12 +571,15 @@ app.post("/membership/admin/login", async (req, res) => {
 });
 
 app.post("/membership/admin/logout", (req, res) => {
-  req.session.destroy();
-  res.json({ success: true });
+  req.session.destroy(() => {
+    res.json({ success: true });
+  });
 });
 
 app.get("/membership/admin/dashboard", requireAdminPage, (req, res) => {
-  res.render("membership-admin-dashboard");
+  res.render("membership-admin-dashboard", {
+    adminName: req.session.adminName || "Admin",
+  });
 });
 
 // Get all members for admin
@@ -722,8 +787,8 @@ app.post("/membership/admin/add-loan", requireAdmin, async (req, res) => {
 
     await db.query(
       `INSERT INTO loans (member_id,loan_no,loan_type,amount,interest_rate,term_months,
-       monthly_payment,date_released,due_date,outstanding_balance,purpose,encoded_by)
-       VALUES (?,?,?,?,?,?,?,?,?,?,?,?)`,
+       monthly_payment,date_released,due_date,outstanding_balance,purpose,encoded_by,status,applied_at)
+       VALUES (?,?,?,?,?,?,?,?,?,?,?,?,'pending',NOW())`,
       [
         member_id,
         loanNo,
@@ -850,6 +915,152 @@ app.post(
   },
 );
 
+// ── ADMIN: VERIFIED MEMBERS (approved account + approved form) ──────────────
+app.get(
+  "/membership/admin/verified-members",
+  requireAdmin,
+  async (req, res) => {
+    try {
+      const [rows] = await db.query(`
+      SELECT
+        m.id, m.application_no, m.user_id, m.first_name, m.middle_name, m.last_name,
+        m.form_status, m.form_approved_at, m.approved_at, m.submitted_at,
+        CONCAT(COALESCE(m.first_name,''),' ',COALESCE(m.middle_name,''),' ',COALESCE(m.last_name,'')) AS full_name,
+        COALESCE(sh.total_shares,0)  AS total_shares,
+        COALESCE(sv.total_savings,0) AS total_savings,
+        COALESCE(ln.total_loans,0)   AS total_loan_balance,
+        COALESCE(ln.loan_count,0)    AS loan_count
+      FROM members m
+      LEFT JOIN (
+        SELECT member_id, SUM(CASE WHEN type='deposit' THEN amount ELSE -amount END) AS total_shares
+        FROM shares GROUP BY member_id
+      ) sh ON sh.member_id = m.id
+      LEFT JOIN (
+        SELECT member_id, SUM(CASE WHEN type='deposit' THEN amount ELSE -amount END) AS total_savings
+        FROM savings GROUP BY member_id
+      ) sv ON sv.member_id = m.id
+      LEFT JOIN (
+        SELECT member_id, SUM(outstanding_balance) AS total_loans, COUNT(*) AS loan_count
+        FROM loans WHERE status='active' GROUP BY member_id
+      ) ln ON ln.member_id = m.id
+      WHERE m.status = 'approved' AND m.form_status = 'approved'
+      ORDER BY m.form_approved_at DESC
+    `);
+      res.json(rows);
+    } catch (e) {
+      console.error(e);
+      res.json([]);
+    }
+  },
+);
+
+// ── ADMIN: GET MEMBER CREDENTIALS (for approved account view) ───────────────
+app.get(
+  "/membership/admin/member-creds/:id",
+  requireAdmin,
+  async (req, res) => {
+    try {
+      const [rows] = await db.query(
+        "SELECT id, user_id, password, first_name, last_name, approved_at, submitted_at FROM members WHERE id=?",
+        [req.params.id],
+      );
+      if (!rows.length) return res.json({ success: false });
+      res.json({ success: true, member: rows[0] });
+    } catch (e) {
+      res.json({ success: false });
+    }
+  },
+);
+
+// ── ADMIN: GET LOAN APPLICATIONS (loans table with pending/rejected support) ─
+// Extend loans to support application_status
+// We add application_status column check — if column doesn't exist yet, handle gracefully
+app.get(
+  "/membership/admin/loan-applications",
+  requireAdmin,
+  async (req, res) => {
+    try {
+      const [rows] = await db.query(`
+      SELECT l.*,
+        CONCAT(COALESCE(m.first_name,''),' ',COALESCE(m.middle_name,''),' ',COALESCE(m.last_name,'')) AS full_name,
+        m.user_id
+      FROM loans l
+      JOIN members m ON l.member_id = m.id
+      ORDER BY l.created_at DESC
+    `);
+      res.json(rows);
+    } catch (e) {
+      res.json([]);
+    }
+  },
+);
+
+// ── ADMIN: GET MEMBER LOAN TIMELINE ──────────────────────────────────────────
+app.get(
+  "/membership/admin/member-loan-timeline/:memberId",
+  requireAdmin,
+  async (req, res) => {
+    try {
+      const mid = req.params.memberId;
+      // Get member info
+      const [mRows] = await db.query(
+        `SELECT id, user_id, first_name, middle_name, last_name, status, form_status, submitted_at, approved_at, form_approved_at
+       FROM members WHERE id=?`,
+        [mid],
+      );
+      if (!mRows.length) return res.json({ success: false });
+      const member = mRows[0];
+
+      // Get loans
+      const [loans] = await db.query(
+        `SELECT * FROM loans WHERE member_id=? ORDER BY created_at DESC`,
+        [mid],
+      );
+
+      // Get loan payments for each loan
+      const loansWithPayments = [];
+      for (const loan of loans) {
+        const [payments] = await db.query(
+          `SELECT * FROM loan_payments WHERE loan_id=? ORDER BY payment_date ASC`,
+          [loan.id],
+        );
+        loansWithPayments.push({ ...loan, payments });
+      }
+
+      res.json({ success: true, member, loans: loansWithPayments });
+    } catch (e) {
+      console.error(e);
+      res.json({ success: false });
+    }
+  },
+);
+
+// ── ADMIN: UPDATE LOAN STATUS (approve/reject application) ───────────────────
+app.post("/membership/admin/loan-status", requireAdmin, async (req, res) => {
+  try {
+    const { loan_id, status, date_released } = req.body;
+    // status: 'active' (approved), 'rejected'
+    if (status === "active") {
+      await db.query(
+        "UPDATE loans SET status=?, date_released=?, approved_at=NOW() WHERE id=?",
+        [
+          status,
+          date_released || new Date().toISOString().split("T")[0],
+          loan_id,
+        ],
+      );
+    } else {
+      await db.query(
+        "UPDATE loans SET status=?, rejected_at=NOW() WHERE id=?",
+        [status, loan_id],
+      );
+    }
+    res.json({ success: true });
+  } catch (e) {
+    res.json({ success: false });
+  }
+});
+
 // ── START ──────────────────────────────────────
 app.listen(PORT, () => {
   console.log(`\n🚀 Server running  → http://localhost:${PORT}`);
@@ -888,10 +1099,11 @@ app.post("/canteen/api/order", async (req, res) => {
       return res.json({ success: false, message: "Empty order." });
 
     const orderNo = genOrderNo();
-    const memberId = req.session?.memberId || null;
-    const memberUserId = req.session?.memberUserId || null;
-    const custName =
-      customerType === "member" ? memberUserId || "Member" : "Walk-in Visitor";
+    // Visitor orders must NEVER be linked to a member session
+    const isVisitor = customerType === "visitor" || customerType !== "member";
+    const memberId = isVisitor ? null : req.session?.memberId || null;
+    const memberUserId = isVisitor ? null : req.session?.memberUserId || null;
+    const custName = isVisitor ? "Walk-in Visitor" : memberUserId || "Member";
 
     const [result] = await db.query(
       `INSERT INTO canteen_orders (order_no, customer_type, member_id, member_user_id, customer_name, total, pay_mode, amount_paid, change_amount, status)
@@ -953,6 +1165,46 @@ app.get("/canteen/api/order/:id/status", async (req, res) => {
   }
 });
 
+// GET /canteen/api/my-orders — member fetches their active + recent orders
+app.get("/canteen/api/my-orders", requireMemberPage, async (req, res) => {
+  try {
+    const memberId = req.session.memberId;
+    const [rows] = await db.query(
+      `SELECT order_no, total, pay_mode, status, placed_at, ready_at
+       FROM canteen_orders
+       WHERE member_id = ?
+       ORDER BY placed_at DESC LIMIT 50`,
+      [memberId],
+    );
+    res.json({ success: true, orders: rows });
+  } catch (err) {
+    res.json({ success: false, orders: [] });
+  }
+});
+
+// GET /canteen/api/my-orders/:orderNo/items — get items of a specific order
+app.get(
+  "/canteen/api/my-orders/:orderNo/items",
+  requireMemberPage,
+  async (req, res) => {
+    try {
+      const memberId = req.session.memberId;
+      const [orderRows] = await db.query(
+        "SELECT * FROM canteen_orders WHERE order_no = ? AND member_id = ?",
+        [req.params.orderNo, memberId],
+      );
+      if (!orderRows.length) return res.json({ success: false });
+      const [items] = await db.query(
+        "SELECT item_name, qty, price, subtotal FROM canteen_order_items WHERE order_id = ?",
+        [orderRows[0].id],
+      );
+      res.json({ success: true, order: orderRows[0], items });
+    } catch (err) {
+      res.json({ success: false });
+    }
+  },
+);
+
 // GET /canteen/api/orders/pending — admin polls all active orders
 app.get("/canteen/api/orders/pending", requireAdmin, async (req, res) => {
   try {
@@ -1006,9 +1258,11 @@ app.post("/canteen/api/order/:id/done", requireAdmin, async (req, res) => {
 });
 
 // Canteen admin monitor page
-app.get("/canteen/admin", requireAdminPage, (req, res) =>
-  res.render("canteen-admin"),
-);
+app.get("/canteen/admin", (req, res) => {
+  if (!req.session?.isAdmin)
+    return res.redirect("/membership/admin?from=canteen");
+  res.render("canteen-admin");
+});
 
 // ── CANTEEN ITEM MANAGEMENT ──────────────────
 app.post("/canteen/api/items", requireAdmin, async (req, res) => {
@@ -1079,10 +1333,118 @@ app.get("/canteen/api/orders/history", requireAdmin, async (req, res) => {
 });
 
 // ── CREDIT ORDERS ─────────────────────────────
+// ── CANTEEN MEMBER PROFILE ────────────────────
+app.get("/canteen/api/my-profile", requireMemberPage, async (req, res) => {
+  try {
+    const [rows] = await db.query(
+      "SELECT first_name, last_name, user_id, profile_photo FROM members WHERE id = ?",
+      [req.session.memberId],
+    );
+    if (!rows.length) return res.json({ success: false });
+    const m = rows[0];
+    res.json({
+      success: true,
+      firstName: m.first_name || "",
+      lastName: m.last_name || "",
+      fullName: ((m.first_name || "") + " " + (m.last_name || "")).trim(),
+      userId: m.user_id || "",
+      profilePhoto: m.profile_photo || null,
+    });
+  } catch (e) {
+    res.json({ success: false });
+  }
+});
+
+// ── MEMBER CLAIM ORDER ────────────────────────
+app.post(
+  "/canteen/api/order/:orderNo/claim",
+  requireMemberPage,
+  async (req, res) => {
+    try {
+      const memberId = req.session.memberId;
+      const { orderNo } = req.params;
+      // Verify this order belongs to this member and is ready
+      const [rows] = await db.query(
+        "SELECT * FROM canteen_orders WHERE order_no = ? AND member_id = ? AND status = 'ready'",
+        [orderNo, memberId],
+      );
+      if (!rows.length)
+        return res.json({
+          success: false,
+          message: "Order not found or not ready.",
+        });
+
+      await db.query(
+        "UPDATE canteen_orders SET status='done', done_at=NOW() WHERE order_no = ?",
+        [orderNo],
+      );
+      res.json({ success: true });
+    } catch (e) {
+      console.error(e);
+      res.json({ success: false });
+    }
+  },
+);
+
+// ── MARK CREDIT AS PAID (admin) ──────────────
+app.post(
+  "/canteen/api/order/:orderNo/mark-paid",
+  requireAdmin,
+  async (req, res) => {
+    try {
+      const [rows] = await db.query(
+        "SELECT * FROM canteen_orders WHERE order_no = ? AND pay_mode = 'credit'",
+        [req.params.orderNo],
+      );
+      if (!rows.length)
+        return res.json({ success: false, message: "Order not found." });
+      await db.query(
+        "UPDATE canteen_orders SET credit_paid = 1, amount_paid = total WHERE order_no = ?",
+        [req.params.orderNo],
+      );
+      res.json({ success: true });
+    } catch (e) {
+      res.json({ success: false });
+    }
+  },
+);
+
+// ── ORDER DETAIL (admin) ──────────────────────
+app.get(
+  "/canteen/api/order-detail/:orderNo",
+  requireAdmin,
+  async (req, res) => {
+    try {
+      const [orders] = await db.query(
+        `SELECT o.*, m.first_name, m.last_name
+       FROM canteen_orders o
+       LEFT JOIN members m ON o.member_id = m.id
+       WHERE o.order_no = ? LIMIT 1`,
+        [req.params.orderNo],
+      );
+      if (!orders.length) return res.json({ success: false });
+      const order = orders[0];
+      const [items] = await db.query(
+        "SELECT item_name, qty, price, subtotal FROM canteen_order_items WHERE order_id = ?",
+        [order.id],
+      );
+      // Full name: use members table if available, fallback to customer_name
+      const fullName =
+        order.first_name || order.last_name
+          ? ((order.first_name || "") + " " + (order.last_name || "")).trim()
+          : order.customer_name || "—";
+      res.json({ success: true, order: { ...order, fullName }, items });
+    } catch (e) {
+      console.error(e);
+      res.json({ success: false });
+    }
+  },
+);
+
 app.get("/canteen/api/orders/credits", requireAdmin, async (req, res) => {
   try {
     const [orders] = await db.query(
-      `SELECT * FROM canteen_orders WHERE pay_mode='credit' ORDER BY placed_at DESC`,
+      `SELECT *, IF(credit_paid=1,'paid','unpaid') AS credit_status FROM canteen_orders WHERE pay_mode='credit' ORDER BY placed_at DESC`,
     );
     res.json(orders);
   } catch (e) {

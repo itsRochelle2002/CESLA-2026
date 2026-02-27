@@ -1710,8 +1710,8 @@
         }
       }
     </style>
-      <link rel="stylesheet" href="/css/global.css" />
-</head>
+    <link rel="stylesheet" href="/css/global.css" />
+  </head>
   <body>
     <!-- TOP BAR -->
     <div class="topbar">
@@ -4217,8 +4217,8 @@
 
       /* ─── MISC ─── */
       function doLogout() {
-        fetch("/membership/logout", { method: "POST" }).then(
-          () => (location.href = "/membership/login"),
+        fetch("/membership/logout", { method: "POST" }).then(() =>
+          window.location.replace("/membership/login"),
         );
       }
       function showToast(m) {
