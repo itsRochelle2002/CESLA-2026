@@ -481,7 +481,13 @@ app.post(
 //  ADMIN ROUTES
 // ════════════════════════════════════════════
 app.get("/membership/admin", (req, res) => {
-  if (req.session?.isAdmin) return res.redirect("/membership/admin/dashboard");
+  if (req.session?.isAdmin) {
+    const redirectTo =
+      req.query.from === "canteen"
+        ? "/canteen/admin"
+        : "/membership/admin/dashboard";
+    return res.redirect(redirectTo);
+  }
   res.render("membership-admin");
 });
 
@@ -849,4 +855,252 @@ app.listen(PORT, () => {
   console.log(`\n🚀 Server running  → http://localhost:${PORT}`);
   console.log(`🗄️  Database        → climbs_db (MySQL)`);
   console.log(`🔐 Admin Login     → /membership/admin\n`);
+});
+
+// ════════════════════════════════════════════
+//  CANTEEN ORDERING API  (MySQL DB)
+// ════════════════════════════════════════════
+
+function genOrderNo() {
+  const ts = Date.now().toString().slice(-6);
+  const rand = String(Math.floor(Math.random() * 900) + 100);
+  return `ORD-${ts}-${rand}`;
+}
+
+// GET /canteen/api/items — fetch menu items from DB
+app.get("/canteen/api/items", async (req, res) => {
+  try {
+    const [rows] = await db.query(
+      "SELECT * FROM canteen_items WHERE is_available = 1 ORDER BY category, name",
+    );
+    res.json(rows);
+  } catch (err) {
+    res.json([]);
+  }
+});
+
+// POST /canteen/api/order — place a new order
+app.post("/canteen/api/order", async (req, res) => {
+  try {
+    const { items, total, payMode, amountPaid, change, customerType } =
+      req.body;
+    if (!items || !items.length)
+      return res.json({ success: false, message: "Empty order." });
+
+    const orderNo = genOrderNo();
+    const memberId = req.session?.memberId || null;
+    const memberUserId = req.session?.memberUserId || null;
+    const custName =
+      customerType === "member" ? memberUserId || "Member" : "Walk-in Visitor";
+
+    const [result] = await db.query(
+      `INSERT INTO canteen_orders (order_no, customer_type, member_id, member_user_id, customer_name, total, pay_mode, amount_paid, change_amount, status)
+       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, 'preparing')`,
+      [
+        orderNo,
+        customerType || "visitor",
+        memberId,
+        memberUserId,
+        custName,
+        total,
+        payMode || "cash",
+        amountPaid || total,
+        change || 0,
+      ],
+    );
+    const orderId = result.insertId;
+
+    // Insert order items
+    for (const item of items) {
+      await db.query(
+        "INSERT INTO canteen_order_items (order_id, item_id, item_name, price, qty, subtotal) VALUES (?, ?, ?, ?, ?, ?)",
+        [
+          orderId,
+          item.id || null,
+          item.name,
+          item.price,
+          item.qty,
+          item.price * item.qty,
+        ],
+      );
+      // Deduct stock
+      if (item.id)
+        await db.query(
+          "UPDATE canteen_items SET stock = GREATEST(stock - ?, 0) WHERE id = ?",
+          [item.qty, item.id],
+        );
+    }
+
+    console.log(`🍽️  New order ${orderNo} by ${custName} — ₱${total}`);
+    res.json({ success: true, orderId: orderNo });
+  } catch (err) {
+    console.error("Order error:", err);
+    res.json({ success: false, message: "Server error." });
+  }
+});
+
+// GET /canteen/api/order/:id/status — user polls their order status
+app.get("/canteen/api/order/:id/status", async (req, res) => {
+  try {
+    const [rows] = await db.query(
+      "SELECT order_no, status FROM canteen_orders WHERE order_no = ?",
+      [req.params.id],
+    );
+    if (!rows.length) return res.json({ found: false });
+    res.json({ found: true, status: rows[0].status, id: rows[0].order_no });
+  } catch (err) {
+    res.json({ found: false });
+  }
+});
+
+// GET /canteen/api/orders/pending — admin polls all active orders
+app.get("/canteen/api/orders/pending", requireAdmin, async (req, res) => {
+  try {
+    const [orders] = await db.query(
+      `SELECT * FROM canteen_orders WHERE status != 'done' ORDER BY placed_at ASC`,
+    );
+    for (const order of orders) {
+      const [items] = await db.query(
+        "SELECT * FROM canteen_order_items WHERE order_id = ?",
+        [order.id],
+      );
+      order.items = items;
+      order.placedAt = order.placed_at;
+      order.customerName = order.customer_name;
+      order.customerType = order.customer_type;
+      order.payMode = order.pay_mode;
+      order.id = order.order_no;
+    }
+    res.json(orders);
+  } catch (err) {
+    res.json([]);
+  }
+});
+
+// POST /canteen/api/order/:id/ready — admin marks as ready
+app.post("/canteen/api/order/:id/ready", requireAdmin, async (req, res) => {
+  try {
+    await db.query(
+      `UPDATE canteen_orders SET status='ready', ready_at=NOW() WHERE order_no=?`,
+      [req.params.id],
+    );
+    console.log(`✅ Order ${req.params.id} → READY FOR PICKUP`);
+    res.json({ success: true });
+  } catch (err) {
+    res.json({ success: false });
+  }
+});
+
+// POST /canteen/api/order/:id/done — admin marks as done/claimed
+app.post("/canteen/api/order/:id/done", requireAdmin, async (req, res) => {
+  try {
+    await db.query(
+      `UPDATE canteen_orders SET status='done', done_at=NOW() WHERE order_no=?`,
+      [req.params.id],
+    );
+    console.log(`🏁 Order ${req.params.id} → DONE/CLAIMED`);
+    res.json({ success: true });
+  } catch (err) {
+    res.json({ success: false });
+  }
+});
+
+// Canteen admin monitor page
+app.get("/canteen/admin", requireAdminPage, (req, res) =>
+  res.render("canteen-admin"),
+);
+
+// ── CANTEEN ITEM MANAGEMENT ──────────────────
+app.post("/canteen/api/items", requireAdmin, async (req, res) => {
+  try {
+    const { name, category, price, stock, emoji } = req.body;
+    await db.query(
+      "INSERT INTO canteen_items (name,category,price,stock,emoji) VALUES (?,?,?,?,?)",
+      [name, category, price, stock || 0, emoji || "🍽️"],
+    );
+    res.json({ success: true });
+  } catch (e) {
+    res.json({ success: false });
+  }
+});
+
+app.post("/canteen/api/items/:id/toggle", requireAdmin, async (req, res) => {
+  try {
+    await db.query("UPDATE canteen_items SET is_available=? WHERE id=?", [
+      req.body.is_available,
+      req.params.id,
+    ]);
+    res.json({ success: true });
+  } catch (e) {
+    res.json({ success: false });
+  }
+});
+
+app.post("/canteen/api/items/:id/restock", requireAdmin, async (req, res) => {
+  try {
+    await db.query("UPDATE canteen_items SET stock = stock + ? WHERE id=?", [
+      req.body.qty,
+      req.params.id,
+    ]);
+    res.json({ success: true });
+  } catch (e) {
+    res.json({ success: false });
+  }
+});
+
+app.delete("/canteen/api/items/:id", requireAdmin, async (req, res) => {
+  try {
+    await db.query("UPDATE canteen_items SET is_available=0 WHERE id=?", [
+      req.params.id,
+    ]);
+    res.json({ success: true });
+  } catch (e) {
+    res.json({ success: false });
+  }
+});
+
+// ── ORDER HISTORY ────────────────────────────
+app.get("/canteen/api/orders/history", requireAdmin, async (req, res) => {
+  try {
+    const [orders] = await db.query(
+      `SELECT * FROM canteen_orders ORDER BY placed_at DESC LIMIT 200`,
+    );
+    for (const o of orders) {
+      const [items] = await db.query(
+        "SELECT * FROM canteen_order_items WHERE order_id=?",
+        [o.id],
+      );
+      o.items = items;
+    }
+    res.json(orders);
+  } catch (e) {
+    res.json([]);
+  }
+});
+
+// ── CREDIT ORDERS ─────────────────────────────
+app.get("/canteen/api/orders/credits", requireAdmin, async (req, res) => {
+  try {
+    const [orders] = await db.query(
+      `SELECT * FROM canteen_orders WHERE pay_mode='credit' ORDER BY placed_at DESC`,
+    );
+    res.json(orders);
+  } catch (e) {
+    res.json([]);
+  }
+});
+
+// ── DAILY REPORTS ─────────────────────────────
+app.get("/canteen/api/reports/daily", requireAdmin, async (req, res) => {
+  try {
+    const [rows] = await db.query(
+      `SELECT * FROM canteen_daily_summary LIMIT 30`,
+    );
+    const [today] = await db.query(
+      `SELECT * FROM canteen_daily_summary WHERE order_date = CURDATE() LIMIT 1`,
+    );
+    res.json({ rows, today: today[0] || null });
+  } catch (e) {
+    res.json({ rows: [], today: null });
+  }
 });
