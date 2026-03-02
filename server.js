@@ -1035,6 +1035,68 @@ app.get(
   },
 );
 
+// ── ADMIN: GET FULL MEMBER TRANSACTIONS (shares + savings + loans) ────────────
+app.get(
+  "/membership/admin/member-full/:memberId",
+  requireAdmin,
+  async (req, res) => {
+    try {
+      const mid = req.params.memberId;
+
+      const [shares] = await db.query(
+        `SELECT * FROM shares WHERE member_id=? ORDER BY transaction_date DESC, created_at DESC`,
+        [mid],
+      );
+      const [savings] = await db.query(
+        `SELECT * FROM savings WHERE member_id=? ORDER BY transaction_date DESC, created_at DESC`,
+        [mid],
+      );
+      const [loans] = await db.query(
+        `SELECT * FROM loans WHERE member_id=? ORDER BY created_at DESC`,
+        [mid],
+      );
+      const loansWithPayments = [];
+      for (const loan of loans) {
+        const [payments] = await db.query(
+          `SELECT * FROM loan_payments WHERE loan_id=? ORDER BY payment_date ASC`,
+          [loan.id],
+        );
+        loansWithPayments.push({ ...loan, payments });
+      }
+
+      // Compute totals
+      const totalShares = shares.reduce(
+        (s, t) => s + (t.type === "deposit" ? +t.amount : -+t.amount),
+        0,
+      );
+      const totalSavings = savings.reduce(
+        (s, t) => s + (t.type === "deposit" ? +t.amount : -+t.amount),
+        0,
+      );
+      const activeLoans = loansWithPayments.filter(
+        (l) => l.status === "active",
+      );
+      const totalLoanBalance = activeLoans.reduce(
+        (s, l) => s + parseFloat(l.outstanding_balance || 0),
+        0,
+      );
+
+      res.json({
+        success: true,
+        shares,
+        savings,
+        loans: loansWithPayments,
+        totalShares,
+        totalSavings,
+        totalLoanBalance,
+      });
+    } catch (e) {
+      console.error(e);
+      res.json({ success: false });
+    }
+  },
+);
+
 // ── ADMIN: UPDATE LOAN STATUS (approve/reject application) ───────────────────
 app.post("/membership/admin/loan-status", requireAdmin, async (req, res) => {
   try {
