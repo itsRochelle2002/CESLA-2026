@@ -33,7 +33,33 @@
         min-height: 100vh;
         display: flex;
         flex-direction: column;
-        overflow: hidden;
+        overflow-y: auto;
+        overflow-x: hidden;
+      }
+
+      /* ═══ GLOBAL SCROLLBAR STYLING ═══ */
+      * {
+        scrollbar-width: thin;
+        scrollbar-color: rgba(245, 197, 24, 0.45) rgba(255, 255, 255, 0.06);
+      }
+      *::-webkit-scrollbar {
+        width: 6px;
+        height: 6px;
+      }
+      *::-webkit-scrollbar-track {
+        background: rgba(255, 255, 255, 0.05);
+        border-radius: 10px;
+      }
+      *::-webkit-scrollbar-thumb {
+        background: rgba(245, 197, 24, 0.45);
+        border-radius: 10px;
+        transition: background 0.2s;
+      }
+      *::-webkit-scrollbar-thumb:hover {
+        background: rgba(245, 197, 24, 0.75);
+      }
+      *::-webkit-scrollbar-corner {
+        background: transparent;
       }
 
       /* ═══ TOP BAR ═══ */
@@ -122,7 +148,8 @@
         flex: 1;
         padding: 14px;
         gap: 12px;
-        overflow: hidden;
+        overflow: visible;
+        min-height: 0;
       }
 
       /* ═══ SIDEBAR ═══ */
@@ -133,6 +160,12 @@
         flex-direction: column;
         gap: 4px;
         padding-top: 2px;
+        overflow-y: auto;
+        overflow-x: hidden;
+        max-height: calc(100vh - 70px);
+        position: sticky;
+        top: 14px;
+        align-self: flex-start;
       }
 
       /* Normal nav button */
@@ -254,10 +287,11 @@
           rgba(50, 65, 160, 0.5) 100%
         );
         border-radius: 20px 20px 0 0;
-        overflow: hidden;
+        overflow: visible;
         display: flex;
         flex-direction: column;
         position: relative;
+        min-height: 0;
       }
       /* Decorative blobs */
       .blob {
@@ -299,16 +333,24 @@
       .content-inner {
         flex: 1;
         overflow-y: auto;
+        overflow-x: hidden;
         padding: 22px 24px 28px;
         position: relative;
         z-index: 1;
       }
       .content-inner::-webkit-scrollbar {
-        width: 4px;
+        width: 6px;
+      }
+      .content-inner::-webkit-scrollbar-track {
+        background: rgba(255, 255, 255, 0.05);
+        border-radius: 10px;
       }
       .content-inner::-webkit-scrollbar-thumb {
-        background: rgba(255, 255, 255, 0.18);
+        background: rgba(245, 197, 24, 0.5);
         border-radius: 10px;
+      }
+      .content-inner::-webkit-scrollbar-thumb:hover {
+        background: rgba(245, 197, 24, 0.8);
       }
 
       /* ═══ PANELS ═══ */
@@ -799,6 +841,21 @@
       /* Table */
       .tbl-wrap {
         overflow-x: auto;
+        overflow-y: visible;
+      }
+      .tbl-wrap::-webkit-scrollbar {
+        height: 5px;
+      }
+      .tbl-wrap::-webkit-scrollbar-track {
+        background: rgba(255, 255, 255, 0.05);
+        border-radius: 10px;
+      }
+      .tbl-wrap::-webkit-scrollbar-thumb {
+        background: rgba(245, 197, 24, 0.45);
+        border-radius: 10px;
+      }
+      .tbl-wrap::-webkit-scrollbar-thumb:hover {
+        background: rgba(245, 197, 24, 0.75);
       }
       .tbl {
         width: 100%;
