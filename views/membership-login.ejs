@@ -529,7 +529,7 @@
       // Dynamic back button based on source
       const _p = new URLSearchParams(window.location.search);
       document.getElementById("backBtn").href =
-        _p.get("from") === "canteen" ? "/ordering" : "/membership";
+        _p.get("from") === "canteen" ? "/ordering" : "/";
 
       function togglePw() {
         const el = document.getElementById("password");

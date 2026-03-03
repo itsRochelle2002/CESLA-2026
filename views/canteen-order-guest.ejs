@@ -34,6 +34,8 @@
         background: rgba(13, 27, 62, 0.7);
         backdrop-filter: blur(12px);
         flex-shrink: 0;
+        position: relative;
+        z-index: 1000;
         animation: slideDown 0.5s ease both;
       }
       @keyframes slideDown {
@@ -94,6 +96,64 @@
       .header-menu-btn:hover {
         background: rgba(201, 168, 76, 0.2);
       }
+      .header-menu-btn.open {
+        background: rgba(201, 168, 76, 0.2);
+        border-color: rgba(201, 168, 76, 0.4);
+      }
+
+      /* ── HEADER DROPDOWN ── */
+      .header-dropdown {
+        position: absolute;
+        top: calc(100% + 10px);
+        right: 0;
+        background: rgba(210, 228, 240, 0.95);
+        backdrop-filter: blur(14px);
+        border: 1px solid rgba(255, 255, 255, 0.6);
+        border-radius: 12px;
+        min-width: 170px;
+        box-shadow: 0 8px 30px rgba(1, 31, 75, 0.2);
+        overflow: hidden;
+        display: none;
+        z-index: 1100;
+      }
+      @keyframes dropIn {
+        from {
+          opacity: 0;
+          transform: translateY(-6px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+      .header-dropdown.show {
+        display: block;
+      }
+      .hd-item {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 11px 16px;
+        font-size: 0.82rem;
+        font-weight: 500;
+        color: #011f4b;
+        cursor: pointer;
+        transition: background 0.15s;
+        text-decoration: none;
+      }
+      .hd-item:hover {
+        background: rgba(201, 168, 76, 0.15);
+        color: #c9a84c;
+      }
+      .hd-item.danger:hover {
+        background: rgba(231, 76, 60, 0.15);
+        color: #e74c3c;
+      }
+      .hd-divider {
+        border: none;
+        border-top: 1px solid rgba(1, 31, 75, 0.1);
+        margin: 0;
+      }
 
       .layout {
         display: flex;
@@ -115,23 +175,26 @@
       }
 
       .panel {
-        background: rgba(255, 255, 255, 0.07);
-        border: 1px solid rgba(255, 255, 255, 0.1);
+        background: rgba(178, 203, 222, 0.45);
+        border: 1.5px solid rgba(255, 255, 255, 0.55);
         border-radius: 18px;
-        backdrop-filter: blur(10px);
+        backdrop-filter: blur(14px);
+        box-shadow:
+          0 4px 24px rgba(1, 31, 75, 0.1),
+          inset 0 1px 0 rgba(255, 255, 255, 0.6);
         overflow: hidden;
         display: flex;
         flex-direction: column;
       }
       .panel-head {
         padding: 14px 18px 10px;
-        border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+        border-bottom: 1px solid rgba(1, 31, 75, 0.1);
       }
       .panel-head h2 {
         font-family: "Playfair Display", serif;
         font-size: 0.85rem;
         font-weight: 700;
-        color: #fff;
+        color: #011f4b;
         letter-spacing: 2px;
         text-transform: uppercase;
         padding-bottom: 8px;
@@ -157,9 +220,9 @@
         width: 100%;
         padding: 11px 14px;
         border-radius: 10px;
-        background: rgba(255, 255, 255, 0.08);
-        border: 1px solid rgba(255, 255, 255, 0.1);
-        color: rgba(255, 255, 255, 0.8);
+        background: rgba(255, 255, 255, 0.35);
+        border: 1px solid rgba(255, 255, 255, 0.5);
+        color: #011f4b;
         font-family: "DM Sans", sans-serif;
         font-size: 0.8rem;
         font-weight: 600;
@@ -170,7 +233,7 @@
           transform 0.15s;
       }
       .cat-btn:hover {
-        background: rgba(255, 255, 255, 0.14);
+        background: rgba(255, 255, 255, 0.55);
         transform: translateX(2px);
       }
       .cat-btn.active {
@@ -420,12 +483,12 @@
         justify-content: space-between;
         align-items: center;
         padding: 8px 0;
-        border-top: 1px solid rgba(255, 255, 255, 0.1);
+        border-top: 1px solid rgba(1, 31, 75, 0.12);
       }
       .cart-total-label {
         font-size: 0.82rem;
         font-weight: 700;
-        color: #fff;
+        color: #011f4b;
       }
       .cart-total-val {
         font-size: 1rem;
@@ -442,7 +505,7 @@
         align-items: center;
         gap: 8px;
         font-size: 0.74rem;
-        color: rgba(255, 255, 255, 0.65);
+        color: rgba(1, 31, 75, 0.7);
         cursor: pointer;
       }
       .pay-opt input[type="radio"] {
@@ -455,15 +518,15 @@
       }
       .amount-group label {
         font-size: 0.7rem;
-        color: rgba(255, 255, 255, 0.5);
-        font-weight: 500;
+        color: rgba(1, 31, 75, 0.65);
+        font-weight: 600;
       }
       .amount-input {
-        background: rgba(255, 255, 255, 0.08);
-        border: 1px solid rgba(255, 255, 255, 0.12);
+        background: rgba(255, 255, 255, 0.6);
+        border: 1px solid rgba(255, 255, 255, 0.7);
         border-radius: 8px;
         padding: 8px 12px;
-        color: #fff;
+        color: #011f4b;
         font-family: "DM Sans", sans-serif;
         font-size: 0.8rem;
         font-weight: 600;
@@ -481,14 +544,28 @@
       }
       .change-label {
         font-size: 0.72rem;
-        color: rgba(255, 255, 255, 0.5);
+        color: rgba(1, 31, 75, 0.65);
+        font-weight: 600;
       }
       .change-val {
         font-size: 0.82rem;
         font-weight: 700;
-        color: rgba(255, 255, 255, 0.8);
+        color: #011f4b;
       }
 
+      .insufficient-warn {
+        display: none;
+        font-size: 0.72rem;
+        font-weight: 600;
+        color: #e74c3c;
+        background: rgba(231, 76, 60, 0.1);
+        border: 1px solid rgba(231, 76, 60, 0.25);
+        border-radius: 7px;
+        padding: 6px 10px;
+      }
+      .insufficient-warn.show {
+        display: block;
+      }
       .btn-place {
         width: 100%;
         padding: 11px;
@@ -522,10 +599,10 @@
         background: rgba(231, 76, 60, 0.15);
         border: 1px solid rgba(231, 76, 60, 0.3);
         border-radius: 10px;
-        color: rgba(231, 76, 60, 0.9);
+        color: #e74c3c;
         font-family: "DM Sans", sans-serif;
         font-size: 0.78rem;
-        font-weight: 600;
+        font-weight: 700;
         cursor: pointer;
         transition:
           background 0.2s,
@@ -1081,7 +1158,14 @@
           >
         </div>
       </div>
-      <button class="header-menu-btn">&#9776;</button>
+      <div style="position: relative" id="menuWrap">
+        <button class="header-menu-btn" id="menuBtn" onclick="toggleMenu()">
+          &#9776;
+        </button>
+        <div class="header-dropdown" id="headerDropdown">
+          <div class="hd-item" onclick="confirmLeave()">🏠 Back to Portal</div>
+        </div>
+      </div>
     </header>
 
     <div class="layout">
@@ -1144,7 +1228,8 @@
               border-radius: 9px;
               padding: 9px 12px;
               font-size: 0.72rem;
-              color: rgba(80, 200, 150, 0.9);
+              color: #011f4b;
+              font-weight: 600;
               text-align: center;
             "
           >
@@ -1441,6 +1526,21 @@
       function dismissVisitorOrder(orderNo) {
         const orders = getVisitorOrders().filter((o) => o.orderNo !== orderNo);
         saveVisitorOrders(orders);
+        // If this was the currently tracked order, stop polling and reset
+        if (currentOrderId === orderNo) {
+          currentOrderId = null;
+          if (pollInterval) {
+            clearInterval(pollInterval);
+            pollInterval = null;
+          }
+          // Hide overlay if open
+          const overlay = document.getElementById("statusOverlay");
+          if (overlay && overlay.classList.contains("active")) {
+            overlay.classList.remove("active");
+          }
+          document.getElementById("btnPlace").disabled = false;
+          isMinimized = false;
+        }
         updateVisitorOrdersUI();
         renderActiveOrdersPanel();
       }
@@ -1485,12 +1585,18 @@
                 ? "✅ Ready for Pick-up!"
                 : "⏳ Preparing...";
             const statusClass = o.status === "ready" ? "ready-text" : "waiting";
-            const dismissBtn = `<button class="aop-dismiss-btn" onclick="dismissVisitorOrder('${o.orderNo}')">✓ Done / Dismiss</button>`;
+            const dismissLabel =
+              o.status === "ready" ? "✓ Done / Dismiss" : "✕ Cancel / Remove";
+            const dismissStyle =
+              o.status === "ready"
+                ? ""
+                : "background:rgba(231,76,60,0.12);color:#e74c3c;border-color:rgba(231,76,60,0.3);";
+            const dismissBtn = `<button class="aop-dismiss-btn" style="${dismissStyle}" onclick="dismissVisitorOrder('${o.orderNo}')">${dismissLabel}</button>`;
             return `<div class="aop-order-card ${o.status === "ready" ? "ready" : ""}">
             <div class="aop-order-no">${o.orderNo}</div>
             <div class="aop-status ${statusClass}">${statusLabel}</div>
             <div class="aop-total">Total: ₱${parseFloat(o.total).toFixed(2)}</div>
-            ${o.status === "ready" ? dismissBtn : ""}
+            ${dismissBtn}
           </div>`;
           })
           .join("");
@@ -1739,6 +1845,25 @@
       loadMenuItems();
       updateVisitorOrdersUI();
       pollVisitorOrders();
+
+      function toggleMenu() {
+        const btn = document.getElementById("menuBtn");
+        const dd = document.getElementById("headerDropdown");
+        btn.classList.toggle("open");
+        dd.classList.toggle("show");
+      }
+      document.addEventListener("click", function (e) {
+        const wrap = document.getElementById("menuWrap");
+        if (wrap && !wrap.contains(e.target)) {
+          document.getElementById("menuBtn")?.classList.remove("open");
+          document.getElementById("headerDropdown")?.classList.remove("show");
+        }
+      });
+      function confirmLeave() {
+        if (confirm("Leave the canteen ordering page?")) {
+          window.location.href = "/ordering";
+        }
+      }
     </script>
   </body>
 </html>
